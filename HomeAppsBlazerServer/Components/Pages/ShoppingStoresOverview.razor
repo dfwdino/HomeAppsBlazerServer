@@ -1,0 +1,82 @@
+﻿@page "/ShoppingStores"
+@using HomeAppsBlazerServer.Models
+@using HomeAppsBlazerServer.Servcies
+
+@*Endalbes it*@
+@* @rendermode InteractiveServer *@
+
+@* jackes up the view of the table *@
+@rendermode @(new InteractiveServerRenderMode(prerender: false)) 
+
+
+@* Loads as it as it download it. *@
+@attribute [StreamRendering]
+
+@inject IShoppingStoreService ShoppingStoreService
+@inject NavigationManager NavigationManger
+
+
+<PageTitle>Shopping Stores</PageTitle>
+<h3>Shopping Stores</h3>
+
+@if (AllShoppingStores.Count.Equals(0))
+{
+    <p><em>Loadding Stores....</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <th>Store Name</th>
+            <th>Address</th>
+            <th>Deleted</th>
+            <th>Edit/Delete</th>
+        </thead>
+        <tbody>
+            @foreach (var store in AllShoppingStores)
+            {
+                <tr>
+                    <td>@store.StoreName</td>
+                    <td>@store.Address</td>
+                    <td>@store.IsDeleted</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="@(() => EditStore(store.ShoppingStoreID))" >Edit Store</button>
+                        <button class="btn btn-primary" @onclick="@(() => DeleteStore(store.ShoppingStoreID))">Delete Store</button>
+                        </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button class="btn btn-primary" @onclick="AddStore">Add Store</button>
+
+}
+
+
+
+
+@code {
+    List<ShoppingStore> AllShoppingStores = new List<ShoppingStore>();
+
+    protected override async Task OnInitializedAsync()
+    {
+   
+        AllShoppingStores = await ShoppingStoreService.GetShoppingStoresAsync();
+    }
+
+    void EditStore(int id)
+    {
+        NavigationManger.NavigateTo($"/edit-store/{id}");
+    }
+    void AddStore()
+    {
+        NavigationManger.NavigateTo($"/edit-store/");
+    }
+   
+    async Task DeleteStore(int id)
+    {
+        //delete
+        await ShoppingStoreService.RemoveShoppingStore((int)id);
+        AllShoppingStores = await ShoppingStoreService.GetShoppingStoresAsync();
+    }
+}

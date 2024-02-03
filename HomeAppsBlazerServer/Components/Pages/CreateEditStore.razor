@@ -1,0 +1,89 @@
+﻿@page "/edit-store"
+@page "/edit-store/{Id:int}"
+@using HomeAppsBlazerServer.Models
+@using HomeAppsBlazerServer.Servcies
+@using Microsoft.AspNetCore.Mvc
+
+@inject IShoppingStoreService ShoppingStoreService
+@inject NavigationManager NavigationManger
+
+@rendermode InteractiveServer
+
+@if (Id is null)
+{
+    <h3>Add New store</h3>
+}
+else
+{
+    <h3>Update @CurrentShoppingStore.StoreName Store</h3>
+}
+
+
+<EditForm Model="CurrentShoppingStore" OnSubmit="HandleSubmit" >
+    <div>
+        <label for="storename">Store Name</label>
+        <InputText id="storename" @bind-Value="@CurrentShoppingStore.StoreName" class="form-control" />
+    </div>
+    <div>
+        <label for="storeaddress">Store Address</label>
+        <InputText id="storeaddress" @bind-Value="@CurrentShoppingStore.Address" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">submit</button>
+  @*   <button class="btn btn-primary" @onclick="@DeleteStore">Delete</button> *@
+    <button class="btn btn-primary" @onclick="@(() => DeleteStore())">Delete Store</button>
+
+</EditForm>
+
+
+
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+
+    public ShoppingStore CurrentShoppingStore { get; set; } = new() { StoreName = string.Empty };
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id is not null)
+        {
+            var shoppingstore = await ShoppingStoreService.GetShoppingStoreByIDAsync((int)(Id));
+
+            if (shoppingstore is not null)
+            {
+                CurrentShoppingStore = shoppingstore;
+            }
+        }
+
+    }
+
+    [HttpPost]
+    //not working
+    async Task DeleteStore()
+    {
+        //delete
+        await ShoppingStoreService.RemoveShoppingStore((int)Id);
+
+        NavigationManger.NavigateTo($"/ShoppingStores/");
+    }
+
+    async Task HandleSubmit()
+    {
+        if (Id is not null)
+        {
+            //update
+            await ShoppingStoreService.UpdateShoppingStore(CurrentShoppingStore, (int)Id);
+            NavigationManger.NavigateTo($"/ShoppingStores/");
+        }
+        else
+        {
+            //add
+            await ShoppingStoreService.AddShoppingStoreAsyn(CurrentShoppingStore);
+            NavigationManger.NavigateTo($"/ShoppingStores/");
+        }
+
+       
+
+    }
+
+}
