@@ -1,5 +1,6 @@
 ﻿using HomeAppsBlazerServer.Data;
 using HomeAppsBlazerServer.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace HomeAppsBlazerServer.Servcies
 {
@@ -7,29 +8,64 @@ namespace HomeAppsBlazerServer.Servcies
     {
         private readonly MyDbContext myDbContext;
 
-        public Task AddShoppingItemAsyn(ShoppingItem shoppingItem)
+        public ShoppingItemService(MyDbContext context)
         {
-            throw new NotImplementedException();
+            myDbContext = context;
         }
 
-        public Task<ShoppingItem> GetShoppingItemByIDAsync(int id)
+        public async Task AddShoppingItemAsyn(ShoppingItem shoppingItem)
         {
-            throw new NotImplementedException();
+            myDbContext.ShoppingItems.Add(shoppingItem);
+            await myDbContext.SaveChangesAsync();
         }
 
-        public Task<List<ShoppingItem>> GetShoppingItemsAsync()
+        public async Task<ShoppingItem> GetShoppingItemByIDAsync(int id)
         {
-            throw new NotImplementedException();
+            var shoppingitem = await myDbContext.ShoppingItems.FirstOrDefaultAsync(mm => mm.ShoppingItemID.Equals(id));
+            return shoppingitem;
+        }
+   
+
+        public async Task<List<ShoppingItem>> GetShoppingItemsAsync()
+        {
+            var resutls = await myDbContext.ShoppingItems.ToListAsync();
+            return resutls;
         }
 
-        public Task RemoveShoppingItem(int id)
+        public async Task RemoveShoppingItem(int id)
         {
-            throw new NotImplementedException();
+            var shoppingItem = await myDbContext.ShoppingItems.FirstOrDefaultAsync(mm => mm.ShoppingItemID.Equals(id));
+
+            if (shoppingItem != null)
+            {
+                myDbContext.ShoppingItems.Remove(shoppingItem);
+                try
+                {
+                    await myDbContext.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    var asdfa = ex.Message;
+                }
+
+            }
         }
 
-        public Task UpdateShoppingItem(ShoppingItem shoppingItem, int id)
+        public async Task UpdateShoppingItem(ShoppingItem shoppingItem, int id)
         {
-            throw new NotImplementedException();
+            var currentshoppingItem = await myDbContext.ShoppingItems.FirstOrDefaultAsync(mm => mm.ShoppingItemID.Equals(id));
+
+            if (currentshoppingItem != null)
+            {
+                currentshoppingItem.ItemName = shoppingItem.ItemName;
+                currentshoppingItem.IsGlutenFree = shoppingItem.IsGlutenFree;
+                currentshoppingItem.FreddyDontLike = shoppingItem.FreddyDontLike;
+                currentshoppingItem.KidsDontLike = shoppingItem.KidsDontLike;
+                currentshoppingItem.ElliottDontLike = shoppingItem.ElliottDontLike;
+
+                await myDbContext.SaveChangesAsync();
+
+            }
         }
     }
 }

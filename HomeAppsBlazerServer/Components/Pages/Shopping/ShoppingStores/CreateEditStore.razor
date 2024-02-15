@@ -9,6 +9,8 @@
 
 @rendermode InteractiveServer
 
+@layout HomeAppsBlazerServer.Components.Layout.ShoppingLayout
+
 @if (Id is null)
 {
     <h3>Add New store</h3>
@@ -22,15 +24,18 @@ else
 <EditForm Model="CurrentShoppingStore" OnSubmit="HandleSubmit" >
     <div>
         <label for="storename">Store Name</label>
-        <InputText id="storename" @bind-Value="@CurrentShoppingStore.StoreName" class="form-control" />
+        <InputText id="storename" @bind-Value="@CurrentShoppingStore.StoreName"  />
     </div>
+    <div style="padding-bottom:10px" />
     <div>
         <label for="storeaddress">Store Address</label>
-        <InputText id="storeaddress" @bind-Value="@CurrentShoppingStore.Address" class="form-control" />
+        <InputText id="storeaddress" @bind-Value="@CurrentShoppingStore.Address" />
     </div>
-    <button type="submit" class="btn btn-primary">submit</button>
+    <div style="padding-bottom:20px" />
+
+    <button type="submit" class="btn btn-primary">Submit</button>
   @*   <button class="btn btn-primary" @onclick="@DeleteStore">Delete</button> *@
-    <button class="btn btn-primary" @onclick="@(() => DeleteStore())">Delete Store</button>
+    <button class="btn btn-primary" @onclick="@(() => DeleteStore())">Delete</button>
 
 </EditForm>
 

@@ -1,0 +1,85 @@
+﻿@page "/ShoppingItems"
+@using HomeAppsBlazerServer.Models
+@using HomeAppsBlazerServer.Servcies
+
+@*Endalbes it*@
+@* @rendermode InteractiveServer *@
+
+@* jackes up the view of the table *@
+@rendermode @(new InteractiveServerRenderMode(prerender: false)) 
+
+
+@* Loads as it as it download it. *@
+@attribute [StreamRendering]
+
+@inject IShoppingItemService shoppingItemService
+@inject NavigationManager NavigationManger
+
+@layout HomeAppsBlazerServer.Components.Layout.ShoppingLayout
+
+<PageTitle>Shopping Items</PageTitle>
+<h3>Shopping Items</h3>
+
+@if (AllShoppingItems.Count.Equals(0))
+{
+    <p><em>Loadding Stores....</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <th>Item Name</th>
+        <th>Elliott Dont Like</th>
+        <th>Freddy Dont Like</th>
+        <th>Kids Dont Like</th>
+        <th>Edit/Delete</th>
+        </thead>
+        <tbody>
+            @foreach (var item in AllShoppingItems)
+            {
+                <tr>
+                    <td class="link-primary" @onclick="@(() => EditItem(item.ShoppingItemID))">@item.ItemName</td>
+                    <td>@item.ElliottDontLike</td>
+                    <td>@item.FreddyDontLike</td>
+                    <td>@item.KidsDontLike</td>
+                    <td>
+                        @* <button class="btn btn-primary" @onclick="@(() => EditItem(item.ShoppingItemID))">Edit Item</button> *@
+                        <button class="btn btn-primary" @onclick="@(() => DeleteItem(item.ShoppingItemID))">Delete Item</button>
+                        </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button class="btn btn-primary" @onclick="AddItem">Add Item</button>
+
+}
+
+
+
+
+@code {
+    List<ShoppingItem> AllShoppingItems = new List<ShoppingItem>();
+
+    protected override async Task OnInitializedAsync()
+    {
+   
+        AllShoppingItems = await shoppingItemService.GetShoppingItemsAsync();
+    }
+
+    void EditItem(int id)
+    {
+        NavigationManger.NavigateTo($"/edit-items/{id}");
+    }
+    void AddItem()
+    {
+        NavigationManger.NavigateTo($"/edit-items/");
+    }
+   
+    async Task DeleteItem(int id)
+    {
+        //delete
+        await shoppingItemService.RemoveShoppingItem((int)id);
+        AllShoppingItems = await shoppingItemService.GetShoppingItemsAsync();
+    }
+}
