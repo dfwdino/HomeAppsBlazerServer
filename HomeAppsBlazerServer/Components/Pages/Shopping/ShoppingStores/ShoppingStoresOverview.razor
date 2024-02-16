@@ -12,7 +12,7 @@
 @* Loads as it as it download it. *@
 @attribute [StreamRendering]
 
-@inject IShoppingStoreService ShoppingStoreService
+@inject IShoppingServices ShoppingServices
 @inject NavigationManager NavigationManger
 
 @layout HomeAppsBlazerServer.Components.Layout.ShoppingLayout
@@ -31,18 +31,18 @@ else
             <th>Store Name</th>
             <th>Address</th>
             <th>Deleted</th>
-            <th>Edit/Delete</th>
+            <th>Delete</th>
         </thead>
         <tbody>
             @foreach (var store in AllShoppingStores)
             {
                 <tr>
-                    <td>@store.StoreName</td>
+                    <td @onclick="@(() => EditStore(store.ShoppingStoreID))">@store.StoreName</td>
                     <td>@store.Address</td>
                     <td>@store.IsDeleted</td>
                     <td>
-                        <button class="btn btn-primary" @onclick="@(() => EditStore(store.ShoppingStoreID))" >Edit Store</button>
-                        <button class="btn btn-primary" @onclick="@(() => DeleteStore(store.ShoppingStoreID))">Delete Store</button>
+                       @*  <button class="btn btn-primary" @onclick="@(() => EditStore(store.ShoppingStoreID))" >Edit Store</button> *@
+                        <button class="btn btn-primary" @onclick="@(() => DeleteStore(store.ShoppingStoreID))">Delete</button>
                         </td>
                 </tr>
             }
@@ -62,7 +62,7 @@ else
     protected override async Task OnInitializedAsync()
     {
    
-        AllShoppingStores = await ShoppingStoreService.GetShoppingStoresAsync();
+        AllShoppingStores = await ShoppingServices.GetShoppingStoresAsync();
     }
 
     void EditStore(int id)
@@ -77,7 +77,7 @@ else
     async Task DeleteStore(int id)
     {
         //delete
-        await ShoppingStoreService.RemoveShoppingStore((int)id);
-        AllShoppingStores = await ShoppingStoreService.GetShoppingStoresAsync();
+        await ShoppingServices.RemoveShoppingStore((int)id);
+        AllShoppingStores = await ShoppingServices.GetShoppingStoresAsync();
     }
 }

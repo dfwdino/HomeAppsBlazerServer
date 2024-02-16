@@ -1,11 +1,11 @@
-﻿@page "/edit-items"
-@page "/edit-items/{Id:int}"
+﻿@page "/edit-item"
+@page "/edit-item/{Id:int}"
 
 @using HomeAppsBlazerServer.Models
 @using HomeAppsBlazerServer.Servcies
 @using Microsoft.AspNetCore.Mvc
 
-@inject IShoppingItemService ShoppingItemService
+@inject IShoppingServices ShoppingServices
 @inject NavigationManager NavigationManger
 
 @rendermode InteractiveServer
@@ -14,7 +14,8 @@
 
 @if (Id is null)
 {
-    <h3>Add New items</h3>
+    <h3>Add Item</h3>
+    <div style="padding-bottom:10px" />
 }
 else
 {
@@ -28,11 +29,14 @@ else
         <label for="itemsname">Items Name:</label>
         <InputText id="itemsname" @bind-Value="@CurrentShoppingitems.ItemName"  />
     </div>
+
     <div style="padding-bottom:10px" />
+    
     <div>
         <label for="IsGlutenFree">Gluten Free:</label>
         <InputCheckbox id="IsGlutenFree" @bind-Value="@CurrentShoppingitems.IsGlutenFree"/>
     </div>
+
     <div style="padding-bottom:10px" />
 
     <div>
@@ -41,6 +45,7 @@ else
             <InputCheckbox id="KidsDontLike" @bind-Value="@CurrentShoppingitems.KidsDontLike" />
         </div>
     </div>
+
     <div style="padding-bottom:10px" />
 
     <div>
@@ -49,6 +54,7 @@ else
             <InputCheckbox id="FreddyDontLike" @bind-Value="@CurrentShoppingitems.FreddyDontLike" />
         </div>
     </div>
+
     <div style="padding-bottom:10px" />
 
     <div>
@@ -61,7 +67,7 @@ else
     <div style="padding-bottom:20px"/>
 
     <button type="submit" class="btn btn-primary">Submit</button>
-  @*   <button class="btn btn-primary" @onclick="@Deleteitems">Delete</button> *@
+
     <button class="btn btn-primary" @onclick="@(() => Deleteitems())">Delete</button>
 
 
@@ -80,7 +86,7 @@ else
     {
         if (Id is not null)
         {
-            var shoppingitems = await ShoppingItemService.GetShoppingItemByIDAsync((int)(Id));
+            var shoppingitems = await ShoppingServices.GetShoppingItemByIDAsync((int)(Id));
 
             if (shoppingitems is not null)
             {
@@ -95,7 +101,7 @@ else
     async Task Deleteitems()
     {
         //delete
-        await ShoppingItemService.RemoveShoppingItem((int)Id);
+        await ShoppingServices.RemoveShoppingItem((int)Id);
 
         NavigationManger.NavigateTo($"/Shoppingitemss/");
     }
@@ -105,13 +111,13 @@ else
         if (Id is not null)
         {
             //update
-            await ShoppingItemService.UpdateShoppingItem(CurrentShoppingitems, (int)Id);
+            await ShoppingServices.UpdateShoppingItem(CurrentShoppingitems, (int)Id);
             NavigationManger.NavigateTo($"/Shoppingitems/");
         }
         else
         {
             //add
-            await ShoppingItemService.AddShoppingItemAsyn(CurrentShoppingitems);
+            await ShoppingServices.AddShoppingItemAsyn(CurrentShoppingitems);
             NavigationManger.NavigateTo($"/Shoppingitemss/");
         }
 

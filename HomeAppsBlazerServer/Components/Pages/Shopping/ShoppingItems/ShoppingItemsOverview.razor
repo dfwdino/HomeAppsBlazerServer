@@ -12,7 +12,8 @@
 @* Loads as it as it download it. *@
 @attribute [StreamRendering]
 
-@inject IShoppingItemService shoppingItemService
+@inject IShoppingServices ShoppingServices
+
 @inject NavigationManager NavigationManger
 
 @layout HomeAppsBlazerServer.Components.Layout.ShoppingLayout
@@ -44,7 +45,7 @@ else
                     <td>@item.KidsDontLike</td>
                     <td>
                         @* <button class="btn btn-primary" @onclick="@(() => EditItem(item.ShoppingItemID))">Edit Item</button> *@
-                        <button class="btn btn-primary" @onclick="@(() => DeleteItem(item.ShoppingItemID))">Delete Item</button>
+                        <button class="btn btn-primary" @onclick="@(() => DeleteItem(item.ShoppingItemID))">Delete</button>
                         </td>
                 </tr>
             }
@@ -64,22 +65,22 @@ else
     protected override async Task OnInitializedAsync()
     {
    
-        AllShoppingItems = await shoppingItemService.GetShoppingItemsAsync();
+        AllShoppingItems = await ShoppingServices.GetShoppingItemsAsync();
     }
 
     void EditItem(int id)
     {
-        NavigationManger.NavigateTo($"/edit-items/{id}");
+        NavigationManger.NavigateTo($"/edit-item/{id}");
     }
     void AddItem()
     {
-        NavigationManger.NavigateTo($"/edit-items/");
+        NavigationManger.NavigateTo($"/edit-item/");
     }
    
     async Task DeleteItem(int id)
     {
         //delete
-        await shoppingItemService.RemoveShoppingItem((int)id);
-        AllShoppingItems = await shoppingItemService.GetShoppingItemsAsync();
+        await ShoppingServices.RemoveShoppingItem((int)id);
+        AllShoppingItems = await ShoppingServices.GetShoppingItemsAsync();
     }
 }

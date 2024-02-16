@@ -4,7 +4,7 @@
 @using HomeAppsBlazerServer.Servcies
 @using Microsoft.AspNetCore.Mvc
 
-@inject IShoppingStoreService ShoppingStoreService
+@inject IShoppingServices ShoppingServices
 @inject NavigationManager NavigationManger
 
 @rendermode InteractiveServer
@@ -26,16 +26,22 @@ else
         <label for="storename">Store Name</label>
         <InputText id="storename" @bind-Value="@CurrentShoppingStore.StoreName"  />
     </div>
+
     <div style="padding-bottom:10px" />
+
     <div>
         <label for="storeaddress">Store Address</label>
         <InputText id="storeaddress" @bind-Value="@CurrentShoppingStore.Address" />
     </div>
+
     <div style="padding-bottom:20px" />
 
     <button type="submit" class="btn btn-primary">Submit</button>
-  @*   <button class="btn btn-primary" @onclick="@DeleteStore">Delete</button> *@
-    <button class="btn btn-primary" @onclick="@(() => DeleteStore())">Delete</button>
+
+    @if (Id is not null)
+    {
+        <button class="btn btn-primary" @onclick="@(() => DeleteStore())">Delete</button>
+    }
 
 </EditForm>
 
@@ -52,7 +58,7 @@ else
     {
         if (Id is not null)
         {
-            var shoppingstore = await ShoppingStoreService.GetShoppingStoreByIDAsync((int)(Id));
+            var shoppingstore = await ShoppingServices.GetShoppingStoreByIDAsync((int)(Id));
 
             if (shoppingstore is not null)
             {
@@ -67,7 +73,7 @@ else
     async Task DeleteStore()
     {
         //delete
-        await ShoppingStoreService.RemoveShoppingStore((int)Id);
+        await ShoppingServices.RemoveShoppingStore((int)Id);
 
         NavigationManger.NavigateTo($"/ShoppingStores/");
     }
@@ -77,13 +83,13 @@ else
         if (Id is not null)
         {
             //update
-            await ShoppingStoreService.UpdateShoppingStore(CurrentShoppingStore, (int)Id);
+            await ShoppingServices.UpdateShoppingStore(CurrentShoppingStore, (int)Id);
             NavigationManger.NavigateTo($"/ShoppingStores/");
         }
         else
         {
             //add
-            await ShoppingStoreService.AddShoppingStoreAsyn(CurrentShoppingStore);
+            await ShoppingServices.AddShoppingStoreAsyn(CurrentShoppingStore);
             NavigationManger.NavigateTo($"/ShoppingStores/");
         }
 

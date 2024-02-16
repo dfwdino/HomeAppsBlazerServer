@@ -12,8 +12,9 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddDbContext<MyDbContext>(options => 
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddScoped<IShoppingStoreService,ShoppingStoreServcie>();
-builder.Services.AddScoped<IShoppingItemService, ShoppingItemService>();
+        builder.Services.AddScoped<IShoppingServices, ShoppingServices>();
+//builder.Services.AddScoped<IShoppingStoreService,ShoppingStoreServcie>();
+//builder.Services.AddScoped<IShoppingItemService, ShoppingItemService>();
 
 var app = builder.Build();
 
