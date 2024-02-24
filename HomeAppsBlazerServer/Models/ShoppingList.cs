@@ -1,14 +1,15 @@
 ﻿
 
+using HomeAppsBlazerServer.Models.Interface;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HomeAppsBlazerServer.Models
 {
-    
+
     [Table("ShoppingItemList", Schema = "Shopping")]
-    public class ShoppingList
+    public class ShoppingList : IShoppingList
     {
         [Key]
         public int ShoppingItemListID { get; set; }

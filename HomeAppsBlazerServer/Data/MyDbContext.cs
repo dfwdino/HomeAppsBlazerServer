@@ -16,6 +16,7 @@ namespace HomeAppsBlazerServer.Data
 
         public DbSet<ShoppingStore> ShoppingStores { get; set; }
         public DbSet<ShoppingItem> ShoppingItems { get; set; }
+        public DbSet<ShoppingItemList> ShoppingItemList { get; set; }
 
 
     }

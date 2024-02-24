@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using HomeAppsBlazerServer.Models.Interface;
 
 namespace HomeAppsBlazerServer.Models
 {
     [Table("ShoppingItems", Schema = "Shopping")]
-    public class ShoppingItem
+    public class ShoppingItem : IShoppingItem
     {
         public int ShoppingItemID { get; set; }
         public string ItemName { get; set; }

@@ -1,4 +1,5 @@
-﻿using HomeAppsBlazerServer.Data;
+﻿using HomeAppsBlazerServer.Components;
+using HomeAppsBlazerServer.Data;
 using HomeAppsBlazerServer.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +17,8 @@ namespace HomeAppsBlazerServer.Servcies
         #region Items
         public async Task AddShoppingItemAsyn(ShoppingItem shoppingItem)
         {
+            shoppingItem.ItemName = shoppingItem.ItemName.ToTileCase();
+
             myDbContext.ShoppingItems.Add(shoppingItem);
             await myDbContext.SaveChangesAsync();
         }
@@ -26,6 +29,22 @@ namespace HomeAppsBlazerServer.Servcies
             return shoppingitem;
         }
 
+
+        public async Task AddItList(int id)
+        {
+            var NeedItem = await myDbContext.ShoppingItems.FirstOrDefaultAsync(mm => mm.ShoppingItemID.Equals(id));
+
+            ShoppingItemList NewListItem = new ShoppingItemList();
+
+            NewListItem.ShoppingItemID = NeedItem.ShoppingItemID;
+          
+            ///Todo
+            ///Need to link store to item
+
+            myDbContext.ShoppingItemList.Add(NewListItem);
+
+
+        }
 
         public async Task<List<ShoppingItem>> GetShoppingItemsAsync()
         {
@@ -71,9 +90,10 @@ namespace HomeAppsBlazerServer.Servcies
         #endregion End Items
 
 
-        #region
+        #region Shopping Store
         public async Task AddShoppingStoreAsyn(ShoppingStore shoppingStore)
         {
+            shoppingStore.StoreName = shoppingStore.StoreName.ToTileCase();
             myDbContext.ShoppingStores.Add(shoppingStore);
             await myDbContext.SaveChangesAsync();
 
@@ -124,7 +144,30 @@ namespace HomeAppsBlazerServer.Servcies
             }
         }
 
-        #endregion
+        #endregion End Shopping Store
+
+
+        #region Need List
+
+        public async Task AddItemToList(int id)
+        {
+            ShoppingItemList shoppingItemList = new ShoppingItemList();
+
+            shoppingItemList.ShoppingItemID = id;
+            shoppingItemList.NeedDate = DateTime.Now;
+            
+            myDbContext.ShoppingItemList.Add(shoppingItemList);
+            myDbContext.SaveChanges();
+        }
+
+
+        public async Task<List<ShoppingItemList>> GetAllNeedItemsAsync()
+        {
+            var resutls = await myDbContext.ShoppingItemList.ToListAsync();
+            return resutls;
+        }
+
+        #endregion End Need List
 
 
 

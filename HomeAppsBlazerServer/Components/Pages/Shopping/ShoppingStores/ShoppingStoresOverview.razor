@@ -37,7 +37,7 @@ else
             @foreach (var store in AllShoppingStores)
             {
                 <tr>
-                    <td @onclick="@(() => EditStore(store.ShoppingStoreID))">@store.StoreName</td>
+                    <td class="link-primary" @onclick="@(() => EditStore(store.ShoppingStoreID))">@store.StoreName</td>
                     <td>@store.Address</td>
                     <td>@store.IsDeleted</td>
                     <td>
