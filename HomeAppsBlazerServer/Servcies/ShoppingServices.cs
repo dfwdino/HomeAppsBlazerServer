@@ -46,9 +46,16 @@ namespace HomeAppsBlazerServer.Servcies
 
         }
 
-        public async Task<List<ShoppingItem>> GetShoppingItemsAsync()
+        public async Task<List<ShoppingItem>> GetShoppingItemsAsync(bool showallitems = false)
         {
-            var resutls = await myDbContext.ShoppingItems.ToListAsync();
+            IList<string> ListOfAllItemsOnList = new List<string>();
+
+            if (showallitems.Equals(false))
+            {
+                ListOfAllItemsOnList = myDbContext.ShoppingItemList.Where(mm => mm.GotItem.Equals(false)).Select(m => m.ShoppingItemID.ToString()).Distinct().ToList();
+            }
+
+            var resutls = await myDbContext.ShoppingItems.Where(i => !ListOfAllItemsOnList.Any(e => i.ShoppingItemID.ToString().Contains(e))).ToListAsync();
             return resutls;
         }
 
@@ -179,7 +186,9 @@ namespace HomeAppsBlazerServer.Servcies
 
         public async Task<List<ShoppingItemList>> GetAllNeedItemsAsync()
         {
-            var resutls = await myDbContext.ShoppingItemList.ToListAsync();
+            var resutls = await myDbContext.ShoppingItemList.Where(mm => mm.GotItem.Equals(false) 
+                                && (mm.NeedDate == null && mm.NeedDate <= DateTime.Now)).ToListAsync();
+                        
             return resutls;
         }
 
