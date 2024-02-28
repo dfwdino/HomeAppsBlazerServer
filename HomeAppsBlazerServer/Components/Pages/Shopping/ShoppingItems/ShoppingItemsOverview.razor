@@ -39,8 +39,8 @@ else
         <tbody>
             @foreach (var item in AllShoppingItems)
             {
-                <tr>
-                    <td> <span class="link-primary" @onclick="@(() => EditItem(item.ShoppingItemID))"> @item.ItemName </span> - <span class="link-primary" @onclick="@(() => AddItemToList(item.ShoppingItemID))"> Need</span></td>
+                <tr id="@item.ShoppingItemID">
+                    <td> <span class="link-primary" @onclick="@(() => EditItem(item.ShoppingItemID))"> @item.ItemName </span> - <span style="@(IsShow ? "" : "display:none")" class="link-primary" @onclick="@(() => AddItemToList(item.ShoppingItemID))"> Need</span></td>
                     <td>@item.ElliottDontLike</td>
                     <td>@item.FreddyDontLike</td>
                     <td>@item.KidsDontLike</td>
@@ -62,12 +62,15 @@ else
 
 @code {
     List<ShoppingItem> AllShoppingItems = new List<ShoppingItem>();
+    bool IsShow { get; set; } = true;
 
     protected override async Task OnInitializedAsync()
     {
-   
+
+        //Show all items or show that it needed. 
         AllShoppingItems = await ShoppingServices.GetShoppingItemsAsync();
     }
+
 
     void EditItem(int id)
     {
@@ -76,20 +79,21 @@ else
 
     void AddItem()
     {
+     
         NavigationManger.NavigateTo($"/edit-item/");
     }
    
     async Task AddItemToList(int id)
-    {
+    {   
         await ShoppingServices.AddItemToList((int)id);
+        AllShoppingItems.Remove(AllShoppingItems.First(m => m.ShoppingItemID == id));
         await JsRuntime.InvokeVoidAsync("alert", "Item Added");
 
-        //AllShoppingItems = await ShoppingServices.GetShoppingItemsAsync();
     }
 
     async Task DeleteItem(int id)
     {
-        //delete
+    
         await ShoppingServices.RemoveShoppingItem((int)id);
         AllShoppingItems = await ShoppingServices.GetShoppingItemsAsync();
     }

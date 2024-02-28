@@ -150,14 +150,30 @@ namespace HomeAppsBlazerServer.Servcies
         #region Need List
 
         public async Task AddItemToList(int id)
-        {
+        { 
+
+            if (myDbContext.ShoppingItemList.FirstOrDefault(mm => mm.ShoppingItemID.Equals(id)) != null)
+            {
+                return;
+            }
+
             ShoppingItemList shoppingItemList = new ShoppingItemList();
 
             shoppingItemList.ShoppingItemID = id;
             shoppingItemList.NeedDate = DateTime.Now;
             
             myDbContext.ShoppingItemList.Add(shoppingItemList);
-            myDbContext.SaveChanges();
+
+            try
+            {
+                myDbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+
+                await Console.Out.WriteLineAsync(ex.Message);
+            }
+          
         }
 
 
