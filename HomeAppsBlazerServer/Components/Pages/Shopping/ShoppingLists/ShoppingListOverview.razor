@@ -1,0 +1,88 @@
+﻿@page "/ShoppingList"
+
+
+@using HomeAppsBlazerServer.Models
+@using HomeAppsBlazerServer.Servcies
+
+@*Endalbes it*@
+@* @rendermode InteractiveServer *@
+
+@* jackes up the view of the table *@
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+
+@* Loads as it as it download it. *@
+@attribute [StreamRendering]
+
+@inject IShoppingServices ShoppingServices
+
+@inject NavigationManager NavigationManger
+@inject IJSRuntime JsRuntime
+
+@layout HomeAppsBlazerServer.Components.Layout.ShoppingLayout
+
+<PageTitle>Shopping List</PageTitle>
+<h3>Shopping Items</h3>
+
+@if (CurrentShoppingList.Count.Equals(0))
+{
+    <p><em>Loadding List Items....</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <th>Item Name</th>
+        <th>Store</th>
+        <th>Edit/Delete</th>
+        </thead>
+        <tbody>
+            @foreach (var item in CurrentShoppingList)
+            {
+                <tr id="@item.ShoppingItemListID">
+                    <td> <span class="link-primary" @onclick="@(() => EditItem(item.ShoppingItemListID))"> @item.ItemName </span> - <span class="link-primary" @onclick="@(() => GotItem(item.ShoppingItemListID))"> Got</span> - <span>@item.NumberOfItems</span></td>
+                    <td>@item.ShoppingStore?.StoreName</td>
+                    <td>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
+
+
+
+
+@code {
+    List<ShoppingItemResult> CurrentShoppingList = new List<ShoppingItemResult>();
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        CurrentShoppingList = await GetShoppingItems();
+
+    }
+
+
+    async Task<List<ShoppingItemResult>> GetShoppingItems()
+    {
+        return await ShoppingServices.GetAllNeedItemsAsync();
+    }
+
+    void EditItem(int id)
+    {
+        NavigationManger.NavigateTo($"/edit-item/{id}");
+    }
+
+    async Task GotItem(int id)
+    {
+        await ShoppingServices.AddItemToList((int)id);
+        CurrentShoppingList.Remove(CurrentShoppingList.First(m => m.ShoppingItemListID == id));
+        await JsRuntime.InvokeVoidAsync("alert", "Item Added");
+
+    }
+
+
+}

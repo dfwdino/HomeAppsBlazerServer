@@ -1,4 +1,6 @@
 ﻿@page "/ShoppingItems"
+@page "/ShoppingItems/{showallitems:bool}"
+
 @using HomeAppsBlazerServer.Models
 @using HomeAppsBlazerServer.Servcies
 
@@ -28,6 +30,8 @@
 }
 else
 {
+    <span class="link-primary" @onclick="@(() => GetShoppingItems(true))">Show All</span>
+
     <table class="table">
         <thead>
         <th>Item Name</th>
@@ -40,7 +44,7 @@ else
             @foreach (var item in AllShoppingItems)
             {
                 <tr id="@item.ShoppingItemID">
-                    <td> <span class="link-primary" @onclick="@(() => EditItem(item.ShoppingItemID))"> @item.ItemName </span> - <span style="@(IsShow ? "" : "display:none")" class="link-primary" @onclick="@(() => AddItemToList(item.ShoppingItemID))"> Need</span></td>
+                    <td> <span class="link-primary" @onclick="@(() => EditItem(item.ShoppingItemID))"> @item.ItemName </span> - <span class="link-primary" @onclick="@(() => AddItemToList(item.ShoppingItemID))"> Need</span></td>
                     <td>@item.ElliottDontLike</td>
                     <td>@item.FreddyDontLike</td>
                     <td>@item.KidsDontLike</td>
@@ -62,15 +66,22 @@ else
 
 @code {
     List<ShoppingItem> AllShoppingItems = new List<ShoppingItem>();
-    bool IsShow { get; set; } = true;
+
+    [Parameter]
+    public bool showallitems { get; set; } = false;
 
     protected override async Task OnInitializedAsync()
     {
-
-        //Show all items or show that it needed. 
-        AllShoppingItems = await ShoppingServices.GetShoppingItemsAsync();
+       
+        await GetShoppingItems(showallitems);
+       
     }
 
+
+    async Task GetShoppingItems(bool showallitems = false)
+    {
+        AllShoppingItems = await ShoppingServices.GetShoppingItemsAsync(showallitems);
+    }
 
     void EditItem(int id)
     {
@@ -78,8 +89,7 @@ else
     }
 
     void AddItem()
-    {
-     
+    {     
         NavigationManger.NavigateTo($"/edit-item/");
     }
    

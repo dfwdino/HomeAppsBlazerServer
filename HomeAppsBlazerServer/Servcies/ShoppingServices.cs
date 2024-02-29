@@ -2,6 +2,7 @@
 using HomeAppsBlazerServer.Data;
 using HomeAppsBlazerServer.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace HomeAppsBlazerServer.Servcies
 {
@@ -9,7 +10,8 @@ namespace HomeAppsBlazerServer.Servcies
     {
         private readonly MyDbContext myDbContext;
 
-        public ShoppingServices(MyDbContext context) {
+        public ShoppingServices(MyDbContext context)
+        {
             myDbContext = context;
         }
 
@@ -37,7 +39,7 @@ namespace HomeAppsBlazerServer.Servcies
             ShoppingItemList NewListItem = new ShoppingItemList();
 
             NewListItem.ShoppingItemID = NeedItem.ShoppingItemID;
-          
+
             ///Todo
             ///Need to link store to item
 
@@ -115,7 +117,7 @@ namespace HomeAppsBlazerServer.Servcies
 
         public async Task<List<ShoppingStore>> GetShoppingStoresAsync()
         {
-            var resutls = await myDbContext.ShoppingStores.ToListAsync();
+            var resutls = await myDbContext.ShoppingStores.Where(mm => mm.IsDeleted == false).ToListAsync();
             return resutls;
         }
 
@@ -125,7 +127,9 @@ namespace HomeAppsBlazerServer.Servcies
 
             if (shoppingstore != null)
             {
-                myDbContext.ShoppingStores.Remove(shoppingstore);
+                //myDbContext.ShoppingStores.Remove(shoppingstore);
+                shoppingstore.IsDeleted = true;
+
                 try
                 {
                     await myDbContext.SaveChangesAsync();
@@ -157,7 +161,7 @@ namespace HomeAppsBlazerServer.Servcies
         #region Need List
 
         public async Task AddItemToList(int id)
-        { 
+        {
 
             if (myDbContext.ShoppingItemList.FirstOrDefault(mm => mm.ShoppingItemID.Equals(id)) != null)
             {
@@ -168,7 +172,7 @@ namespace HomeAppsBlazerServer.Servcies
 
             shoppingItemList.ShoppingItemID = id;
             shoppingItemList.NeedDate = DateTime.Now;
-            
+
             myDbContext.ShoppingItemList.Add(shoppingItemList);
 
             try
@@ -180,16 +184,50 @@ namespace HomeAppsBlazerServer.Servcies
 
                 await Console.Out.WriteLineAsync(ex.Message);
             }
-          
+
         }
 
 
-        public async Task<List<ShoppingItemList>> GetAllNeedItemsAsync()
+        public async Task<List<ShoppingItemResult>> GetAllNeedItemsAsync()
         {
-            var resutls = await myDbContext.ShoppingItemList.Where(mm => mm.GotItem.Equals(false) 
-                                && (mm.NeedDate == null && mm.NeedDate <= DateTime.Now)).ToListAsync();
-                        
-            return resutls;
+            List<ShoppingItemResult> results = new();
+
+            try
+            {
+                //mm = ShoppingItemList in lambda
+                results = await myDbContext.ShoppingItemList
+               .Where(mm => (mm.GotItem == false || mm.GotItem == null)
+                      && (mm.NeedDate == null || mm.NeedDate <= DateTime.Today))
+               .Join(myDbContext.ShoppingItems, mm => mm.ShoppingItemID, si => si.ShoppingItemID, (mm, si) => new { mm, si })
+               .GroupJoin(myDbContext.ShoppingStores,
+                          mmSi => mmSi.mm.ShoppingStoreID,
+                          ss => ss.ShoppingStoreID,
+                          (mmSi, storeGroup) => new { mmSi, storeGroup })
+               .SelectMany(
+                   x => x.storeGroup.DefaultIfEmpty(),
+                   (x, ss) => new ShoppingItemResult
+                   {
+                       ShoppingItemListID = x.mmSi.mm.ShoppingItemListID,
+                       ItemName = x.mmSi.si.ItemName,
+                       ShoppingStore = ss, // Assuming ShoppingStore is of type ShoppingStore
+                       NumberOfItems = x.mmSi.mm.NumberOfItems
+                   }
+               )
+               .ToListAsync();
+
+
+            }
+            catch (Exception ex)
+            {
+                await Console.Out.WriteLineAsync(ex.Message);
+            }
+
+            return results;
+        }
+
+        public async Task GotItem(int id)
+        {
+
         }
 
         #endregion End Need List

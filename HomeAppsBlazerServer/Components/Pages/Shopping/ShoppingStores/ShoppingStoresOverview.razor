@@ -6,11 +6,11 @@
 @* @rendermode InteractiveServer *@
 
 @* jackes up the view of the table *@
-@rendermode @(new InteractiveServerRenderMode(prerender: false)) 
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 
 @* Loads as it as it download it. *@
-@attribute [StreamRendering]
+@* @attribute [StreamRendering] *@
 
 @inject IShoppingServices ShoppingServices
 @inject NavigationManager NavigationManger
@@ -28,10 +28,10 @@ else
 {
     <table class="table">
         <thead>
-            <th>Store Name</th>
-            <th>Address</th>
-            <th>Deleted</th>
-            <th>Delete</th>
+        <th>Store Name</th>
+        <th>Address</th>
+        <th>Deleted</th>
+        <th>Delete</th>
         </thead>
         <tbody>
             @foreach (var store in AllShoppingStores)
@@ -41,9 +41,8 @@ else
                     <td>@store.Address</td>
                     <td>@store.IsDeleted</td>
                     <td>
-                       @*  <button class="btn btn-primary" @onclick="@(() => EditStore(store.ShoppingStoreID))" >Edit Store</button> *@
                         <button class="btn btn-primary" @onclick="@(() => DeleteStore(store.ShoppingStoreID))">Delete</button>
-                        </td>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -61,7 +60,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-   
         AllShoppingStores = await ShoppingServices.GetShoppingStoresAsync();
     }
 
@@ -73,7 +71,7 @@ else
     {
         NavigationManger.NavigateTo($"/edit-store/");
     }
-   
+
     async Task DeleteStore(int id)
     {
         //delete

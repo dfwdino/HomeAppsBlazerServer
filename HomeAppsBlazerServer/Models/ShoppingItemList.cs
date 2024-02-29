@@ -14,6 +14,8 @@ namespace HomeAppsBlazerServer.Models
         public DateTime? GotItemDate { get; set; }
         public DateTime? NeedDate { get; set; }
         public bool GotItem { get; set; }
+
+        public int? NumberOfItems { get; set; }
     }
 }
 

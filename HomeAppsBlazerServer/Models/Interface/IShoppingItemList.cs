@@ -8,5 +8,6 @@
         int ShoppingItemID { get; set; }
         int ShoppingItemListID { get; set; }
         int? ShoppingStoreID { get; set; }
+        int? NumberOfItems { get; set; }
     }
 }
