@@ -84,13 +84,24 @@ namespace HomeAppsBlazerServer.Servcies
         {
             var currentshoppingItem = await myDbContext.ShoppingItems.FirstOrDefaultAsync(mm => mm.ShoppingItemID.Equals(id));
 
+            var storeid = await myDbContext.ShoppingItemList.Where(m => m.ShoppingItemID==id).OrderByDescending(m => m.GotItemDate).Select(m => m.ShoppingStoreID).LastOrDefaultAsync();
+
             if (currentshoppingItem != null)
             {
+
+                if(currentshoppingItem.Price != shoppingItem.Price)
+                {
+                   myDbContext.PriceHistory.Add(new PriceHistory { Amount = shoppingItem.Price, ItemID = currentshoppingItem.ShoppingItemID, PriceDate = DateTime.Now, StoreID = storeid });
+                }
+
+
                 currentshoppingItem.ItemName = shoppingItem.ItemName;
                 currentshoppingItem.IsGlutenFree = shoppingItem.IsGlutenFree;
                 currentshoppingItem.FreddyDontLike = shoppingItem.FreddyDontLike;
                 currentshoppingItem.KidsDontLike = shoppingItem.KidsDontLike;
                 currentshoppingItem.ElliottDontLike = shoppingItem.ElliottDontLike;
+                currentshoppingItem.Price = shoppingItem.Price;
+
 
                 await myDbContext.SaveChangesAsync();
 
@@ -210,7 +221,8 @@ namespace HomeAppsBlazerServer.Servcies
                        ShoppingItemListID = x.mmSi.mm.ShoppingItemListID,
                        ItemName = x.mmSi.si.ItemName,
                        ShoppingStore = ss, // Assuming ShoppingStore is of type ShoppingStore
-                       NumberOfItems = x.mmSi.mm.NumberOfItems
+                       NumberOfItems = x.mmSi.mm.NumberOfItems,
+                       Price = x.mmSi.mm.Price
                    }
                )
                .ToListAsync();
@@ -232,7 +244,18 @@ namespace HomeAppsBlazerServer.Servcies
 
         #endregion End Need List
 
+        #region Price History
 
+        public async Task AddPriceToHistry(int itemid, int? storeid)
+        {
+
+        }
+        public async Task<List<ShoppingItemResult>> GetPriceHisotry(int itemid)
+        {
+            return null;
+        }
+
+        #endregion End Price History
 
 
     }

@@ -9,5 +9,6 @@
         string ItemName { get; set; }
         bool KidsDontLike { get; set; }
         int ShoppingItemID { get; set; }
+        decimal Price { get; set; }
     }
 }

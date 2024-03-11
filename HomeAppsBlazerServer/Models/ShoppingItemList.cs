@@ -16,6 +16,7 @@ namespace HomeAppsBlazerServer.Models
         public bool GotItem { get; set; }
 
         public int? NumberOfItems { get; set; }
+        public decimal? Price { get; set; }
     }
 }
 

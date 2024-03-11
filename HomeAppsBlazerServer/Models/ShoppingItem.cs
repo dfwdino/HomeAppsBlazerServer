@@ -13,6 +13,7 @@ namespace HomeAppsBlazerServer.Models
         public bool KidsDontLike { get; set; }
         public bool FreddyDontLike { get; set; }
         public bool ElliottDontLike { get; set; }
+        public decimal Price { get; set; }
 
     }
 }

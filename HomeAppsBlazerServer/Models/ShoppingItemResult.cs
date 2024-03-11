@@ -10,5 +10,6 @@ namespace HomeAppsBlazerServer.Models
         public ShoppingStore ShoppingStore { get; set; }
 
         public int? NumberOfItems { get; set; }
+        public decimal? Price { get; set;}
     }
 }

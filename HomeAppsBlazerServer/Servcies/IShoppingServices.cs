@@ -29,8 +29,14 @@ namespace HomeAppsBlazerServer.Servcies
 
         Task<List<ShoppingItemResult>> GetAllNeedItemsAsync();
 
-                #endregion End Need List
+        #endregion End Need List
 
+        #region Price History
+
+        Task AddPriceToHistry(int itemid, int? storeid);
+        Task<List<ShoppingItemResult>> GetPriceHisotry(int itemid);
+
+        #endregion End Price History
 
     }
 }

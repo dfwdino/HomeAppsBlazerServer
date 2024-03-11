@@ -1,4 +1,4 @@
-﻿@page "/edit-item"
+﻿@page "/pricehistory"
 @page "/edit-item/{Id:int}"
 
 @using HomeAppsBlazerServer.Models
@@ -84,14 +84,14 @@ else
     [Parameter]
     public int? Id { get; set; }
 
-    public ShoppingItem CurrentShoppingitems { get; set; } = new() { ItemName = string.Empty };
+    //public PriceHistory priceHistory { get; set; };
 
 
     protected override async Task OnParametersSetAsync()
     {
         if (Id is not null)
         {
-            var shoppingitems = await ShoppingServices.GetShoppingItemByIDAsync((int)(Id));
+            var shoppingitems = await ShoppingServices.GetPriceHisotry((int)(Id));
 
             if (shoppingitems is not null)
             {
@@ -108,24 +108,16 @@ else
         //delete
         await ShoppingServices.RemoveShoppingItem((int)Id);
 
-        NavigationManger.NavigateTo($"/Shoppingitemss/");
+        //NavigationManger.NavigateTo($"/Shoppingitemss/");
     }
 
     async Task HandleSubmit()
     {
-        if (Id is not null)
-        {
-            //update
-            await ShoppingServices.UpdateShoppingItem(CurrentShoppingitems, (int)Id);
-            NavigationManger.NavigateTo($"/Shoppingitems/");
-        }
-        else
-        {
+        
             //add
-            await ShoppingServices.AddShoppingItemAsyn(CurrentShoppingitems);
-            NavigationManger.NavigateTo($"/Shoppingitemss/");
-        }
-
+        await ShoppingServices.AddPriceToHistry(PriceHistory);
+        //NavigationManger.NavigateTo($"/Shoppingitemss/");
+        
        
 
     }
