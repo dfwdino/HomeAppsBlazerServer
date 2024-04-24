@@ -38,16 +38,19 @@ else
         <th>Elliott Dont Like</th>
         <th>Freddy Dont Like</th>
         <th>Kids Dont Like</th>
+        <th>Price</th>
         <th>Edit/Delete</th>
         </thead>
         <tbody>
             @foreach (var item in AllShoppingItems)
             {
                 <tr id="@item.ShoppingItemID">
-                    <td> <span class="link-primary" @onclick="@(() => EditItem(item.ShoppingItemID))"> @item.ItemName </span> - <span class="link-primary" @onclick="@(() => AddItemToList(item.ShoppingItemID))"> Need</span></td>
+                    <td> <span class="link-primary" @onclick="@(() => EditItem(item.ShoppingItemID))"> @item.ItemName </span> - 
+                                            <span class="link-primary" @onclick="@(() => AddItemToList(item.ShoppingItemID))"> Need</span></td>
                     <td>@item.ElliottDontLike</td>
                     <td>@item.FreddyDontLike</td>
                     <td>@item.KidsDontLike</td>
+                    <td @onclick="@(() => GetHistory(item.ShoppingItemID))">@item.Price</td>
                     <td>
                         @* <button class="btn btn-primary" @onclick="@(() => EditItem(item.ShoppingItemID))">Edit Item</button> *@
                         <button class="btn btn-primary" @onclick="@(() => DeleteItem(item.ShoppingItemID))">Delete</button>
@@ -86,6 +89,11 @@ else
     void EditItem(int id)
     {
         NavigationManger.NavigateTo($"/edit-item/{id}");
+    }
+
+    void GetHistory(int id)
+    {
+        var ItemPriceHistory =  ShoppingServices.GetPriceHisotry(id);
     }
 
     void AddItem()

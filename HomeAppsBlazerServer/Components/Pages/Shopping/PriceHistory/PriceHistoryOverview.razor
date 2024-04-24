@@ -1,0 +1,79 @@
+﻿@page "/pricehistory"
+@page "/pricehistoryedit-item/{Id:int}"
+
+@using HomeAppsBlazerServer.Models
+@using HomeAppsBlazerServer.Servcies
+@using Microsoft.AspNetCore.Mvc
+
+@inject IShoppingServices ShoppingServices
+@inject NavigationManager NavigationManger
+
+@rendermode InteractiveServer
+
+@layout HomeAppsBlazerServer.Components.Layout.ShoppingLayout
+
+@if (Id is null)
+{
+    <h3>Add Item</h3>
+    <div style="padding-bottom:10px" />
+}
+else
+{
+    <h3>Update @priceHistory.First().ItemName item</h3>
+}
+
+<EditForm Model="priceHistory" OnSubmit="HandleSubmit" >
+
+    <table class="table">
+
+    </table>
+
+
+</EditForm>
+
+
+
+
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+
+    public List<PriceHistory> priceHistory { get; set; }
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id is not null)
+        {
+            var PriceHistory = await ShoppingServices.GetPriceHisotry((int)(Id));
+
+            if (PriceHistory is not null)
+            {
+                priceHistory = PriceHistory;
+            }
+        }
+
+    }
+
+    [HttpPost]
+    //not working
+    async Task Deleteitems()
+    {
+        //delete
+        await ShoppingServices.RemoveShoppingItem((int)Id);
+
+        //NavigationManger.NavigateTo($"/Shoppingitemss/");
+    }
+
+    async Task HandleSubmit()
+    {
+
+        //add
+        //await ShoppingServices.AddPriceToHistry(PriceHistory);
+        //NavigationManger.NavigateTo($"/Shoppingitemss/");
+
+
+
+    }
+
+}

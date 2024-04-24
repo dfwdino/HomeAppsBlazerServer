@@ -33,8 +33,8 @@ namespace HomeAppsBlazerServer.Servcies
 
         #region Price History
 
-        Task AddPriceToHistry(int itemid, int? storeid);
-        Task<List<ShoppingItemResult>> GetPriceHisotry(int itemid);
+        Task AddPriceToHistry(int itemid, decimal price, int? storeid);
+        Task<List<PriceHistory>> GetPriceHisotry(int itemid);
 
         #endregion End Price History
 

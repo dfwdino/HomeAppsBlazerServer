@@ -1,8 +1,10 @@
 ﻿using HomeAppsBlazerServer.Components;
 using HomeAppsBlazerServer.Data;
 using HomeAppsBlazerServer.Models;
+using HomeAppsBlazerServer.Models.Interface;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.VisualBasic;
 
 namespace HomeAppsBlazerServer.Servcies
 {
@@ -57,8 +59,25 @@ namespace HomeAppsBlazerServer.Servcies
                 ListOfAllItemsOnList = myDbContext.ShoppingItemList.Where(mm => mm.GotItem.Equals(false)).Select(m => m.ShoppingItemID.ToString()).Distinct().ToList();
             }
 
-            var resutls = await myDbContext.ShoppingItems.Where(i => !ListOfAllItemsOnList.Any(e => i.ShoppingItemID.ToString().Contains(e))).ToListAsync();
-            return resutls;
+           
+            var results = await myDbContext.ShoppingItems
+                        .Where(i => !ListOfAllItemsOnList.Any(e => i.ShoppingItemID.ToString().Contains(e)))
+                        .GroupJoin(myDbContext.PriceHistory, // The table to join with
+                            item => item.ShoppingItemID, // Key from the first table
+                            price => price.ItemID, // Key from the second table
+                            (item, prices) => new { Item = item, Prices = prices }) // Result selector
+                        .SelectMany(
+                            x => x.Prices.Take(1).OrderBy(m => m.PriceDate).DefaultIfEmpty(), // This ensures that you get items even if they don't have a price
+                            (x, price) => new ShoppingItem
+                            {
+                                ItemName = x.Item.ItemName,
+                                Price = price.Amount // Use the null-conditional operator here
+                            })
+                        .ToListAsync();
+
+           
+      
+            return results;
         }
 
         public async Task RemoveShoppingItem(int id)
@@ -89,10 +108,10 @@ namespace HomeAppsBlazerServer.Servcies
             if (currentshoppingItem != null)
             {
 
-                if(currentshoppingItem.Price != shoppingItem.Price)
-                {
-                   myDbContext.PriceHistory.Add(new PriceHistory { Amount = shoppingItem.Price, ItemID = currentshoppingItem.ShoppingItemID, PriceDate = DateTime.Now, StoreID = storeid });
-                }
+                //if(currentshoppingItem.Price != shoppingItem.Price)
+                //{
+                //   myDbContext.PriceHistory.Add(new PriceHistory { Amount = shoppingItem.Price, ItemID = currentshoppingItem.ShoppingItemID, PriceDate = DateTime.Now, StoreID = storeid });
+                //}
 
 
                 currentshoppingItem.ItemName = shoppingItem.ItemName;
@@ -100,7 +119,7 @@ namespace HomeAppsBlazerServer.Servcies
                 currentshoppingItem.FreddyDontLike = shoppingItem.FreddyDontLike;
                 currentshoppingItem.KidsDontLike = shoppingItem.KidsDontLike;
                 currentshoppingItem.ElliottDontLike = shoppingItem.ElliottDontLike;
-                currentshoppingItem.Price = shoppingItem.Price;
+                //currentshoppingItem.Price = shoppingItem.Price;
 
 
                 await myDbContext.SaveChangesAsync();
@@ -246,14 +265,23 @@ namespace HomeAppsBlazerServer.Servcies
 
         #region Price History
 
-        public async Task AddPriceToHistry(int itemid, int? storeid)
+        public async Task AddPriceToHistry(int itemid, decimal price, int? storeid)
         {
-
+            myDbContext.PriceHistory.Add(new PriceHistory { ItemID = itemid, StoreID = storeid, Amount = price, PriceDate = DateAndTime.Now });
         }
-        public async Task<List<ShoppingItemResult>> GetPriceHisotry(int itemid)
+
+        public Task<List<PriceHistory>> GetPriceHisotry(int itemid)
         {
+            var testme = myDbContext.PriceHistory
+                                   .Join(myDbContext.ShoppingItems, mm => mm.ItemID, si => si.ShoppingItemID, (mm, si) => new { mm, si })
+                                   .Join(myDbContext.ShoppingStores, mm => mm.mm.StoreID, ss => ss.ShoppingStoreID, (mm, ss) => new { mm, ss });
             return null;
         }
+
+
+
+
+
 
         #endregion End Price History
 

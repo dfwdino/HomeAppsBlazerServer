@@ -7,6 +7,8 @@
         DateTime PriceDate { get; set; }
         int ItemID { get; set; }
         int? StoreID { get; set; }
+        string ItemName { get; set; }
+        string StoreName { get; set; }
     }
 
 }
