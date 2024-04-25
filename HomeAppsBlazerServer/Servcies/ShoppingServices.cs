@@ -67,10 +67,11 @@ namespace HomeAppsBlazerServer.Servcies
                             price => price.ItemID, // Key from the second table
                             (item, prices) => new { Item = item, Prices = prices }) // Result selector
                         .SelectMany(
-                            x => x.Prices.Take(1).OrderBy(m => m.PriceDate).DefaultIfEmpty(), // This ensures that you get items even if they don't have a price
+                            x => x.Prices.OrderByDescending(m => m.PriceDate).Take(1).DefaultIfEmpty(), // This ensures that you get items even if they don't have a price
                             (x, price) => new ShoppingItem
                             {
                                 ItemName = x.Item.ItemName,
+                                ShoppingItemID = x.Item.ShoppingItemID,
                                 Price = price.Amount // Use the null-conditional operator here
                             })
                         .ToListAsync();
@@ -270,12 +271,15 @@ namespace HomeAppsBlazerServer.Servcies
             myDbContext.PriceHistory.Add(new PriceHistory { ItemID = itemid, StoreID = storeid, Amount = price, PriceDate = DateAndTime.Now });
         }
 
-        public Task<List<PriceHistory>> GetPriceHisotry(int itemid)
+        public async Task<List<PriceHistory>> GetPriceHisotry(int itemid)
         {
-            var testme = myDbContext.PriceHistory
-                                   .Join(myDbContext.ShoppingItems, mm => mm.ItemID, si => si.ShoppingItemID, (mm, si) => new { mm, si })
-                                   .Join(myDbContext.ShoppingStores, mm => mm.mm.StoreID, ss => ss.ShoppingStoreID, (mm, ss) => new { mm, ss });
-            return null;
+
+
+            List<PriceHistory> itemPrice = myDbContext.PriceHistory.Where(mm => mm.ItemID ==  itemid).OrderByDescending(mm => mm.PriceDate).ToList();
+                                   ///.Join(myDbContext.ShoppingItems, mm => mm.ItemID, si => si.ShoppingItemID, (mm, si) => new { mm, si })
+                                   //.Join(myDbContext.ShoppingStores, mm => mm.mm.StoreID, ss => ss.ShoppingStoreID, (mm, ss) => new { mm, ss })
+                                   
+            return itemPrice;
         }
 
 

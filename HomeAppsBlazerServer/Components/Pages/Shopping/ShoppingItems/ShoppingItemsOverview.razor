@@ -1,14 +1,16 @@
 ﻿@page "/ShoppingItems"
 @page "/ShoppingItems/{showallitems:bool}"
 
+@using HomeAppsBlazerServer.Components.Pages.Shopping.PriceHistory
 @using HomeAppsBlazerServer.Models
+@using HomeAppsBlazerServer.Models.Interface
 @using HomeAppsBlazerServer.Servcies
 
 @*Endalbes it*@
-@* @rendermode InteractiveServer *@
+@rendermode InteractiveServer
 
 @* jackes up the view of the table *@
-@rendermode @(new InteractiveServerRenderMode(prerender: false)) 
+@* @rendermode @(new InteractiveServerRenderMode(prerender: false))  *@
 
 
 @* Loads as it as it download it. *@
@@ -50,7 +52,7 @@ else
                     <td>@item.ElliottDontLike</td>
                     <td>@item.FreddyDontLike</td>
                     <td>@item.KidsDontLike</td>
-                    <td @onclick="@(() => GetHistory(item.ShoppingItemID))">@item.Price</td>
+                    <td @onclick="@(() => ShowHistory(item.ShoppingItemID))">@item.Price</td>
                     <td>
                         @* <button class="btn btn-primary" @onclick="@(() => EditItem(item.ShoppingItemID))">Edit Item</button> *@
                         <button class="btn btn-primary" @onclick="@(() => DeleteItem(item.ShoppingItemID))">Delete</button>
@@ -62,12 +64,24 @@ else
 
     <button class="btn btn-primary" @onclick="AddItem">Add Item</button>
 
+    <PriceHistoryOverview @ref="popupRef" />
+
 }
 
 
 
 
 @code {
+
+    private PriceHistoryOverview popupRef;
+
+    private void ShowHistory(int id)
+    {
+       List<PriceHistory> ItemPriceHistory =  ShoppingServices.GetPriceHisotry(id).Result;
+
+        popupRef.Show(ItemPriceHistory);
+    }
+
     List<ShoppingItem> AllShoppingItems = new List<ShoppingItem>();
 
     [Parameter]
@@ -91,10 +105,7 @@ else
         NavigationManger.NavigateTo($"/edit-item/{id}");
     }
 
-    void GetHistory(int id)
-    {
-        var ItemPriceHistory =  ShoppingServices.GetPriceHisotry(id);
-    }
+   
 
     void AddItem()
     {     
