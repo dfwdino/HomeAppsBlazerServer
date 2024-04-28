@@ -29,7 +29,6 @@ else
     <table class="table">
         <thead>
         <th>Store Name</th>
-        <th>Address</th>
         <th>Deleted</th>
         <th>Delete</th>
         </thead>
@@ -37,9 +36,8 @@ else
             @foreach (var store in AllShoppingStores)
             {
                 <tr>
-                    <td class="link-primary" @onclick="@(() => EditStore(store.ShoppingStoreID))">@store.StoreName</td>
-                    <td>@store.Address</td>
-                    <td>@store.IsDeleted</td>
+                    <td class="link-primary" @onclick="@(() => EditStore(store.ShoppingStoreID))">@store.StoreName @(@store.Address != null ? " - " + store.Address : "")</td>
+                    <td> @(store.IsDeleted == false ? "Active" : "Hidden")</td>
                     <td>
                         <button class="btn btn-primary" @onclick="@(() => DeleteStore(store.ShoppingStoreID))">Delete</button>
                     </td>
