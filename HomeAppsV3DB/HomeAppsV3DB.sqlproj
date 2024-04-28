@@ -80,5 +80,6 @@
     <Build Include="Security\Shopping.sql" />
     <Build Include="Security\KidsArea.sql" />
     <Build Include="Security\HomeAppSettings.sql" />
+    <Build Include="Shopping\Tables\PriceHistory.sql" />
   </ItemGroup>
 </Project>
