@@ -245,7 +245,8 @@ namespace HomeAppsBlazerServer.Servcies
                        ItemName = x.mmSi.si.ItemName,
                        ShoppingStore = ss, // Assuming ShoppingStore is of type ShoppingStore
                        NumberOfItems = x.mmSi.mm.NumberOfItems,
-                       Price = x.mmSi.mm.Price
+                       ShoppingListID = x.mmSi.si.ShoppingItemID,
+                       Price = x.mmSi.si.Price
                    }
                )
                .ToListAsync();

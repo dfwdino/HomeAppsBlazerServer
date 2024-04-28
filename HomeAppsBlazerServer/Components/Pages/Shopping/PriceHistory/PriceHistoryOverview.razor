@@ -18,14 +18,38 @@
 }
 
 
-@if(priceHistory is not null)
+@if (priceHistory == null)
+{
+}
+
+else if (priceHistory.Count().Equals(0))
+{
+    <div class="toast-container p-3 @showClass" data-bs-autohide="true" data-bs-delay="5000">
+
+        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">No past prices</strong>
+                <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
+            </div>
+
+            <div class="toast-body">
+                @foreach (var itemprice in priceHistory)
+                {
+                    <div>@itemprice.PriceDate.ToShortDateString() - @itemprice.Amount - @itemprice.StoreID </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+else if(priceHistory is not null)
 {
 
 <div class="toast-container p-3 @showClass" data-bs-autohide="true" data-bs-delay="5000">
       
     <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-header">
-            <strong class="me-auto">@priceHistory.First().ItemName</strong>
+            <strong class="me-auto">@priceHistory.FirstOrDefault()?.ItemName</strong>
             <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
         </div>
 

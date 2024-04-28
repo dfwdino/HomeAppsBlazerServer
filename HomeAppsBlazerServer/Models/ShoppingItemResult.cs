@@ -11,5 +11,6 @@ namespace HomeAppsBlazerServer.Models
 
         public int? NumberOfItems { get; set; }
         public decimal? Price { get; set;}
+        public int ShoppingListID { get; set; }
     }
 }

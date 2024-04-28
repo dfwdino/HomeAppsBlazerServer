@@ -1,6 +1,7 @@
 ﻿@page "/ShoppingList"
 
 
+@using HomeAppsBlazerServer.Components.Pages.Shopping.PriceHistory
 @using HomeAppsBlazerServer.Models
 @using HomeAppsBlazerServer.Servcies
 
@@ -40,7 +41,10 @@ else
             @foreach (var item in CurrentShoppingList)
             {
                 <tr id="@item.ShoppingItemListID">
-                    <td> <span class="link-primary" @onclick="@(() => EditItem(item.ShoppingItemListID))"> @item.ItemName </span> - <span class="link-primary" @onclick="@(() => GotItem(item.ShoppingItemListID))"> Got</span> - <span>@item.NumberOfItems</span> -  <span> @item.Price</span/></td>
+                    <td> <span class="link-primary" @onclick="@(() => EditItem(item.ShoppingItemListID))"> @item.ItemName </span> 
+                                - <span class="link-primary" @onclick="@(() => GotItem(item.ShoppingItemListID))"> Got</span> 
+                                - <span>@item.NumberOfItems</span> 
+                                -  <span @onclick="@(() => ShowHistory(item.ShoppingListID))">@item.Price</span/></td> <!--Need to pass the Item ID not ItekListID-->
                     <td>@item.ShoppingStore?.StoreName</td>
                     <td>
                     </td>
@@ -51,12 +55,21 @@ else
 
 }
 
-
+  <PriceHistoryOverview @ref="popupRef" />
 
 
 @code {
     List<ShoppingItemResult> CurrentShoppingList = new List<ShoppingItemResult>();
 
+     private PriceHistoryOverview popupRef;
+
+    private void ShowHistory(int id)
+    {
+        
+       List<PriceHistory> ItemPriceHistory =  ShoppingServices.GetPriceHisotry(id).Result;
+
+        popupRef.Show(ItemPriceHistory);
+    }
 
 
     protected override async Task OnInitializedAsync()
