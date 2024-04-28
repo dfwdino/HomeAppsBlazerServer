@@ -59,7 +59,7 @@ namespace HomeAppsBlazerServer.Servcies
                 ListOfAllItemsOnList = myDbContext.ShoppingItemList.Where(mm => mm.GotItem.Equals(false)).Select(m => m.ShoppingItemID.ToString()).Distinct().ToList();
             }
 
-           
+
             var results = await myDbContext.ShoppingItems
                         .Where(i => !ListOfAllItemsOnList.Any(e => i.ShoppingItemID.ToString().Contains(e)))
                         .GroupJoin(myDbContext.PriceHistory, // The table to join with
@@ -72,12 +72,15 @@ namespace HomeAppsBlazerServer.Servcies
                             {
                                 ItemName = x.Item.ItemName,
                                 ShoppingItemID = x.Item.ShoppingItemID,
+                                KidsDontLike = x.Item.KidsDontLike,
+                                FreddyDontLike = x.Item.FreddyDontLike,
+                                ElliottDontLike = x.Item.ElliottDontLike,
                                 Price = price.Amount // Use the null-conditional operator here
                             })
                         .ToListAsync();
 
-           
-      
+
+
             return results;
         }
 
@@ -104,7 +107,7 @@ namespace HomeAppsBlazerServer.Servcies
         {
             var currentshoppingItem = await myDbContext.ShoppingItems.FirstOrDefaultAsync(mm => mm.ShoppingItemID.Equals(id));
 
-            var storeid = await myDbContext.ShoppingItemList.Where(m => m.ShoppingItemID==id).OrderByDescending(m => m.GotItemDate).Select(m => m.ShoppingStoreID).LastOrDefaultAsync();
+            var storeid = await myDbContext.ShoppingItemList.Where(m => m.ShoppingItemID == id).OrderByDescending(m => m.GotItemDate).Select(m => m.ShoppingStoreID).LastOrDefaultAsync();
 
             if (currentshoppingItem != null)
             {
@@ -275,10 +278,20 @@ namespace HomeAppsBlazerServer.Servcies
         {
 
 
-            List<PriceHistory> itemPrice = myDbContext.PriceHistory.Where(mm => mm.ItemID ==  itemid).OrderByDescending(mm => mm.PriceDate).ToList();
-                                   ///.Join(myDbContext.ShoppingItems, mm => mm.ItemID, si => si.ShoppingItemID, (mm, si) => new { mm, si })
-                                   //.Join(myDbContext.ShoppingStores, mm => mm.mm.StoreID, ss => ss.ShoppingStoreID, (mm, ss) => new { mm, ss })
-                                   
+            List<PriceHistory> itemPrice = myDbContext.PriceHistory
+                     .Where(mm => mm.ItemID == itemid)
+                     .OrderByDescending(mm => mm.PriceDate)
+                     .Join(myDbContext.ShoppingItems, mm => mm.ItemID, si => si.ShoppingItemID, (mm, si) => new PriceHistory
+                     {
+                         Amount = mm.Amount,
+                         ItemName = si.ItemName,
+                         PriceHistoryID = mm.PriceHistoryID,
+                         PriceDate = mm.PriceDate
+
+
+                     })
+                     .ToList();
+
             return itemPrice;
         }
 

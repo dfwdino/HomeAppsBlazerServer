@@ -37,11 +37,9 @@ else
     <table class="table">
         <thead>
         <th>Item Name</th>
-        <th>Elliott Dont Like</th>
-        <th>Freddy Dont Like</th>
-        <th>Kids Dont Like</th>
+        <th>Dislike</th>
         <th>Price</th>
-        <th>Edit/Delete</th>
+        <th>Delete</th>
         </thead>
         <tbody>
             @foreach (var item in AllShoppingItems)
@@ -49,9 +47,22 @@ else
                 <tr id="@item.ShoppingItemID">
                     <td> <span class="link-primary" @onclick="@(() => EditItem(item.ShoppingItemID))"> @item.ItemName </span> - 
                                             <span class="link-primary" @onclick="@(() => AddItemToList(item.ShoppingItemID))"> Need</span></td>
-                    <td>@item.ElliottDontLike</td>
-                    <td>@item.FreddyDontLike</td>
-                    <td>@item.KidsDontLike</td>
+
+                    <td>
+                        @if (item.ElliottDontLike == true)
+                        {
+                            <span class='strike'>Elliott</span>
+                        }
+                        @if (item.FreddyDontLike == true)
+                        {
+                            <span class='strike'>Freddy</span>
+                        }
+                        @if (item.KidsDontLike == true)
+                        {
+                            <span class='strike'>Kids</span>
+                        }
+                    </td>
+
                     <td @onclick="@(() => ShowHistory(item.ShoppingItemID))">@item.Price</td>
                     <td>
                         @* <button class="btn btn-primary" @onclick="@(() => EditItem(item.ShoppingItemID))">Edit Item</button> *@
@@ -127,3 +138,12 @@ else
         AllShoppingItems = await ShoppingServices.GetShoppingItemsAsync();
     }
 }
+
+
+<style>
+
+    .strike {
+        text-decoration: line-through;
+        color:red;
+    }
+</style>

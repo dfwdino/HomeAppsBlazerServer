@@ -73,6 +73,8 @@ else
 
     <div style="padding-bottom:20px"/>
 
+    <button class="btn btn-primary" @onclick="@(() => Cancel())">Cancel</button>
+
     <button type="submit" class="btn btn-primary">Submit</button>
 
     <button class="btn btn-primary" @onclick="@(() => Deleteitems())">Delete</button>
@@ -110,7 +112,15 @@ else
         //delete
         await ShoppingServices.RemoveShoppingItem((int)Id);
 
-        NavigationManger.NavigateTo($"/Shoppingitemss/");
+        NavigationManger.NavigateTo($"/ShoppingItems/");
+    }
+
+    [HttpPost]
+  
+    async Task Cancel()
+    {
+       
+        NavigationManger.NavigateTo($"/ShoppingItems/");
     }
 
     async Task HandleSubmit()
@@ -125,7 +135,7 @@ else
         {
             //add
             await ShoppingServices.AddShoppingItemAsyn(CurrentShoppingitems);
-            NavigationManger.NavigateTo($"/Shoppingitemss/");
+            NavigationManger.NavigateTo($"/ShoppingItems/");
         }
 
        

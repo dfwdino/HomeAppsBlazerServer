@@ -26,6 +26,7 @@ if (!app.Environment.IsDevelopment())
 app.UseStaticFiles();
 app.UseAntiforgery();
 
+
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode(); //Need to use the newest and coolest stuff with blazer and .net 8
 

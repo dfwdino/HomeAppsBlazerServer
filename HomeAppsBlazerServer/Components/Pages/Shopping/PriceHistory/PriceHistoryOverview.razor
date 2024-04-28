@@ -12,25 +12,6 @@
 
 @layout HomeAppsBlazerServer.Components.Layout.ShoppingLayout
 
-@if (Id is null)
-{
-    <h3>Add Item</h3>
-    <div style="padding-bottom:10px" />
-}
-else
-{
-    <h3>Update @priceHistory.First().ItemID item</h3>
-}
-
-@* <EditForm Model="priceHistory" OnSubmit="HandleSubmit" >
-
-    <table class="table">
-
-    </table>
-
-
-</EditForm> *@
-
 
 @{
     var showClass = IsVisible ? "d-block" : "d-none";
@@ -39,10 +20,12 @@ else
 
 @if(priceHistory is not null)
 {
+
 <div class="toast-container p-3 @showClass" data-bs-autohide="true" data-bs-delay="5000">
+      
     <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-header">
-            <strong class="me-auto">@HeaderText</strong>
+            <strong class="me-auto">@priceHistory.First().ItemName</strong>
             <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
         </div>
 

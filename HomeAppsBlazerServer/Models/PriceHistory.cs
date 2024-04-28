@@ -15,8 +15,9 @@ namespace HomeAppsBlazerServer.Models
         public int ItemID { get; set; }
         public int? StoreID { get; set; }
 
-        //public string? ItemName { get; set; }
-        //public string? StoreName { get; set; }
+      public string ItemName { get; set; } 
+        
+
     }
 
 }
