@@ -112,10 +112,10 @@ namespace HomeAppsBlazerServer.Servcies
             if (currentshoppingItem != null)
             {
 
-                //if(currentshoppingItem.Price != shoppingItem.Price)
-                //{
-                //   myDbContext.PriceHistory.Add(new PriceHistory { Amount = shoppingItem.Price, ItemID = currentshoppingItem.ShoppingItemID, PriceDate = DateTime.Now, StoreID = storeid });
-                //}
+                if (currentshoppingItem.Price != shoppingItem.Price)
+                {
+                    myDbContext.PriceHistory.Add(new PriceHistory { Amount = shoppingItem.Price, ItemID = currentshoppingItem.ShoppingItemID, PriceDate = DateTime.Now, StoreID = storeid });
+                }
 
 
                 currentshoppingItem.ItemName = shoppingItem.ItemName;
@@ -123,7 +123,7 @@ namespace HomeAppsBlazerServer.Servcies
                 currentshoppingItem.FreddyDontLike = shoppingItem.FreddyDontLike;
                 currentshoppingItem.KidsDontLike = shoppingItem.KidsDontLike;
                 currentshoppingItem.ElliottDontLike = shoppingItem.ElliottDontLike;
-                //currentshoppingItem.Price = shoppingItem.Price;
+                currentshoppingItem.Price = shoppingItem.Price;
 
 
                 await myDbContext.SaveChangesAsync();
@@ -246,7 +246,9 @@ namespace HomeAppsBlazerServer.Servcies
                        ShoppingStore = ss, // Assuming ShoppingStore is of type ShoppingStore
                        NumberOfItems = x.mmSi.mm.NumberOfItems,
                        ShoppingListID = x.mmSi.si.ShoppingItemID,
-                       Price = x.mmSi.si.Price
+                       Price = x.mmSi.si.Price,
+                       ItemID = x.mmSi.si.ShoppingItemID
+                       
                    }
                )
                .ToListAsync();
