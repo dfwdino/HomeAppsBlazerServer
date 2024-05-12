@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using HomeAppsBlazerServer.Models.Interface;
+﻿using HomeAppsBlazerServer.Models.Interface;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HomeAppsBlazerServer.Models
 {
@@ -16,7 +16,7 @@ namespace HomeAppsBlazerServer.Models
         public bool GotItem { get; set; }
 
         public int? NumberOfItems { get; set; }
-        public decimal? Price { get; set; }
+        //public decimal? Price { get; set; }
     }
 }
 

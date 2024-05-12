@@ -1,9 +1,7 @@
 ﻿using HomeAppsBlazerServer.Components;
 using HomeAppsBlazerServer.Data;
 using HomeAppsBlazerServer.Models;
-using HomeAppsBlazerServer.Models.Interface;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.VisualBasic;
 
 namespace HomeAppsBlazerServer.Servcies
@@ -197,10 +195,10 @@ namespace HomeAppsBlazerServer.Servcies
         public async Task AddItemToList(int id)
         {
 
-            if (myDbContext.ShoppingItemList.FirstOrDefault(mm => mm.ShoppingItemID.Equals(id)) != null)
-            {
-                return;
-            }
+            //if (myDbContext.ShoppingItemList.FirstOrDefault(mm => mm.ShoppingItemID.Equals(id)) == null)
+            //{
+            //    return;
+            //}
 
             ShoppingItemList shoppingItemList = new ShoppingItemList();
 
@@ -248,7 +246,7 @@ namespace HomeAppsBlazerServer.Servcies
                        ShoppingListID = x.mmSi.si.ShoppingItemID,
                        Price = x.mmSi.si.Price,
                        ItemID = x.mmSi.si.ShoppingItemID
-                       
+
                    }
                )
                .ToListAsync();
@@ -265,6 +263,14 @@ namespace HomeAppsBlazerServer.Servcies
 
         public async Task GotItem(int id)
         {
+
+            ShoppingItemList currentitem = myDbContext.ShoppingItemList.FirstOrDefault(mm => mm.ShoppingItemListID.Equals(id));
+
+            currentitem.GotItem = true;
+            currentitem.GotItemDate = DateTime.Now;
+
+            await myDbContext.SaveChangesAsync();
+
 
         }
 

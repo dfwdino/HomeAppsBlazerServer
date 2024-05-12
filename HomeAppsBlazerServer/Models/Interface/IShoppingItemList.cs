@@ -10,7 +10,7 @@
 
         // Store-related details
         int? ShoppingStoreID { get; set; }
-        decimal? Price { get; set; }
+        //decimal? Price { get; set; }
 
         // Quantity information
         int? NumberOfItems { get; set; }

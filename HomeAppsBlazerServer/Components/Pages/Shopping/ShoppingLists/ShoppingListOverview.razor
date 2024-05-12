@@ -41,13 +41,11 @@ else
             @foreach (var item in CurrentShoppingList)
             {
                 <tr id="@item.ShoppingItemListID">
-                    <td> <span class="link-primary" @onclick="@(() => EditItem(item.ItemID))"> @item.ItemName </span> 
-                                - <span class="link-primary" @onclick="@(() => GotItem(item.ShoppingItemListID))"> Got</span> 
+                    <td> <span class="link-primary" @onclick="@(() => GotItem(item.ShoppingItemListID))"> @item.ItemName </span> 
                                 - <span>@item.NumberOfItems</span> 
                                 -  <span @onclick="@(() => ShowHistory(item.ShoppingListID))">@item.Price</span/></td> <!--Need to pass the Item ID not ItekListID-->
                     <td>@item.ShoppingStore?.StoreName</td>
-                    <td>
-                    </td>
+                    <td><span class="link-primary" @onclick="@(() => EditItem(item.ItemID))"> Edit </span> </td>
                 </tr>
             }
         </tbody>
@@ -91,9 +89,9 @@ else
 
     async Task GotItem(int id)
     {
-        await ShoppingServices.AddItemToList((int)id);
+        await ShoppingServices.GotItem((int)id);
         CurrentShoppingList.Remove(CurrentShoppingList.First(m => m.ShoppingItemListID == id));
-        await JsRuntime.InvokeVoidAsync("alert", "Item Added");
+        //await JsRuntime.InvokeVoidAsync("alert", "Item Added");
 
     }
 

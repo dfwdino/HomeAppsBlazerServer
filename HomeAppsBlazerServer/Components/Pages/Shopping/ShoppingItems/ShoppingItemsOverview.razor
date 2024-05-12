@@ -23,8 +23,20 @@
 
 @layout HomeAppsBlazerServer.Components.Layout.ShoppingLayout
 
-<PageTitle>Shopping Items</PageTitle>
-<h3>Shopping Items</h3>
+@if (_showallitems == false)
+{
+    <PageTitle>Shopping Items</PageTitle>
+    <h3>Not on List Items</h3>
+
+    <span class="link-primary" @onclick="@(() => GetShoppingItems(@_showallitems))">Show All</span>
+}
+else
+{
+    <PageTitle>Shopping Items</PageTitle>
+    <h3>All Items</h3>
+
+    <span class="link-primary" @onclick="@(() => GetShoppingItems(@_showallitems))">Show Not on List</span>
+}
 
 @if (AllShoppingItems.Count.Equals(0))
 {
@@ -32,7 +44,6 @@
 }
 else
 {
-    <span class="link-primary" @onclick="@(() => GetShoppingItems(true))">Show All</span>
 
     <table class="table">
         <thead>
@@ -45,8 +56,10 @@ else
             @foreach (var item in AllShoppingItems)
             {
                 <tr id="@item.ShoppingItemID">
-                    <td> <span class="link-primary" @onclick="@(() => EditItem(item.ShoppingItemID))"> @item.ItemName </span> - 
-                                            <span class="link-primary" @onclick="@(() => AddItemToList(item.ShoppingItemID))"> Need</span></td>
+                    <td>
+                        <span class="link-primary" @onclick="@(() => EditItem(item.ShoppingItemID))"> @item.ItemName </span> -
+                        <span class="link-primary" @onclick="@(() => AddItemToList(item.ShoppingItemID))"> Need</span>
+                    </td>
 
                     <td>
                         @if (item.ElliottDontLike == true)
@@ -67,7 +80,7 @@ else
                     <td>
                         @* <button class="btn btn-primary" @onclick="@(() => EditItem(item.ShoppingItemID))">Edit Item</button> *@
                         <button class="btn btn-primary" @onclick="@(() => DeleteItem(item.ShoppingItemID))">Delete</button>
-                        </td>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -86,29 +99,33 @@ else
 
     private PriceHistoryOverview popupRef;
 
-    private void ShowHistory(int id)
-    {
-       List<PriceHistory> ItemPriceHistory =  ShoppingServices.GetPriceHisotry(id).Result;
-
-        popupRef.Show(ItemPriceHistory);
-    }
-
     List<ShoppingItem> AllShoppingItems = new List<ShoppingItem>();
+    private bool _showallitems = false;
 
     [Parameter]
     public bool showallitems { get; set; } = false;
 
+    private void ShowHistory(int id)
+    {
+        List<PriceHistory> ItemPriceHistory = ShoppingServices.GetPriceHisotry(id).Result;
+
+        popupRef.Show(ItemPriceHistory);
+    }
+
+
     protected override async Task OnInitializedAsync()
     {
-       
+
         await GetShoppingItems(showallitems);
-       
+
     }
 
 
     async Task GetShoppingItems(bool showallitems = false)
-    {
+    {   
         AllShoppingItems = await ShoppingServices.GetShoppingItemsAsync(showallitems);
+
+        _showallitems = !showallitems;
     }
 
     void EditItem(int id)
@@ -116,15 +133,15 @@ else
         NavigationManger.NavigateTo($"/edit-item/{id}");
     }
 
-   
+
 
     void AddItem()
-    {     
+    {
         NavigationManger.NavigateTo($"/edit-item/");
     }
-   
+
     async Task AddItemToList(int id)
-    {   
+    {
         await ShoppingServices.AddItemToList((int)id);
         AllShoppingItems.Remove(AllShoppingItems.First(m => m.ShoppingItemID == id));
         await JsRuntime.InvokeVoidAsync("alert", "Item Added");
@@ -133,7 +150,7 @@ else
 
     async Task DeleteItem(int id)
     {
-    
+
         await ShoppingServices.RemoveShoppingItem((int)id);
         AllShoppingItems = await ShoppingServices.GetShoppingItemsAsync();
     }
@@ -144,6 +161,6 @@ else
 
     .strike {
         text-decoration: line-through;
-        color:red;
+        color: red;
     }
 </style>

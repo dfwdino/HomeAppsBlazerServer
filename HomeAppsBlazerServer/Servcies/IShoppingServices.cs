@@ -27,6 +27,8 @@ namespace HomeAppsBlazerServer.Servcies
         #region Need List
         Task AddItemToList(int id);
 
+        Task GotItem(int id);
+
         Task<List<ShoppingItemResult>> GetAllNeedItemsAsync();
 
         #endregion End Need List
