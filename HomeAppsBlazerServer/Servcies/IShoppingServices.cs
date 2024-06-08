@@ -6,7 +6,7 @@ namespace HomeAppsBlazerServer.Servcies
     {
 
         #region Store
-        Task<List<ShoppingStore>> GetShoppingStoresAsync();
+        Task<List<ShoppingStore>> GetShoppingStoresAsync(string filter = "");
         Task<ShoppingStore> GetShoppingStoreByIDAsync(int id);
         Task AddShoppingStoreAsyn(ShoppingStore shoppingStore);
         Task RemoveShoppingStore(int id);

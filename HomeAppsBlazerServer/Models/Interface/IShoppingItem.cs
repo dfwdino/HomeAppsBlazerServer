@@ -10,5 +10,7 @@
         bool KidsDontLike { get; set; }
         int ShoppingItemID { get; set; }
         decimal? Price { get; set; }
+
+        int? StoreID { get; set; }
     }
 }

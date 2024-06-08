@@ -2,7 +2,6 @@ using HomeAppsBlazerServer.Components;
 using HomeAppsBlazerServer.Data;
 using HomeAppsBlazerServer.Servcies;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,9 +9,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents(); //Need to use the newest and coolest stuff with blazer and .net 8
 
-builder.Services.AddDbContext<MyDbContext>(options => 
+builder.Services.AddBlazorBootstrap();
+
+builder.Services.AddDbContext<MyDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-        builder.Services.AddScoped<IShoppingServices, ShoppingServices>();
+
+builder.Services.AddScoped<IShoppingServices, ShoppingServices>();
 
 
 var app = builder.Build();

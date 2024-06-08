@@ -2,6 +2,7 @@
 using HomeAppsBlazerServer.Data;
 using HomeAppsBlazerServer.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualBasic;
 
 namespace HomeAppsBlazerServer.Servcies
@@ -147,9 +148,17 @@ namespace HomeAppsBlazerServer.Servcies
             return shoppingstore;
         }
 
-        public async Task<List<ShoppingStore>> GetShoppingStoresAsync()
+        public async Task<List<ShoppingStore>> GetShoppingStoresAsync(string filter = "")
         {
-            var resutls = await myDbContext.ShoppingStores.Where(mm => mm.IsDeleted == false).ToListAsync();
+            var storequery = myDbContext.ShoppingStores.Where(mm => mm.IsDeleted == false).AsQueryable();
+
+            if (!filter.IsNullOrEmpty())
+            {
+                storequery = storequery.Where(mm => mm.StoreName.Contains(filter));
+            }
+
+            List<ShoppingStore> resutls = await storequery.ToListAsync();
+
             return resutls;
         }
 
