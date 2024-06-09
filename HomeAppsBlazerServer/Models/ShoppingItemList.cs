@@ -8,15 +8,20 @@ namespace HomeAppsBlazerServer.Models
 
     public class ShoppingItemList : IShoppingItemList
     {
-        public int ShoppingItemListID { get; set; }
-        public int ShoppingItemID { get; set; }
+        public int ShoppingListItemID { get; set; }
+
+        public IShoppingItem ShoppingItem { get; set; }
+
+        public IShoppingStore ShoppingStore { get; set; }
+
         public int? ShoppingStoreID { get; set; }
         public DateTime? GotItemDate { get; set; }
         public DateTime? NeedDate { get; set; }
         public bool GotItem { get; set; }
 
         public int? NumberOfItems { get; set; }
-        //public decimal? Price { get; set; }
+        public decimal? Price { get; set; }
+
     }
 }
 

@@ -3,7 +3,9 @@
     public interface IShoppingItemList
     {
         // Item details
-        int ShoppingItemID { get; set; }
+        IShoppingItem ShoppingItem { get; set; }
+        int ShoppingListItemID { get; set; }
+        IShoppingStore ShoppingStore { get; set; }
         bool GotItem { get; set; }
         DateTime? GotItemDate { get; set; }
         DateTime? NeedDate { get; set; }
@@ -14,6 +16,9 @@
 
         // Quantity information
         int? NumberOfItems { get; set; }
+
+        decimal? Price { get; set; }
+
     }
 
 }

@@ -239,7 +239,7 @@ namespace HomeAppsBlazerServer.Servcies
                 results = await myDbContext.ShoppingItemList
                .Where(mm => (mm.GotItem == false || mm.GotItem == null)
                       && (mm.NeedDate == null || mm.NeedDate <= DateTime.Today))
-               .Join(myDbContext.ShoppingItems, mm => mm.ShoppingItemID, si => si.ShoppingItemID, (mm, si) => new { mm, si })
+               .Join(myDbContext.ShoppingItems, mm => mm.ShoppingItem.ShoppingItemID, si => si.ShoppingItemID, (mm, si) => new { mm, si })
                .GroupJoin(myDbContext.ShoppingStores,
                           mmSi => mmSi.mm.ShoppingStoreID,
                           ss => ss.ShoppingStoreID,
@@ -248,7 +248,7 @@ namespace HomeAppsBlazerServer.Servcies
                    x => x.storeGroup.DefaultIfEmpty(),
                    (x, ss) => new ShoppingItemResult
                    {
-                       ShoppingItemListID = x.mmSi.mm.ShoppingItemListID,
+                       ShoppingItemListID = x.mmSi.mm.ShoppingListItemID,
                        ItemName = x.mmSi.si.ItemName,
                        ShoppingStore = ss, // Assuming ShoppingStore is of type ShoppingStore
                        NumberOfItems = x.mmSi.mm.NumberOfItems,
@@ -269,6 +269,62 @@ namespace HomeAppsBlazerServer.Servcies
 
             return results;
         }
+
+        public async Task<ShoppingItemList> GetListItem(int id)
+        {
+            ShoppingItemList results = new();
+
+            try
+            {
+                //mm = ShoppingItemList in lambda
+                results = await myDbContext.ShoppingItemList
+               .Where(mm => ((mm.GotItem == false || mm.GotItem == null) && mm.ShoppingListItemID == id)
+                      && (mm.NeedDate == null || mm.NeedDate <= DateTime.Today))
+               .Join(myDbContext.ShoppingItems, mm => mm.ShoppingItem.ShoppingItemID, si => si.ShoppingItemID, (mm, si) => new { mm, si })
+               .GroupJoin(myDbContext.ShoppingStores,
+                          mmSi => mmSi.mm.ShoppingStoreID,
+                          ss => ss.ShoppingStoreID,
+                          (mmSi, storeGroup) => new { mmSi, storeGroup })
+               .SelectMany(
+                   x => x.storeGroup.DefaultIfEmpty(),
+                   (x, ss) => new ShoppingItemList
+                   {
+                       ShoppingListItemID = x.mmSi.mm.ShoppingListItemID,
+                       ShoppingItem = x.mmSi.si,
+                       ShoppingStore = ss, // Assuming ShoppingStore is of type ShoppingStore
+                       NumberOfItems = x.mmSi.mm.NumberOfItems,
+                       Price = x.mmSi.si.Price
+
+
+                   }
+               )
+               .First();
+
+                return results;
+
+
+            }
+            catch (Exception ex)
+            {
+                await Console.Out.WriteLineAsync(ex.Message);
+
+            }
+
+            return null;
+
+        }
+
+
+        public async void CreateListItem(ShoppingItemList shoppingItemList)
+        {
+
+        }
+
+        public async void UpdateListItem(ShoppingItemList shoppingItemList, int id)
+        {
+
+        }
+
 
         public async Task GotItem(int id)
         {
