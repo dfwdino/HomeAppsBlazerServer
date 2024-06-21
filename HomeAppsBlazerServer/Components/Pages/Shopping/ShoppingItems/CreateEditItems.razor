@@ -144,6 +144,8 @@ else
 
     public ShoppingItem CurrentShoppingitems { get; set; } = new() { ItemName = string.Empty };
 
+
+    
     private async Task<AutoCompleteDataProviderResult<ShoppingStore>> CustomersDataProvider(BlazorBootstrap.AutoCompleteDataProviderRequest<ShoppingStore> request)
     {
         var customers = await ShoppingServices.GetShoppingStoresAsync(request.Filter.Value); // API call

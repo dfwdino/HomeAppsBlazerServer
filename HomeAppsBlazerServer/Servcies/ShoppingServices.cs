@@ -33,16 +33,20 @@ namespace HomeAppsBlazerServer.Servcies
         }
 
 
-        public async Task AddItList(int id)
+        public async Task AddToList(int id)
         {
-            var NeedItem = await myDbContext.ShoppingItems.FirstOrDefaultAsync(mm => mm.ShoppingItemID.Equals(id));
+            ShoppingItem NeedItem = await myDbContext.ShoppingItems.FirstOrDefaultAsync(mm => mm.ShoppingItemID.Equals(id));
+            ShoppingStore shoppingStore = null;
+
+            if (NeedItem != null && NeedItem.StoreID != null)
+            {
+                shoppingStore = await myDbContext.ShoppingStores.FirstOrDefaultAsync(mm => mm.ShoppingStoreID.Equals(NeedItem.StoreID));
+            }
 
             ShoppingItemList NewListItem = new ShoppingItemList();
 
             NewListItem.ShoppingItemID = NeedItem.ShoppingItemID;
-
-            ///Todo
-            ///Need to link store to item
+            NewListItem.ShoppingStoreID = shoppingStore.ShoppingStoreID;
 
             myDbContext.ShoppingItemList.Add(NewListItem);
 
@@ -106,7 +110,7 @@ namespace HomeAppsBlazerServer.Servcies
         {
             var currentshoppingItem = await myDbContext.ShoppingItems.FirstOrDefaultAsync(mm => mm.ShoppingItemID.Equals(id));
 
-            var storeid = await myDbContext.ShoppingItemList.Where(m => m.ShoppingItemID == id).OrderByDescending(m => m.GotItemDate).Select(m => m.ShoppingStoreID).LastOrDefaultAsync();
+            var storeid = await myDbContext.ShoppingItems.Where(m => m.ShoppingItemID == id).Select(m => m.StoreID).LastOrDefaultAsync();
 
             if (currentshoppingItem != null)
             {
@@ -204,13 +208,18 @@ namespace HomeAppsBlazerServer.Servcies
         public async Task AddItemToList(int id)
         {
 
-            //if (myDbContext.ShoppingItemList.FirstOrDefault(mm => mm.ShoppingItemID.Equals(id)) == null)
-            //{
-            //    return;
-            //}
+            bool FoundItemOnList = myDbContext.ShoppingItemList.Any(mm => mm.GotItem.Equals(false));
+
+            if (FoundItemOnList)
+            {
+                await Console.Out.WriteLineAsync($"Found Item {id} in the list. Add adding again.");
+                return;
+            }
+
 
             ShoppingItemList shoppingItemList = new ShoppingItemList();
 
+            //I think this will error out b/c the object is not coreated yet. 
             shoppingItemList.ShoppingItemID = id;
             shoppingItemList.NeedDate = DateTime.Now;
 
@@ -239,7 +248,7 @@ namespace HomeAppsBlazerServer.Servcies
                 results = await myDbContext.ShoppingItemList
                .Where(mm => (mm.GotItem == false || mm.GotItem == null)
                       && (mm.NeedDate == null || mm.NeedDate <= DateTime.Today))
-               .Join(myDbContext.ShoppingItems, mm => mm.ShoppingItem.ShoppingItemID, si => si.ShoppingItemID, (mm, si) => new { mm, si })
+               .Join(myDbContext.ShoppingItems, mm => mm.ShoppingItemID, si => si.ShoppingItemID, (mm, si) => new { mm, si })
                .GroupJoin(myDbContext.ShoppingStores,
                           mmSi => mmSi.mm.ShoppingStoreID,
                           ss => ss.ShoppingStoreID,
@@ -248,7 +257,7 @@ namespace HomeAppsBlazerServer.Servcies
                    x => x.storeGroup.DefaultIfEmpty(),
                    (x, ss) => new ShoppingItemResult
                    {
-                       ShoppingItemListID = x.mmSi.mm.ShoppingListItemID,
+                       ShoppingItemListID = x.mmSi.mm.ShoppingItemListID,
                        ItemName = x.mmSi.si.ItemName,
                        ShoppingStore = ss, // Assuming ShoppingStore is of type ShoppingStore
                        NumberOfItems = x.mmSi.mm.NumberOfItems,
@@ -277,10 +286,10 @@ namespace HomeAppsBlazerServer.Servcies
             try
             {
                 //mm = ShoppingItemList in lambda
-                results = await myDbContext.ShoppingItemList
-               .Where(mm => ((mm.GotItem == false || mm.GotItem == null) && mm.ShoppingListItemID == id)
+                results = myDbContext.ShoppingItemList
+               .Where(mm => ((mm.GotItem == false || mm.GotItem == null) && mm.ShoppingItemListID == id)
                       && (mm.NeedDate == null || mm.NeedDate <= DateTime.Today))
-               .Join(myDbContext.ShoppingItems, mm => mm.ShoppingItem.ShoppingItemID, si => si.ShoppingItemID, (mm, si) => new { mm, si })
+               .Join(myDbContext.ShoppingItems, mm => mm.ShoppingItemID, si => si.ShoppingItemID, (mm, si) => new { mm, si })
                .GroupJoin(myDbContext.ShoppingStores,
                           mmSi => mmSi.mm.ShoppingStoreID,
                           ss => ss.ShoppingStoreID,
@@ -289,11 +298,11 @@ namespace HomeAppsBlazerServer.Servcies
                    x => x.storeGroup.DefaultIfEmpty(),
                    (x, ss) => new ShoppingItemList
                    {
-                       ShoppingListItemID = x.mmSi.mm.ShoppingListItemID,
-                       ShoppingItem = x.mmSi.si,
-                       ShoppingStore = ss, // Assuming ShoppingStore is of type ShoppingStore
-                       NumberOfItems = x.mmSi.mm.NumberOfItems,
-                       Price = x.mmSi.si.Price
+                       ShoppingItemListID = x.mmSi.mm.ShoppingItemListID,
+                       ShoppingItemID = x.mmSi.si.ShoppingItemID,
+                       ShoppingStoreID = ss.ShoppingStoreID, // Assuming ShoppingStore is of type ShoppingStore
+                       NumberOfItems = x.mmSi.mm.NumberOfItems//,
+                       //Price = x.mmSi.si.Price
 
 
                    }

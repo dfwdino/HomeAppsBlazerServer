@@ -1,4 +1,5 @@
 ﻿using HomeAppsBlazerServer.Models.Interface;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HomeAppsBlazerServer.Models
@@ -8,11 +9,10 @@ namespace HomeAppsBlazerServer.Models
 
     public class ShoppingItemList : IShoppingItemList
     {
-        public int ShoppingListItemID { get; set; }
+        [Key]
+        public int ShoppingItemListID { get; set; }
 
-        public IShoppingItem ShoppingItem { get; set; }
-
-        public IShoppingStore ShoppingStore { get; set; }
+        public int ShoppingItemID { get; set; }
 
         public int? ShoppingStoreID { get; set; }
         public DateTime? GotItemDate { get; set; }
@@ -20,7 +20,7 @@ namespace HomeAppsBlazerServer.Models
         public bool GotItem { get; set; }
 
         public int? NumberOfItems { get; set; }
-        public decimal? Price { get; set; }
+
 
     }
 }
