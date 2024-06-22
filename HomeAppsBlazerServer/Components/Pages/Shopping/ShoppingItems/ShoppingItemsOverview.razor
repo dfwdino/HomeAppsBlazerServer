@@ -38,9 +38,13 @@ else
     <span class="link-primary" @onclick="@(() => GetShoppingItems(@_showallitems))">Show Not on List</span>
 }
 
-@if (AllShoppingItems.Count.Equals(0))
+@if (AllShoppingItems is null)
 {
     <p><em>Loadding Stores....</em></p>
+}
+else if (AllShoppingItems.Count.Equals(0))
+{
+    <p><em>Did not find any items</em></p>
 }
 else
 {
@@ -99,7 +103,7 @@ else
 
     private PriceHistoryOverview popupRef;
 
-    List<ShoppingItem> AllShoppingItems = new List<ShoppingItem>();
+    List<ShoppingItem> AllShoppingItems;
     private bool _showallitems = false;
 
     [Parameter]
@@ -130,14 +134,14 @@ else
 
     void EditItem(int id)
     {
-        NavigationManger.NavigateTo($"/edit-item/{id}");
+        NavigationManger.NavigateTo($"edit-item/{id}");
     }
 
 
 
     void AddItem()
     {
-        NavigationManger.NavigateTo($"/edit-item/");
+        NavigationManger.NavigateTo($"edit-item/");
     }
 
     async Task AddItemToList(int id)

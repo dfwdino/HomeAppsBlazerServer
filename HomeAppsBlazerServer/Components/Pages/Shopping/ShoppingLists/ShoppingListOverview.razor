@@ -25,9 +25,13 @@
 <PageTitle>Shopping List</PageTitle>
 <h3>Shopping Items</h3>
 
-@if (CurrentShoppingList.Count.Equals(0))
+@if(CurrentShoppingList is null)
 {
-    <p><em>Loadding List Items....</em></p>
+     <p><em>Loadding List Items....</em></p>
+}
+else if (CurrentShoppingList.Count.Equals(0))
+{
+    <p><em>Did not find any items</em></p>
 }
 else
 {
@@ -57,7 +61,7 @@ else
 
 
 @code {
-    List<ShoppingItemResult> CurrentShoppingList = new List<ShoppingItemResult>();
+    List<ShoppingItemResult> CurrentShoppingList;
 
      private PriceHistoryOverview popupRef;
 
@@ -84,7 +88,7 @@ else
 
     void EditItem(int id)
     {
-        NavigationManger.NavigateTo($"/edit-item/{id}");
+        NavigationManger.NavigateTo($"edit-item/{id}");
     }
 
     async Task GotItem(int id)
