@@ -82,7 +82,8 @@ namespace HomeAppsBlazerServer.Servcies
                         ElliottDontLike = temp.si.ElliottDontLike,
                         FreddyDontLike = temp.si.FreddyDontLike,
                         KidsDontLike = temp.si.KidsDontLike,
-                        StoreID = ss != null ? ss.ShoppingStoreID : null
+                        StoreID = ss != null ? ss.ShoppingStoreID : null,
+                        ShoppingItemID = temp.si.ShoppingItemID
                     })
                 .ToList();
 
@@ -118,9 +119,9 @@ namespace HomeAppsBlazerServer.Servcies
         {
             var currentshoppingItem = await myDbContext.ShoppingItems.FirstOrDefaultAsync(mm => mm.ShoppingItemID.Equals(id));
 
-            var asdfasd = myDbContext.ShoppingItems.Where(m => m.ShoppingItemID == id).Select(m => m.StoreID).ToList();
+            //var asdfasd = myDbContext.ShoppingItems.Where(m => m.ShoppingItemID == id).Select(m => m.StoreID).ToList();
 
-            int? storeid = await myDbContext.ShoppingItems.Where(m => m.ShoppingItemID == id).Select(m => m.StoreID).FirstOrDefaultAsync();
+            //int? storeid = await myDbContext.ShoppingItems.Where(m => m.ShoppingItemID == id).Select(m => m.StoreID).FirstOrDefaultAsync();
 
             if (currentshoppingItem != null)
             {
@@ -129,7 +130,7 @@ namespace HomeAppsBlazerServer.Servcies
                 currentshoppingItem.FreddyDontLike = shoppingItem.FreddyDontLike;
                 currentshoppingItem.KidsDontLike = shoppingItem.KidsDontLike;
                 currentshoppingItem.ElliottDontLike = shoppingItem.ElliottDontLike;
-
+                currentshoppingItem.StoreID = shoppingItem.StoreID;
 
 
                 await myDbContext.SaveChangesAsync();
@@ -211,20 +212,24 @@ namespace HomeAppsBlazerServer.Servcies
         public async Task AddItemToList(int id)
         {
 
-            bool NotOnList = myDbContext.ShoppingItemList.Any(mm => mm.GotItem.Equals(false));
+            bool NotOnList = myDbContext.ShoppingItemList.Any(mm => mm.GotItem.Equals(false) && mm.ShoppingItemID == id);
 
-            if (!NotOnList)
+
+            if (NotOnList)
             {
                 await Console.Out.WriteLineAsync($"Found Item {id} in the list. Add adding again.");
                 return;
             }
 
+            ShoppingItem shoppingItem = myDbContext.ShoppingItems.Where(mm => mm.ShoppingItemID.Equals(id)).FirstOrDefault();
 
             ShoppingItemList shoppingItemList = new ShoppingItemList();
 
             //I think this will error out b/c the object is not coreated yet. 
             shoppingItemList.ShoppingItemID = id;
             shoppingItemList.NeedDate = DateTime.Now;
+            shoppingItemList.ShoppingStoreID = shoppingItem.StoreID;
+
 
             myDbContext.ShoppingItemList.Add(shoppingItemList);
 
@@ -245,33 +250,24 @@ namespace HomeAppsBlazerServer.Servcies
         {
             List<ShoppingItemResult> results = new();
 
+            List<ShoppingItem> shoppingItems = myDbContext.ShoppingItems.Where(mm => mm.IsDeleted == false).ToList();
+            List<ShoppingStore> shoppingStores = myDbContext.ShoppingStores.Where(mm => mm.IsDeleted == false).ToList();
+            List<ShoppingItemList> shoppingItemList = myDbContext.ShoppingItemList.Where(mm => mm.GotItem == false).ToList();
+            List<PriceHistory> priceHistory = myDbContext.PriceHistory.ToList();
+
             try
             {
-                //mm = ShoppingItemList in lambda
-                results = await myDbContext.ShoppingItemList
-               .Where(mm => (mm.GotItem == false || mm.GotItem == null)
-                      && (mm.NeedDate == null || mm.NeedDate <= DateTime.Today))
-               .Join(myDbContext.ShoppingItems, mm => mm.ShoppingItemID, si => si.ShoppingItemID, (mm, si) => new { mm, si })
-               .GroupJoin(myDbContext.ShoppingStores,
-                          mmSi => mmSi.mm.ShoppingStoreID,
-                          ss => ss.ShoppingStoreID,
-                          (mmSi, storeGroup) => new { mmSi, storeGroup })
-               .SelectMany(
-                   x => x.storeGroup.DefaultIfEmpty(),
-                   (x, ss) => new ShoppingItemResult
-                   {
-                       ShoppingItemListID = x.mmSi.mm.ShoppingItemListID,
-                       ItemName = x.mmSi.si.ItemName,
-                       ShoppingStore = ss, // Assuming ShoppingStore is of type ShoppingStore
-                       NumberOfItems = x.mmSi.mm.NumberOfItems,
-                       ShoppingListID = x.mmSi.si.ShoppingItemID,
-                       ItemID = x.mmSi.si.ShoppingItemID
-
-                   }
-               ).OrderBy(mm => mm.ItemName)
-               .ToListAsync();
-
-
+                foreach (var item in shoppingItemList)
+                {
+                    results.Add(new ShoppingItemResult
+                    {
+                        ItemID = item.ShoppingItemID,
+                        ItemName = shoppingItems.Where(mm => mm.ShoppingItemID == item.ShoppingItemID).Select(mm => mm.ItemName).First(),
+                        storename = shoppingStores.Where(mm => mm.ShoppingStoreID == item.ShoppingStoreID).Select(mm => mm.StoreName).FirstOrDefault(),
+                        Price = priceHistory.Where(mm => mm.ItemID == item.ShoppingItemID).OrderByDescending(mm => mm.ItemID).Select(mm => mm.Amount).FirstOrDefault(),
+                        ShoppingItemListID = item.ShoppingItemListID
+                    });
+                }
             }
             catch (Exception ex)
             {
@@ -279,6 +275,7 @@ namespace HomeAppsBlazerServer.Servcies
             }
 
             return results;
+
         }
 
         public async Task<ShoppingItemList> GetListItem(int id)
@@ -369,7 +366,7 @@ namespace HomeAppsBlazerServer.Servcies
                      .Join(myDbContext.ShoppingItems, mm => mm.ItemID, si => si.ShoppingItemID, (mm, si) => new PriceHistory
                      {
                          Amount = mm.Amount,
-                         ItemName = si.ItemName,
+                         //ItemName = si.ItemName,
                          PriceHistoryID = mm.PriceHistoryID,
                          PriceDate = mm.PriceDate
 

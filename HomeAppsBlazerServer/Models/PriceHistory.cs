@@ -1,5 +1,4 @@
 ﻿using HomeAppsBlazerServer.Models.Interface;
-using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -15,8 +14,6 @@ namespace HomeAppsBlazerServer.Models
         public int ItemID { get; set; }
         public int? StoreID { get; set; }
 
-      public string ItemName { get; set; } 
-        
 
     }
 

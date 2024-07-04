@@ -38,7 +38,6 @@ else
     <table class="table">
         <thead>
         <th>Item Name</th>
-        <th>Store</th>
         <th>Edit/Delete</th>
         </thead>
         <tbody>
@@ -46,9 +45,21 @@ else
             {
                 <tr id="@item.ShoppingItemListID">
                     <td> <span class="link-primary" @onclick="@(() => GotItem(item.ShoppingItemListID))"> @item.ItemName </span> 
-                                - <span>@item.NumberOfItems</span> 
-                                -  <span @onclick="@(() => ShowHistory(item.ShoppingListID))">@item.Price</span/></td> <!--Need to pass the Item ID not ItekListID-->
-                    <td>@item.ShoppingStore?.StoreName</td>
+                        @if(item.NumberOfItems.HasValue)
+                        {
+                             <span> - @item.NumberOfItems</span> 
+                        }
+                        @if(item.Price.HasValue)
+                        {
+                                <span @onclick="@(() => ShowHistory(item.ShoppingListID))"> $@item.Price </span/> <!--Need to pass the Item ID not ItekListID-->
+                        }
+                        @if(item.storename != null){
+                            <span> @item.storename </span> 
+                        }
+
+                       </td>
+                   
+
                     <td><span class="link-primary" @onclick="@(() => EditItem(item.ItemID))"> Edit </span> </td>
                 </tr>
             }
