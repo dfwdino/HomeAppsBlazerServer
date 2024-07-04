@@ -55,36 +55,44 @@ namespace HomeAppsBlazerServer.Servcies
 
         public async Task<List<ShoppingItem>> GetShoppingItemsAsync(bool showallitems = false)
         {
-            IList<string> ListOfAllItemsOnList = new List<string>();
 
-            if (showallitems.Equals(false))
+            var query = myDbContext.ShoppingItems.AsQueryable();
+
+            if (!showallitems)
             {
-                ListOfAllItemsOnList = myDbContext.ShoppingItemList.Where(mm => mm.GotItem.Equals(false)).Select(m => m.ShoppingItemID.ToString()).Distinct().ToList();
+                IList<int> ListOfAllItemsOnList = new List<int>();
+
+                ListOfAllItemsOnList = myDbContext.ShoppingItemList.Where(mm => mm.GotItem.Equals(false)).Select(m => m.ShoppingItemID).ToList();
+
+                query = query.Where(si => !ListOfAllItemsOnList.Contains(si.ShoppingItemID));
             }
 
 
-            var results = await myDbContext.ShoppingItems
-                        .Where(i => !ListOfAllItemsOnList.Any(e => i.ShoppingItemID.ToString().Contains(e)))
-                        .GroupJoin(myDbContext.PriceHistory, // The table to join with
-                            item => item.ShoppingItemID, // Key from the first table
-                            price => price.ItemID, // Key from the second table
-                            (item, prices) => new { Item = item, Prices = prices }) // Result selector
-                        .SelectMany(
-                            x => x.Prices.OrderByDescending(m => m.PriceDate).Take(1).DefaultIfEmpty(), // This ensures that you get items even if they don't have a price
-                            (x, price) => new ShoppingItem
-                            {
-                                ItemName = x.Item.ItemName,
-                                ShoppingItemID = x.Item.ShoppingItemID,
-                                KidsDontLike = x.Item.KidsDontLike,
-                                FreddyDontLike = x.Item.FreddyDontLike,
-                                ElliottDontLike = x.Item.ElliottDontLike,
-                                Price = price.Amount // Use the null-conditional operator here
-                            })
-                        .ToListAsync();
+            var result = query
+                .GroupJoin(
+                    myDbContext.ShoppingStores,
+                    si => si.StoreID,
+                    ss => ss.ShoppingStoreID,
+                    (si, ss) => new { si, ss })
+                .SelectMany(
+                    temp => temp.ss.DefaultIfEmpty(),
+                    (temp, ss) => new ShoppingItem
+                    {
+                        ItemName = temp.si.ItemName,
+                        ElliottDontLike = temp.si.ElliottDontLike,
+                        FreddyDontLike = temp.si.FreddyDontLike,
+                        KidsDontLike = temp.si.KidsDontLike,
+                        StoreID = ss != null ? ss.ShoppingStoreID : null
+                    })
+                .ToList();
 
 
 
-            return results;
+
+
+
+
+            return result;
         }
 
         public async Task RemoveShoppingItem(int id)
@@ -110,23 +118,18 @@ namespace HomeAppsBlazerServer.Servcies
         {
             var currentshoppingItem = await myDbContext.ShoppingItems.FirstOrDefaultAsync(mm => mm.ShoppingItemID.Equals(id));
 
-            var storeid = await myDbContext.ShoppingItems.Where(m => m.ShoppingItemID == id).Select(m => m.StoreID).LastOrDefaultAsync();
+            var asdfasd = myDbContext.ShoppingItems.Where(m => m.ShoppingItemID == id).Select(m => m.StoreID).ToList();
+
+            int? storeid = await myDbContext.ShoppingItems.Where(m => m.ShoppingItemID == id).Select(m => m.StoreID).FirstOrDefaultAsync();
 
             if (currentshoppingItem != null)
             {
-
-                if (currentshoppingItem.Price != shoppingItem.Price)
-                {
-                    myDbContext.PriceHistory.Add(new PriceHistory { Amount = shoppingItem.Price, ItemID = currentshoppingItem.ShoppingItemID, PriceDate = DateTime.Now, StoreID = storeid });
-                }
-
-
                 currentshoppingItem.ItemName = shoppingItem.ItemName;
                 currentshoppingItem.IsGlutenFree = shoppingItem.IsGlutenFree;
                 currentshoppingItem.FreddyDontLike = shoppingItem.FreddyDontLike;
                 currentshoppingItem.KidsDontLike = shoppingItem.KidsDontLike;
                 currentshoppingItem.ElliottDontLike = shoppingItem.ElliottDontLike;
-                currentshoppingItem.Price = shoppingItem.Price;
+
 
 
                 await myDbContext.SaveChangesAsync();
@@ -208,9 +211,9 @@ namespace HomeAppsBlazerServer.Servcies
         public async Task AddItemToList(int id)
         {
 
-            bool FoundItemOnList = myDbContext.ShoppingItemList.Any(mm => mm.GotItem.Equals(false));
+            bool NotOnList = myDbContext.ShoppingItemList.Any(mm => mm.GotItem.Equals(false));
 
-            if (FoundItemOnList)
+            if (!NotOnList)
             {
                 await Console.Out.WriteLineAsync($"Found Item {id} in the list. Add adding again.");
                 return;
@@ -262,11 +265,10 @@ namespace HomeAppsBlazerServer.Servcies
                        ShoppingStore = ss, // Assuming ShoppingStore is of type ShoppingStore
                        NumberOfItems = x.mmSi.mm.NumberOfItems,
                        ShoppingListID = x.mmSi.si.ShoppingItemID,
-                       Price = x.mmSi.si.Price,
                        ItemID = x.mmSi.si.ShoppingItemID
 
                    }
-               )
+               ).OrderBy(mm => mm.ItemName)
                .ToListAsync();
 
 

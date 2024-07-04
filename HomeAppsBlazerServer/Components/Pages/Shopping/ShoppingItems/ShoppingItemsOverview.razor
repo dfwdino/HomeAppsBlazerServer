@@ -23,19 +23,31 @@
 
 @layout HomeAppsBlazerServer.Components.Layout.ShoppingLayout
 
+
+
+
+<link rel="stylesheet" type="text/css" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.0/css/jquery.dataTables.css">
+
+
+<script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.0/jquery.dataTables.min.js"></script>
+
+
 @if (_showallitems == false)
 {
     <PageTitle>Shopping Items</PageTitle>
-    <h3>Not on List Items</h3>
+     <h3>Showing All Items</h3>
 
-    <span class="link-primary" @onclick="@(() => GetShoppingItems(@_showallitems))">Show All</span>
+    
+    <span class="link-primary" @onclick="@(() => GetShoppingItems(@_showallitems))">Show Not on the List</span>
 }
 else
 {
     <PageTitle>Shopping Items</PageTitle>
-    <h3>All Items</h3>
+    <h3>Showing Non-List Items</h3>
+    <span class="link-primary" @onclick="@(() => GetShoppingItems(@_showallitems))">Show All</span>
 
-    <span class="link-primary" @onclick="@(() => GetShoppingItems(@_showallitems))">Show Not on List</span>
+   
 }
 
 @if (AllShoppingItems is null)
@@ -49,9 +61,13 @@ else if (AllShoppingItems.Count.Equals(0))
 else
 {
 
-    <table class="table">
+
+
+
+
+    <table id="shoppingitems" class="display" style="width:100%">
         <thead>
-        <th>Item Name</th>
+        <th scope="col">Item Name</th>
         <th>Dislike</th>
         <th>Price</th>
         <th>Delete</th>
@@ -79,8 +95,7 @@ else
                             <span class='strike'>Kids</span>
                         }
                     </td>
-
-                    <td @onclick="@(() => ShowHistory(item.ShoppingItemID))">@item.Price</td>
+                    <td></td>
                     <td>
                         @* <button class="btn btn-primary" @onclick="@(() => EditItem(item.ShoppingItemID))">Edit Item</button> *@
                         <button class="btn btn-primary" @onclick="@(() => DeleteItem(item.ShoppingItemID))">Delete</button>
@@ -120,14 +135,14 @@ else
     protected override async Task OnInitializedAsync()
     {
 
-        await GetShoppingItems(showallitems);
+        await GetShoppingItems(_showallitems);
 
     }
 
 
     async Task GetShoppingItems(bool showallitems = false)
     {   
-        AllShoppingItems = await ShoppingServices.GetShoppingItemsAsync(showallitems);
+        AllShoppingItems = await ShoppingServices.GetShoppingItemsAsync(_showallitems);
 
         _showallitems = !showallitems;
     }
@@ -168,3 +183,13 @@ else
         color: red;
     }
 </style>
+
+<script>
+    //Not working with sort.. it goes back to only show non-list items.
+    // $(document).ready(function () {
+    //     $('#shoppingitems').DataTable();
+    // });
+
+    
+
+</script>
