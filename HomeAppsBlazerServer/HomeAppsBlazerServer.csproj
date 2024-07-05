@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="Components\Pages\Shopping\ShoppingLists\ShoppingLIstItem.razor" />
+    <Content Remove="Components\Pages\Shopping\ShoppingLists\CreateEditListItem_.razor" />
   </ItemGroup>
 
   <ItemGroup>

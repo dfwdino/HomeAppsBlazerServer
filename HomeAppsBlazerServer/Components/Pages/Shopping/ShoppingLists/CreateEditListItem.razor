@@ -1,5 +1,5 @@
-﻿@page "/ListItem"
-@page "/ListItem/{Id:int}"
+﻿@page "/CreateEditListItem"
+@page "/CreateEditListItem/{Id:int}"
 
 @using HomeAppsBlazerServer.Models
 @using HomeAppsBlazerServer.Servcies
@@ -35,7 +35,7 @@
 }
 else
 {
-    <h3>Update @CurrentShoppingitems.ShoppingItem.ItemName item</h3>
+    <h3>Update @CurrentShoppingitems.ItemName item</h3>
 }
 
 
@@ -48,7 +48,7 @@ else
             <label for="itemsname">Items Name:</label>
         </div>
         <div class="col-lg-2">
-            <InputText id="itemsname" @bind-Value="@CurrentShoppingitems.ShoppingItem.ItemName" />
+            <InputText id="itemsname" @bind-Value="@CurrentShoppingitems.ItemName" />
         </div>
     </div>
 
@@ -72,9 +72,10 @@ else
         <div class="col-lg-2">
             <label for="price">Price:</label>
             <div class="col-lg-2">
-             @*    <InputNumber id="price" @bind-Value="@CurrentShoppingitems.Price" type='number' step='0.01' /> *@
+                @*    <InputNumber id="price" @bind-Value="@CurrentShoppingitems.Price" type='number' step='0.01' /> *@
             </div>
-
+            </div>
+    </div>
 
 
             <div class="row">
@@ -82,7 +83,7 @@ else
                     <label style="width:130px" for="IsGlutenFree">Gluten Free:</label>
                 </div>
                 <div class="col-lg-2">
-                    <InputCheckbox id="IsGlutenFree" @bind-Value="@CurrentShoppingitems.ShoppingItem.IsGlutenFree" />
+                    @* <InputCheckbox id="IsGlutenFree" @bind-Value="@CurrentShoppingitems.IsGlutenFree" /> *@
                 </div>
             </div>
 
@@ -93,18 +94,17 @@ else
                     <label style="width:130px" for="KidsDontLike">Kids Dont Like:</label>
                 </div>
                 <div class="col-lg-3">
-                    <InputCheckbox id="KidsDontLike" @bind-Value="@CurrentShoppingitems.ShoppingItem.KidsDontLike" />
+                    @* <InputCheckbox id="KidsDontLike" @bind-Value="@CurrentShoppingitems.KidsDontLike" /> *@
                 </div>
             </div>
-        </div>
-    </div>
+
 
     <div class="row">
         <div class="col-lg-2">
             <label style="width:130px" for="FreddyDontLike">Freddy Dont Like:</label>
         </div>
         <div class="col-lg-2">
-            <InputCheckbox id="FreddyDontLike" @bind-Value="@CurrentShoppingitems.ShoppingItem.FreddyDontLike" />
+            @* <InputCheckbox id="FreddyDontLike" @bind-Value="@CurrentShoppingitems.FreddyDontLike" /> *@
         </div>
     </div>
 
@@ -115,7 +115,7 @@ else
             <label style="width:130px" for="ElliottDontLike">Elliott Dont Like:</label>
         </div>
         <div class="col-lg-2">
-            <InputCheckbox id="ElliottDontLike" @bind-Value="@CurrentShoppingitems.ShoppingItem.ElliottDontLike" />
+            @* <InputCheckbox id="ElliottDontLike" @bind-Value="@CurrentShoppingitems.ElliottDontLike" /> *@
         </div>
     </div>
 
@@ -142,12 +142,14 @@ else
 
     public string StoreName;
 
-    public ShoppingLIstItem(ShoppingItemList currentShoppingitems)
+    public ShoppingListItem CurrentShoppingitems { get; set; } = new();
+
+    public void ShoppingLIstItem(ShoppingListItem currentShoppingitems)
     {
         CurrentShoppingitems = currentShoppingitems;
     }
 
-    public ShoppingItemList CurrentShoppingitems { get; set; } = new();
+
 
     private async Task<AutoCompleteDataProviderResult<ShoppingStore>> CustomersDataProvider(BlazorBootstrap.AutoCompleteDataProviderRequest<ShoppingStore> request)
     {
@@ -161,8 +163,8 @@ else
 
     private void OnAutoCompleteChanged(ShoppingStore customer)
     {
-        CurrentShoppingitems.ShoppingStore.ShoppingStoreID = customer.ShoppingStoreID;
-        //Console.WriteLine($"'{customer?.StoreName}' selected.");
+        CurrentShoppingitems.ShoppingStoreID = customer.ShoppingStoreID;
+        Console.WriteLine($"'{customer?.StoreName}' selected.");
     }
 
 
@@ -174,9 +176,9 @@ else
 
             if (shoppingitems is not null)
             {
-                CurrentShoppingitems = shoppingitems;
+                //CurrentShoppingitems = shoppingitems;
             }
-            ///Need to fix when null
+       
         }
 
     }
@@ -204,13 +206,13 @@ else
         if (Id is not null)
         {
             //update
-            ShoppingServices.CreateListItem(CurrentShoppingitems);
+            //ShoppingServices.CreateListItem(CurrentShoppingitems);
             NavigationManager.NavigateTo($"/Shoppingitems/");
         }
         else
         {
             //add
-            ShoppingServices.UpdateListItem(CurrentShoppingitems, (int)Id);
+            //ShoppingServices.UpdateListItem(CurrentShoppingitems, (int)Id);
             NavigationManager.NavigateTo($"/ShoppingItems/");
         }
 
