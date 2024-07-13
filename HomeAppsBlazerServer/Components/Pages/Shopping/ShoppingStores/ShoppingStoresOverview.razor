@@ -20,9 +20,13 @@
 <PageTitle>Shopping Stores</PageTitle>
 <h3>Shopping Stores</h3>
 
-@if (AllShoppingStores.Count.Equals(0))
+@if (AllShoppingStores is null) 
+{    
+    <p><em>Loading stores....</em></p>
+}
+else if (AllShoppingStores.Count.Equals(0))
 {
-    <p><em>Loadding Stores....</em></p>
+    <p><em>No stores found....</em></p>
 }
 else
 {
@@ -54,7 +58,7 @@ else
 
 
 @code {
-    List<ShoppingStore> AllShoppingStores = new List<ShoppingStore>();
+    List<ShoppingStore> AllShoppingStores;
 
     protected override async Task OnInitializedAsync()
     {
