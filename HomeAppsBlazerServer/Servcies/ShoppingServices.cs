@@ -23,7 +23,15 @@ namespace HomeAppsBlazerServer.Servcies
             shoppingItem.ItemName = shoppingItem.ItemName.ToTileCase();
 
             myDbContext.ShoppingItems.Add(shoppingItem);
-            await myDbContext.SaveChangesAsync();
+            try
+            {
+                await myDbContext.SaveChangesAsync();
+            }
+            catch (Exception ex) {
+                Console.WriteLine( ex.Message);
+            }
+
+            
         }
 
         public async Task<ShoppingItem> GetShoppingItemByIDAsync(int id)
@@ -145,7 +153,17 @@ namespace HomeAppsBlazerServer.Servcies
         {
             shoppingStore.StoreName = shoppingStore.StoreName.ToTileCase();
             myDbContext.ShoppingStores.Add(shoppingStore);
-            await myDbContext.SaveChangesAsync();
+            try
+            {
+                await myDbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine( ex.Message);
+            }
+
+            
 
 
         }
@@ -165,7 +183,17 @@ namespace HomeAppsBlazerServer.Servcies
                 storequery = storequery.Where(mm => mm.StoreName.Contains(filter));
             }
 
-            List<ShoppingStore> resutls = await storequery.ToListAsync();
+            List<ShoppingStore> resutls = new List<ShoppingStore>();
+
+            try
+            {
+                resutls = await storequery.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex.Message);
+            }
 
             return resutls;
         }
