@@ -284,29 +284,8 @@ namespace HomeAppsBlazerServer.Servcies
 
             try
             {
-                //mm = ShoppingItemList in lambda
-                results = myDbContext.ShoppingItemList
-               .Where(mm => ((mm.GotItem == false || mm.GotItem == null) && mm.ShoppingItemListID == id)
-                      && (mm.NeedDate == null || mm.NeedDate <= DateTime.Today))
-               .Join(myDbContext.ShoppingItems, mm => mm.ShoppingItemID, si => si.ShoppingItemID, (mm, si) => new { mm, si })
-               .GroupJoin(myDbContext.ShoppingStores,
-                          mmSi => mmSi.mm.ShoppingStoreID,
-                          ss => ss.ShoppingStoreID,
-                          (mmSi, storeGroup) => new { mmSi, storeGroup })
-               .SelectMany(
-                   x => x.storeGroup.DefaultIfEmpty(),
-                   (x, ss) => new ShoppingItemList
-                   {
-                       ShoppingItemListID = x.mmSi.mm.ShoppingItemListID,
-                       ShoppingItemID = x.mmSi.si.ShoppingItemID,
-                       ShoppingStoreID = ss.ShoppingStoreID, // Assuming ShoppingStore is of type ShoppingStore
-                       NumberOfItems = x.mmSi.mm.NumberOfItems//,
-                       //Price = x.mmSi.si.Price
 
-
-                   }
-               )
-               .First();
+                results = myDbContext.ShoppingItemList.Where(mm => mm.ShoppingItemListID == id).FirstOrDefault();
 
                 return results;
 
@@ -318,7 +297,7 @@ namespace HomeAppsBlazerServer.Servcies
 
             }
 
-            return null;
+            return results;
 
         }
 

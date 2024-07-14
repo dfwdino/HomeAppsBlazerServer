@@ -168,7 +168,7 @@ else
     {
         await ShoppingServices.AddItemToList((int)id);
         AllShoppingItems.Remove(AllShoppingItems.First(m => m.ShoppingItemID == id));
-        await JsRuntime.InvokeVoidAsync("alert", "Item Added");
+        //await JsRuntime.InvokeVoidAsync("alert", "Item Added");
 
     }
 

@@ -60,7 +60,7 @@ else
                        </td>
                    
 
-                    <td><span class="link-primary" @onclick="@(() => EditItem(item.ItemID))"> Edit </span> </td>
+                    <td><span class="link-primary" @onclick="@(() => EditItem(item.ShoppingItemListID))"> Edit </span> </td>
                 </tr>
             }
         </tbody>
@@ -99,7 +99,7 @@ else
 
     void EditItem(int id)
     {
-        NavigationManger.NavigateTo($"edit-item/{id}");
+        NavigationManger.NavigateTo($"CreateEditListItem/{id}");
     }
 
     async Task GotItem(int id)
