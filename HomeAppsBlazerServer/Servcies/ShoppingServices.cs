@@ -27,11 +27,12 @@ namespace HomeAppsBlazerServer.Servcies
             {
                 await myDbContext.SaveChangesAsync();
             }
-            catch (Exception ex) {
-                Console.WriteLine( ex.Message);
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
 
-            
+
         }
 
         public async Task<ShoppingItem> GetShoppingItemByIDAsync(int id)
@@ -61,7 +62,25 @@ namespace HomeAppsBlazerServer.Servcies
 
         }
 
-        public async Task<List<ShoppingItem>> GetShoppingItemsAsync(bool showallitems = false)
+
+        public async Task<List<ShoppingItem>> GetShoppingItemsFilterAsync(string filter = "")
+        {
+
+            var query = myDbContext.ShoppingItems.AsQueryable();
+
+            if (filter.Length > 0)
+            {
+                query = query.Where(mm => mm.ItemName.Contains(filter));
+            }
+
+            // If filter is empty, return all items
+            return query.ToList();
+
+
+
+        }
+
+        public async Task<List<ShoppingItem>> GetShoppingItemsAsync(bool showallitems = false, string filter = "")
         {
 
             var query = myDbContext.ShoppingItems.AsQueryable();
@@ -74,7 +93,6 @@ namespace HomeAppsBlazerServer.Servcies
 
                 query = query.Where(si => !ListOfAllItemsOnList.Contains(si.ShoppingItemID));
             }
-
 
             var result = query
                 .GroupJoin(
@@ -160,10 +178,10 @@ namespace HomeAppsBlazerServer.Servcies
             catch (Exception ex)
             {
 
-                Console.WriteLine( ex.Message);
+                Console.WriteLine(ex.Message);
             }
 
-            
+
 
 
         }
@@ -306,16 +324,22 @@ namespace HomeAppsBlazerServer.Servcies
 
         }
 
-        public async Task<ShoppingItemList> GetListItem(int id)
+        public async Task<ListItemModel> GetListItem(int id)
         {
-            ShoppingItemList results = new();
+            ListItemModel results = new();
 
             try
             {
 
-                results = myDbContext.ShoppingItemList.Where(mm => mm.ShoppingItemListID == id).FirstOrDefault();
+                results.ShoppingItemList = myDbContext.ShoppingItemList.Where(mm => mm.ShoppingItemListID == id).FirstOrDefault();
 
-                return results;
+                if (results.ShoppingItemList != null)
+                {
+                    results.StoreName = myDbContext.ShoppingStores.Where(mm => mm.ShoppingStoreID.Equals(results.ShoppingItemList.ShoppingStoreID)).FirstOrDefault()?.StoreName;
+                    results.ItemName = myDbContext.ShoppingItems.Where(mm => mm.ShoppingItemID.Equals(results.ShoppingItemList.ShoppingItemID)).FirstOrDefault().ItemName;
+                    results.Price = myDbContext.PriceHistory.Where(mm => mm.ItemID.Equals(results.ShoppingItemList.ShoppingItemID)).OrderByDescending(mm => mm.ItemID).FirstOrDefault()?.Amount.ToString();
+                }
+
 
 
             }

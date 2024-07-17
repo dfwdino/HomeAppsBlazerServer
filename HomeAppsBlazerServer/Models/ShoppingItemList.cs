@@ -21,7 +21,10 @@ namespace HomeAppsBlazerServer.Models
 
         public int? NumberOfItems { get; set; }
 
-
     }
+
+
+
+
 }
 

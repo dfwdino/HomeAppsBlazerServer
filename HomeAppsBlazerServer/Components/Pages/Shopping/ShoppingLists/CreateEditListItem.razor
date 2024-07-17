@@ -35,7 +35,7 @@
 }
 else
 {
-    <h3>Update @CurrentShoppingitems.ShoppingItemID item</h3>
+    <h3>Update @CurrentShoppingitems.StoreName</h3>
 }
 
 
@@ -43,17 +43,25 @@ else
 
 <EditForm Model="CurrentShoppingitems" OnSubmit="HandleSubmit">
 
-    <div class="form-group">
+    @* <div class="form-group">
         <label for="shoppingItemListId">Shopping Item List ID</label>
         <NumberInput id="shoppingItemListId" @bind-Value="CurrentShoppingitems.ShoppingItemListID" class="form-control" />
-    </div>
+    </div> *@
 
     <div class="form-group">
-        <label for="shoppingItemId">Shopping Item ID</label>
-        <NumberInput id="shoppingItemId" @bind-Value="CurrentShoppingitems.ShoppingItemID" class="form-control" />
+        <label for="shoppingItemId">Item Name</label>
+       @*  <InputText id="shoppingItemId" @bind-Value="CurrentShoppingitems.ItemName" class="form-control" /> *@
+        <div class="col-lg-2">
+            <BlazorBootstrap.AutoComplete @bind-Value="ItemName"
+                                          TItem="ShoppingItem"
+                                          DataProvider="CustomersDataProvider"
+                                          PropertyName="ItemName"
+                                          Placeholder="Search a item..."
+                                          OnChanged="(ShoppingItem item) => OnAutoCompleteChanged(item)" />
+        </div>
     </div>
 
-    @* <AutoComplete Data="stores" TextField="Name" ValueField="ID" @bind-Value="CurrentShoppingitems.ShoppingStoreID.ToString()" /> *@
+    
 
 
      <div class="form-group">
@@ -68,24 +76,29 @@ else
     </div>
     </div>
 
-    <div class="form-group">
+    @* <div class="form-group">
         <label for="gotItemDate">Got Item Date</label>
         <InputDate id="gotItemDate" @bind-Value="CurrentShoppingitems.GotItemDate" class="form-control" />
     </div>
-
+ *@
     <div class="form-group">
         <label for="needDate">Need Date</label>
-        <InputDate id="needDate" @bind-Value="CurrentShoppingitems.NeedDate" class="form-control" />
+        <InputDate id="needDate" @bind-Value="CurrentShoppingitems.ShoppingItemList.NeedDate" class="form-control" />
     </div>
 
-    <div class="form-check">
+   @*  <div class="form-check">
         <InputCheckbox id="gotItem" @bind-Value="CurrentShoppingitems.GotItem" class="form-check-input" />
         <label class="form-check-label" for="gotItem">Got Item</label>
     </div>
-
+ *@
     <div class="form-group">
         <label for="numberOfItems">Number of Items</label>
-        <InputNumber id="numberOfItems" @bind-Value="CurrentShoppingitems.NumberOfItems" class="form-control" />
+        <InputNumber id="numberOfItems" @bind-Value="CurrentShoppingitems.ShoppingItemList.NumberOfItems" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="numberOfItems">Price</label>
+        <InputText id="price" @bind-Value="CurrentShoppingitems.Price" class="form-control" />
     </div>
 
     <button type="submit" class="btn btn-primary">Submit</button>
@@ -96,11 +109,12 @@ else
     [Parameter]
     public int? Id { get; set; }
 
-    public string StoreName;
+    public string StoreName,ItemName;
 
-    public ShoppingItemList CurrentShoppingitems { get; set; } = new();
 
-    public void ShoppingLIstItem(ShoppingItemList currentShoppingitems)
+    public ListItemModel CurrentShoppingitems { get; set; } = new();
+
+    public void ShoppingLIstItem(ListItemModel currentShoppingitems)
     {
         CurrentShoppingitems = currentShoppingitems;
     }
@@ -111,21 +125,32 @@ else
 
         return await Task.FromResult(new AutoCompleteDataProviderResult<ShoppingStore> { Data = customers, TotalCount = customers.Count() });
 
+    }
+
+    private async Task<AutoCompleteDataProviderResult<ShoppingItem>> CustomersDataProvider(BlazorBootstrap.AutoCompleteDataProviderRequest<ShoppingItem> request)
+    {
+        var customers = await ShoppingServices.GetShoppingItemsFilterAsync(request.Filter.Value); // API call
+
+        return await Task.FromResult(new AutoCompleteDataProviderResult<ShoppingItem> { Data = customers, TotalCount = customers.Count() });
 
     }
 
 
+    private void OnAutoCompleteChanged(ShoppingItem customer)
+    {
+        CurrentShoppingitems.ShoppingItemList.ShoppingItemID = customer.ShoppingItemID;
+        Console.WriteLine($"'{customer?.ItemName}' selected.");
+    }
+
     private void OnAutoCompleteChanged(ShoppingStore customer)
     {
-        CurrentShoppingitems.ShoppingStoreID = customer.ShoppingStoreID;
+        CurrentShoppingitems.ShoppingItemList.ShoppingStoreID = customer.ShoppingStoreID;
         Console.WriteLine($"'{customer?.StoreName}' selected.");
     }
 
 
     protected override async Task OnParametersSetAsync()
     {
-
-
         if (Id is not null)
         {
             var shoppingitems = await ShoppingServices.GetListItem((int)(Id));
@@ -133,7 +158,7 @@ else
             if (shoppingitems is not null)
             {
                 CurrentShoppingitems = shoppingitems;
-                StoreName = CurrentShoppingitems.ShoppingStoreID.ToString();
+                StoreName = CurrentShoppingitems.StoreName;
             }
 
         }
@@ -164,13 +189,13 @@ else
         if (Id is not null)
         {
             //update
-            //ShoppingServices.CreateListItem(CurrentShoppingitems);
+            //ShoppingServices.UpdateListItem(CurrentShoppingitems.ShoppingItemList, (int)Id);
             NavigationManager.NavigateTo($"/Shoppingitems/");
         }
         else
         {
             //add
-            //ShoppingServices.UpdateListItem(CurrentShoppingitems, (int)Id);
+            ShoppingServices.CreateListItem(CurrentShoppingitems.ShoppingItemList);
             NavigationManager.NavigateTo($"/ShoppingItems/");
         }
 
