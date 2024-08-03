@@ -22,17 +22,29 @@ else
 
 
 <EditForm Model="CurrentShoppingStore" OnSubmit="HandleSubmit" >
-    <div>
-        <label for="storename">Store Name</label>
-        <InputText id="storename" @bind-Value="@CurrentShoppingStore.StoreName"  />
+
+
+    <div class="row">
+
+        <div class="col-lg-2">
+            <label for="itemsname">Store Name:</label>
+        </div>
+        <div class="col-lg-2">
+            <InputText id="storename" @bind-Value="@CurrentShoppingStore.StoreName" />
+        </div>
     </div>
 
-    <div style="padding-bottom:10px" />
 
-    <div>
-        <label for="storeaddress">Store Address</label>
-        <InputText id="storeaddress" @bind-Value="@CurrentShoppingStore.Address" />
+    <div class="row">
+
+        <div class="col-lg-2">
+            <label for="itemsname">Store Address:</label>
+        </div>
+        <div class="col-lg-2">
+            <InputText id="storeaddress" @bind-Value="@CurrentShoppingStore.Address" />
+        </div>
     </div>
+
 
     <div style="padding-bottom:20px" />
 
@@ -98,3 +110,10 @@ else
     }
 
 }
+
+
+        <style>
+    .row {
+        padding-bottom: 5px;
+    }
+        </style>

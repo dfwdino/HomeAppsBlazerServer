@@ -67,17 +67,6 @@ else
     </div>
 
 
-
- @*    <div class="row">
-        <div class="col-lg-2">
-            <label for="price">Price:</label>
-        </div>
-        <div class="col-lg-2">
-            <InputNumber id="price" @bind-Value="@CurrentShoppingitems.Price" type='number' step='0.01' />
-        </div>
-    </div> *@
-
-
     <div class="row">
         <div class="col-lg-2">
             <label style="width:130px" for="IsGlutenFree">Gluten Free:</label>
@@ -119,6 +108,7 @@ else
         </div>
     </div>
 
+    <div style="padding-top:20px"/>
 
     <div class="row">
         <div class="col-lg-1">
@@ -233,4 +223,8 @@ else
     .validation-message {
         color: red;
     }
+
+    .row{
+        padding-bottom:5px;
+      }
 </style>
