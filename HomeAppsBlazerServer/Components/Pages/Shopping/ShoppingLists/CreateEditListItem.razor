@@ -41,12 +41,7 @@ else
 
 
 
-<EditForm Model="CurrentShoppingitems" OnSubmit="HandleSubmit">
-
-    @* <div class="form-group">
-        <label for="shoppingItemListId">Shopping Item List ID</label>
-        <NumberInput id="shoppingItemListId" @bind-Value="CurrentShoppingitems.ShoppingItemListID" class="form-control" />
-    </div> *@
+<EditForm Model="CurrentShoppingitems" OnSubmit="HandleSubmit" @onkeydown="HandleKeyDown">
 
     <div class="form-group">
         <label for="shoppingItemId">Item Name</label>
@@ -109,10 +104,15 @@ else
     [Parameter]
     public int? Id { get; set; }
 
-    public string StoreName,ItemName;
+    public string StoreName,ItemName, pressedKey = string.Empty;
 
 
     public ListItemModel CurrentShoppingitems { get; set; } = new();
+
+    private void HandleKeyDown(KeyboardEventArgs e)
+    {
+        pressedKey = e.Key;
+    }
 
     public void ShoppingLIstItem(ListItemModel currentShoppingitems)
     {
@@ -134,7 +134,6 @@ else
         return await Task.FromResult(new AutoCompleteDataProviderResult<ShoppingItem> { Data = customers, TotalCount = customers.Count() });
 
     }
-
 
     private void OnAutoCompleteChanged(ShoppingItem customer)
     {
@@ -159,10 +158,13 @@ else
             {
                 CurrentShoppingitems = shoppingitems;
                 StoreName = CurrentShoppingitems.StoreName;
+                ItemName = CurrentShoppingitems.ItemName;
+                CurrentShoppingitems.ShoppingItemList = shoppingitems.ShoppingItemList;
+                
+
             }
 
         }
-        
 
     }
 
@@ -173,7 +175,7 @@ else
         //delete
         await ShoppingServices.RemoveShoppingItem((int)Id);
 
-        NavigationManager.NavigateTo($"/ShoppingItems/");
+        NavigationManager.NavigateTo($"ShoppingItems/");
     }
 
     [HttpPost]
@@ -181,22 +183,33 @@ else
     async Task Cancel()
     {
 
-        NavigationManager.NavigateTo($"/ShoppingItems/");
+        NavigationManager.NavigateTo($"ShoppingItems/");
     }
 
     async Task HandleSubmit()
     {
+        //Want to pass if they hit enter to select a itme or store.
+        if (pressedKey.Equals("enter", StringComparison.OrdinalIgnoreCase))
+        {
+            pressedKey = string.Empty;
+            return;
+        }
+
         if (Id is not null)
         {
             //update
-            //ShoppingServices.UpdateListItem(CurrentShoppingitems.ShoppingItemList, (int)Id);
-            NavigationManager.NavigateTo($"/Shoppingitems/");
+            ShoppingServices.UpdateListItem(CurrentShoppingitems.ShoppingItemList, (int)Id);
+            NavigationManager.NavigateTo($"ShoppingList/");
+        }
+        else if (String.IsNullOrEmpty(ItemName))
+        {
+            return;
         }
         else
         {
             //add
             ShoppingServices.CreateListItem(CurrentShoppingitems.ShoppingItemList);
-            NavigationManager.NavigateTo($"/ShoppingItems/");
+            NavigationManager.NavigateTo($"ShoppingList/");
         }
 
 

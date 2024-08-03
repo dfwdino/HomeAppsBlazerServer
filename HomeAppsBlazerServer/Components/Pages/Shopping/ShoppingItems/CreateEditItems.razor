@@ -185,7 +185,7 @@ else
         //delete
         await ShoppingServices.RemoveShoppingItem((int)Id);
 
-        NavigationManager.NavigateTo($"/ShoppingItems/");
+        NavigationManager.NavigateTo($"ShoppingItems/");
     }
 
     [HttpPost]
@@ -193,7 +193,7 @@ else
     async Task Cancel()
     {
 
-        NavigationManager.NavigateTo($"/ShoppingItems/");
+        NavigationManager.NavigateTo($"Shoppingitems/");
     }
 
     async Task HandleSubmit()
@@ -202,13 +202,17 @@ else
         {
             //update
             await ShoppingServices.UpdateShoppingItem(CurrentShoppingitems, (int)Id);
-            NavigationManager.NavigateTo($"/Shoppingitems/");
+            NavigationManager.NavigateTo($"Shoppingitems/");
+        }
+        else if (CurrentShoppingitems.ItemName.Length.Equals(0))
+        {
+            return;
         }
         else
         {
             //add
             await ShoppingServices.AddShoppingItemAsyn(CurrentShoppingitems);
-            NavigationManager.NavigateTo($"/ShoppingItems/");
+            NavigationManager.NavigateTo($"ShoppingItems/");
         }
 
 

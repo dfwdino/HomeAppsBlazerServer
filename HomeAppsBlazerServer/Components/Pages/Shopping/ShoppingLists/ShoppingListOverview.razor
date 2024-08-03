@@ -54,7 +54,7 @@ else
                                 <span @onclick="@(() => ShowHistory(item.ShoppingListID))"> $@item.Price </span/> <!--Need to pass the Item ID not ItekListID-->
                         }
                         @if(item.storename != null){
-                            <span> @item.storename </span> 
+                            <span> - @item.storename</span> 
                         }
 
                        </td>

@@ -66,7 +66,12 @@ namespace HomeAppsBlazerServer.Servcies
         public async Task<List<ShoppingItem>> GetShoppingItemsFilterAsync(string filter = "")
         {
 
-            var query = myDbContext.ShoppingItems.AsQueryable();
+            var query = myDbContext.ShoppingItems
+                        .Where(mm1 => !myDbContext.ShoppingItemList
+                            .Where(mm => mm.GotItem == false)
+                            .Select(mm => mm.ShoppingItemID)
+                            .Contains(mm1.ShoppingItemID))
+                        .AsQueryable();
 
             if (filter.Length > 0)
             {
@@ -311,6 +316,7 @@ namespace HomeAppsBlazerServer.Servcies
                         ItemName = shoppingItems.Where(mm => mm.ShoppingItemID == item.ShoppingItemID).Select(mm => mm.ItemName).First(),
                         storename = shoppingStores.Where(mm => mm.ShoppingStoreID == item.ShoppingStoreID).Select(mm => mm.StoreName).FirstOrDefault(),
                         Price = priceHistory.Where(mm => mm.ItemID == item.ShoppingItemID).OrderByDescending(mm => mm.ItemID).Select(mm => mm.Amount).FirstOrDefault(),
+                        NumberOfItems = item.NumberOfItems,
                         ShoppingItemListID = item.ShoppingItemListID
                     });
                 }
@@ -356,12 +362,14 @@ namespace HomeAppsBlazerServer.Servcies
 
         public async void CreateListItem(ShoppingItemList shoppingItemList)
         {
-
+            myDbContext.ShoppingItemList.Add(shoppingItemList);
+            myDbContext.SaveChanges();
         }
 
         public async void UpdateListItem(ShoppingItemList shoppingItemList, int id)
         {
-
+            myDbContext.ShoppingItemList.Update(shoppingItemList);
+            myDbContext.SaveChanges();
         }
 
 
