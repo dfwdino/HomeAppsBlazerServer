@@ -188,21 +188,23 @@ else
 
     async Task HandleSubmit()
     {
-        if (Id is not null)
-        {
-            //update
-            await ShoppingServices.UpdateShoppingItem(CurrentShoppingitems, (int)Id);
-            NavigationManager.NavigateTo($"Shoppingitems/");
-        }
-        else if (CurrentShoppingitems.ItemName.Length.Equals(0))
+        if (CurrentShoppingitems.ItemName.Length.Equals(0))
         {
             return;
         }
-        else
+        else if (Id is not null) //update
         {
-            //add
+            
+            await ShoppingServices.UpdateShoppingItem(CurrentShoppingitems, (int)Id);
+            NavigationManager.NavigateTo($"Shoppingitems/");
+        }
+        else //add
+        {   
             await ShoppingServices.AddShoppingItemAsyn(CurrentShoppingitems);
-            NavigationManager.NavigateTo($"ShoppingItems/");
+            
+            CurrentShoppingitems = new();
+
+            //NavigationManager.NavigateTo($"ShoppingItems/");
         }
 
 

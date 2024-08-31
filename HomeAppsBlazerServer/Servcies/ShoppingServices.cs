@@ -10,12 +10,13 @@ namespace HomeAppsBlazerServer.Servcies
     public class ShoppingServices : IShoppingServices
     {
         private readonly MyDbContext myDbContext;
+        private readonly ILogger<ShoppingServices> _logger;
 
-        public ShoppingServices(MyDbContext context)
+        public ShoppingServices(MyDbContext context, ILogger<ShoppingServices> logger)
         {
             myDbContext = context;
+            _logger = logger;
         }
-
 
         #region Items
         public async Task AddShoppingItemAsyn(ShoppingItem shoppingItem)
@@ -23,14 +24,32 @@ namespace HomeAppsBlazerServer.Servcies
             shoppingItem.ItemName = shoppingItem.ItemName.ToTileCase();
 
             myDbContext.ShoppingItems.Add(shoppingItem);
+
+
             try
             {
                 await myDbContext.SaveChangesAsync();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                _logger.LogError(ex, "Error adding shopping item: {ItemName}", shoppingItem.ItemName);
+                throw; // Re-throw the exception after logging
             }
+
+            ShoppingItemList shoppingListItem = new();
+
+            shoppingListItem.ShoppingItemID = shoppingItem.ShoppingItemID;
+
+            if (shoppingItem.StoreID.HasValue)
+            {
+                shoppingListItem.ShoppingStoreID = shoppingItem.StoreID;
+            }
+
+
+            myDbContext.ShoppingItemList.Add(shoppingListItem);
+
+
+
 
 
         }
@@ -40,7 +59,6 @@ namespace HomeAppsBlazerServer.Servcies
             var shoppingitem = await myDbContext.ShoppingItems.FirstOrDefaultAsync(mm => mm.ShoppingItemID.Equals(id));
             return shoppingitem;
         }
-
 
         public async Task AddToList(int id)
         {
@@ -58,10 +76,7 @@ namespace HomeAppsBlazerServer.Servcies
             NewListItem.ShoppingStoreID = shoppingStore.ShoppingStoreID;
 
             myDbContext.ShoppingItemList.Add(NewListItem);
-
-
         }
-
 
         public async Task<List<ShoppingItem>> GetShoppingItemsFilterAsync(string filter = "")
         {
@@ -80,9 +95,6 @@ namespace HomeAppsBlazerServer.Servcies
 
             // If filter is empty, return all items
             return query.ToList();
-
-
-
         }
 
         public async Task<List<ShoppingItem>> GetShoppingItemsAsync(bool showallitems = false, string filter = "")
@@ -117,12 +129,6 @@ namespace HomeAppsBlazerServer.Servcies
                         ShoppingItemID = temp.si.ShoppingItemID
                     })
                 .ToList();
-
-
-
-
-
-
 
             return result;
         }
@@ -162,7 +168,6 @@ namespace HomeAppsBlazerServer.Servcies
                 currentshoppingItem.KidsDontLike = shoppingItem.KidsDontLike;
                 currentshoppingItem.ElliottDontLike = shoppingItem.ElliottDontLike;
                 currentshoppingItem.StoreID = shoppingItem.StoreID;
-
 
                 await myDbContext.SaveChangesAsync();
 
