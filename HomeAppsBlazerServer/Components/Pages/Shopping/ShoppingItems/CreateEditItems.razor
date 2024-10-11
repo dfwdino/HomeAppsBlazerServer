@@ -111,10 +111,10 @@ else
     <div style="padding-top:20px"/>
 
     <div class="row">
-        <div class="col-lg-1">
+        <div class="col-lg-1" style="padding-bottom:20px">
             <button class="btn btn-primary" @onclick="@(() => Cancel())">Cancel</button>
         </div>
-        <div class="col-lg-1">
+        <div class="col-lg-1" style="padding-bottom:20px">
             <button type="submit" class="btn btn-primary">Submit</button>
         </div>
         <div class="col-lg-1">
@@ -148,6 +148,7 @@ else
 
     private void OnAutoCompleteChanged(ShoppingStore customer)
     {
+        if (customer != null)
         CurrentShoppingitems.StoreID = customer.ShoppingStoreID;
         //Console.WriteLine($"'{customer?.StoreName}' selected.");
     }
@@ -162,6 +163,8 @@ else
             if (shoppingitems is not null)
             {
                 CurrentShoppingitems = shoppingitems;
+                //StoreName = CurrentShoppingitems.StoreName;
+                
             }
             ///Need to fix when null
         }

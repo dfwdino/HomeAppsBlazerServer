@@ -116,7 +116,7 @@ namespace HomeAppsBlazerServer.Servcies
                     myDbContext.ShoppingStores,
                     si => si.StoreID,
                     ss => ss.ShoppingStoreID,
-                    (si, ss) => new { si, ss })
+                    (si, ss) => new { si, ss }).OrderBy(mm => mm.si.ItemName)
                 .SelectMany(
                     temp => temp.ss.DefaultIfEmpty(),
                     (temp, ss) => new ShoppingItem

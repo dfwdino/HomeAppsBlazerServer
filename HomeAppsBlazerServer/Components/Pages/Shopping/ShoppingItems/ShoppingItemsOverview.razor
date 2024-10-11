@@ -3,14 +3,14 @@
 
 @using HomeAppsBlazerServer.Components.Pages.Shopping.PriceHistory
 @using HomeAppsBlazerServer.Models
-@using HomeAppsBlazerServer.Models.Interface
+
 @using HomeAppsBlazerServer.Servcies
 
 @*Endalbes it*@
-@rendermode InteractiveServer
+@* @rendermode InteractiveServer *@
 
 @* jackes up the view of the table *@
-@* @rendermode @(new InteractiveServerRenderMode(prerender: false))  *@
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 
 @* Loads as it as it download it. *@
@@ -26,13 +26,13 @@
 
 
 
-<link rel="stylesheet" type="text/css" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.0/css/jquery.dataTables.css">
+@* <link rel="stylesheet" type="text/css" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.0/css/jquery.dataTables.css">
 
 
 <script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.1.min.js"></script>
 <script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.0/jquery.dataTables.min.js"></script>
 
-
+ *@
 @if (_showallitems == false)
 {
     <PageTitle>Shopping Items</PageTitle>
@@ -52,7 +52,7 @@ else
 
 @if (AllShoppingItems is null)
 {
-    <p><em>Loadding Stores....</em></p>
+    <p><em>Loadding shopping items....</em></p>
 }
 else if (AllShoppingItems.Count.Equals(0))
 {
@@ -61,31 +61,28 @@ else if (AllShoppingItems.Count.Equals(0))
 else
 {
 
+    <div style="padding-bottom:10px" />
 
 
 
-
-    <table id="shoppingitems" class="display" style="width:100%">
+    <table id="shoppingitems" class="table">
         <thead>
-        <th scope="col">Item Info</th>
-        <th>Dislike</th>
-        <th>Price</th>
-        <th>Delete</th>
+        <th>Item</th>
+        <th></th>
         </thead>
         <tbody>
             @foreach (var item in AllShoppingItems)
             {
                 <tr id="@item.ShoppingItemID">
                     <td>
-                        <span class="link-primary" @onclick="@(() => EditItem(item.ShoppingItemID))"> @item.ItemName </span> -
-                        <span class="link-primary" @onclick="@(() => AddItemToList(item.ShoppingItemID))"> Need</span>
+                        <span class="link-primary" @onclick="@(() => EditItem(item.ShoppingItemID))">@item.ItemName </span> -
+                        <span class="link-primary" @onclick="@(() => AddItemToList(item.ShoppingItemID))" style="padding-right:10px"> Need</span>
+
                         @if (item.StoreID is not null)
                         {
                             <span> - @item.StoreID</span>
                         }
-                    </td>
 
-                    <td>
                         @if (item.ElliottDontLike == true)
                         {
                             <span class='strike'> Elliott</span>
@@ -100,7 +97,6 @@ else
                         }
                   
                     </td>
-                    <td></td>
                     <td>
                         @* <button class="btn btn-primary" @onclick="@(() => EditItem(item.ShoppingItemID))">Edit Item</button> *@
                         <button class="btn btn-primary" @onclick="@(() => DeleteItem(item.ShoppingItemID))">Delete</button>
@@ -146,7 +142,7 @@ else
 
 
     async Task GetShoppingItems(bool showallitems = false)
-    {   
+    {
         AllShoppingItems = await ShoppingServices.GetShoppingItemsAsync(_showallitems);
 
         _showallitems = !showallitems;
