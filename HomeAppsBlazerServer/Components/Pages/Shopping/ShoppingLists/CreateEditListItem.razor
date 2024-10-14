@@ -173,6 +173,14 @@ else
 
     private void OnAutoCompleteChanged(ShoppingStore customer)
     {
+        if(customer is null)
+        {
+            CurrentShoppingitems.ShoppingItemList.ShoppingStoreID = null;
+            CurrentShoppingitems.StoreName = string.Empty;
+            return; 
+
+        }
+
         CurrentShoppingitems.ShoppingItemList.ShoppingStoreID = customer.ShoppingStoreID;
         Console.WriteLine($"'{customer?.StoreName}' selected.");
     }
@@ -227,6 +235,11 @@ else
 
         if (Id is not null)
         {
+            //need to update price if diff
+             await ShoppingServices.AddPriceToHistry(CurrentShoppingitems.ShoppingItemList.ShoppingItemID, 
+                        CurrentShoppingitems.Price.Equals("") ? Convert.ToDecimal(0.0) : Convert.ToDecimal(CurrentShoppingitems.Price), 
+                         CurrentShoppingitems.ShoppingItemList.ShoppingStoreID);
+
             //update
             ShoppingServices.UpdateListItem(CurrentShoppingitems.ShoppingItemList, (int)Id);
             NavigationManager.NavigateTo($"ShoppingList/");

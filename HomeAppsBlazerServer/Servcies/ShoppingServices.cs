@@ -320,7 +320,7 @@ namespace HomeAppsBlazerServer.Servcies
                         ItemID = item.ShoppingItemID,
                         ItemName = shoppingItems.Where(mm => mm.ShoppingItemID == item.ShoppingItemID).Select(mm => mm.ItemName).First(),
                         storename = shoppingStores.Where(mm => mm.ShoppingStoreID == item.ShoppingStoreID).Select(mm => mm.StoreName).FirstOrDefault(),
-                        Price = priceHistory.Where(mm => mm.ItemID == item.ShoppingItemID).OrderByDescending(mm => mm.ItemID).Select(mm => mm.Amount).FirstOrDefault(),
+                        Price = priceHistory.Where(mm => mm.ItemID == item.ShoppingItemID).OrderByDescending(mm => mm.PriceDate).Select(mm => mm.Amount).FirstOrDefault(),
                         NumberOfItems = item.NumberOfItems,
                         ShoppingItemListID = item.ShoppingItemListID
                     });
@@ -398,6 +398,18 @@ namespace HomeAppsBlazerServer.Servcies
         public async Task AddPriceToHistry(int itemid, decimal price, int? storeid)
         {
             myDbContext.PriceHistory.Add(new PriceHistory { ItemID = itemid, StoreID = storeid, Amount = price, PriceDate = DateAndTime.Now });
+
+            try
+            {
+                myDbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
+
         }
 
         public async Task<List<PriceHistory>> GetPriceHisotry(int itemid)
@@ -412,7 +424,8 @@ namespace HomeAppsBlazerServer.Servcies
                          Amount = mm.Amount,
                          //ItemName = si.ItemName,
                          PriceHistoryID = mm.PriceHistoryID,
-                         PriceDate = mm.PriceDate
+                         PriceDate = mm.PriceDate,
+                         ItemID = mm.ItemID
 
 
                      })
