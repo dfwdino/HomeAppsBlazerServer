@@ -56,7 +56,7 @@ else if(priceHistory is not null)
         <div class="toast-body">
             @foreach (var itemprice in priceHistory)
             {
-                <div>@itemprice.PriceDate.ToShortDateString() - @itemprice.Amount - @itemprice.StoreID </div>
+                    <div>@itemprice.PriceDate.ToShortDateString() -  $@itemprice.Amount - @itemprice.StoreID </div>
             }
         </div>
     </div>

@@ -348,7 +348,7 @@ namespace HomeAppsBlazerServer.Servcies
                 {
                     results.StoreName = myDbContext.ShoppingStores.Where(mm => mm.ShoppingStoreID.Equals(results.ShoppingItemList.ShoppingStoreID)).FirstOrDefault()?.StoreName;
                     results.ItemName = myDbContext.ShoppingItems.Where(mm => mm.ShoppingItemID.Equals(results.ShoppingItemList.ShoppingItemID)).FirstOrDefault().ItemName;
-                    results.Price = myDbContext.PriceHistory.Where(mm => mm.ItemID.Equals(results.ShoppingItemList.ShoppingItemID)).OrderByDescending(mm => mm.ItemID).FirstOrDefault()?.Amount.ToString();
+                    results.Price = myDbContext.PriceHistory.Where(mm => mm.ItemID.Equals(results.ShoppingItemList.ShoppingItemID)).OrderByDescending(mm => mm.PriceHistoryID).FirstOrDefault()?.Amount.ToString();
                 }
 
 
