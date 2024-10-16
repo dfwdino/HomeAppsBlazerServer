@@ -78,22 +78,28 @@ else
                         <span class="link-primary" @onclick="@(() => EditItem(item.ShoppingItemID))">@item.ItemName </span> -
                         <span class="link-primary" @onclick="@(() => AddItemToList(item.ShoppingItemID))" style="padding-right:10px"> Need</span>
 
-                        @if (item.StoreID is not null)
+                        @if (item.StoreName is not null)
                         {
-                            <span> - @item.StoreID</span>
+                            <span style="padding-right:5px">- @item.StoreName</span>
                         }
+
+                        @if (item.LastPrice > 0)
+                        {
+                            <span style="padding-right:5px">- $@item.LastPrice </span>
+                        }
+
 
                         @if (item.ElliottDontLike == true)
                         {
-                            <span class='strike'> Elliott</span>
+                            <span class='strike'>Elliott</span>
                         }
                         @if (item.FreddyDontLike == true)
                         {
-                            <span class='strike'> Freddy</span>
+                            <span class='strike'>Freddy</span>
                         }
                         @if (item.KidsDontLike == true)
                         {
-                            <span class='strike'> Kids</span>
+                            <span class='strike'>Kids</span>
                         }
                   
                     </td>
@@ -119,7 +125,7 @@ else
 
     private PriceHistoryOverview popupRef;
 
-    List<ShoppingItem> AllShoppingItems;
+    List<ShoppingDetailItem> AllShoppingItems;
 
     private bool _showallitems = false;
 

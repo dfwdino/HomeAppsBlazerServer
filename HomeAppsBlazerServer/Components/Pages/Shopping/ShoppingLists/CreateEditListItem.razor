@@ -76,17 +76,10 @@ else
     </div>
 
 
-
-    @* <div class="form-group">
-    <label for="gotItemDate">Got Item Date</label>
-    <InputDate id="gotItemDate" @bind-Value="CurrentShoppingitems.GotItemDate" class="form-control" />
-    </div>
-    *@
-
     <div class="row">
 
         <div class="col-lg-2">
-            <label for="itemsname">Need Dat:</label>
+            <label for="itemsname">Need Date:</label>
         </div>
         <div class="col-lg-2">
             <InputDate id="needDate" @bind-Value="CurrentShoppingitems.ShoppingItemList.NeedDate" class="form-control" />
@@ -198,9 +191,8 @@ else
                 StoreName = CurrentShoppingitems.StoreName;
                 ItemName = CurrentShoppingitems.ItemName;
                 CurrentShoppingitems.ShoppingItemList = shoppingitems.ShoppingItemList;
+                CurrentShoppingitems.ShoppingItemList.NeedDate = shoppingitems.ShoppingItemList.NeedDate;
                 
-
-
             }
 
         }
@@ -236,7 +228,6 @@ else
 
         if (Id is not null)
         {
-            //need to update price if diff
              await ShoppingServices.AddPriceToHistry(CurrentShoppingitems.ShoppingItemList.ShoppingItemID, 
                         CurrentShoppingitems.Price.Equals("") ? Convert.ToDecimal(0.0) : Convert.ToDecimal(CurrentShoppingitems.Price), 
                          CurrentShoppingitems.ShoppingItemList.ShoppingStoreID);

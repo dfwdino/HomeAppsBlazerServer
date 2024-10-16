@@ -97,7 +97,7 @@ namespace HomeAppsBlazerServer.Servcies
             return query.ToList();
         }
 
-        public async Task<List<ShoppingItem>> GetShoppingItemsAsync(bool showallitems = false, string filter = "")
+        public async Task<List<ShoppingDetailItem>> GetShoppingItemsAsync(bool showallitems = false, string filter = "")
         {
 
             var query = myDbContext.ShoppingItems.AsQueryable();
@@ -111,24 +111,40 @@ namespace HomeAppsBlazerServer.Servcies
                 query = query.Where(si => !ListOfAllItemsOnList.Contains(si.ShoppingItemID));
             }
 
-            var result = query
-                .GroupJoin(
-                    myDbContext.ShoppingStores,
-                    si => si.StoreID,
-                    ss => ss.ShoppingStoreID,
-                    (si, ss) => new { si, ss }).OrderBy(mm => mm.si.ItemName)
-                .SelectMany(
-                    temp => temp.ss.DefaultIfEmpty(),
-                    (temp, ss) => new ShoppingItem
-                    {
-                        ItemName = temp.si.ItemName,
-                        ElliottDontLike = temp.si.ElliottDontLike,
-                        FreddyDontLike = temp.si.FreddyDontLike,
-                        KidsDontLike = temp.si.KidsDontLike,
-                        StoreID = ss != null ? ss.ShoppingStoreID : null,
-                        ShoppingItemID = temp.si.ShoppingItemID
-                    })
-                .ToList();
+            List<ShoppingDetailItem> result = myDbContext.ShoppingItems
+                        .GroupJoin(myDbContext.ShoppingStores,
+                            si => si.StoreID,
+                            ss => ss.ShoppingStoreID,
+                            (si, ss) => new { si, ss = ss.DefaultIfEmpty() })
+                        .SelectMany(
+                            x => x.ss.DefaultIfEmpty(),
+                            (x, store) => new { x.si, store })
+                        .Select(item => new ShoppingDetailItem
+                        {
+                            ShoppingItemID = item.si.ShoppingItemID,
+                            ItemName = item.si.ItemName,
+                            IsDeleted = item.si.IsDeleted,
+                            IsGlutenFree = item.si.IsGlutenFree,
+                            KidsDontLike = item.si.KidsDontLike,
+                            FreddyDontLike = item.si.FreddyDontLike,
+                            ElliottDontLike = item.si.ElliottDontLike,
+                            StoreName = item.store != null ? item.store.StoreName : null,
+                            LastPrice = myDbContext.PriceHistory
+                                .Where(ph => ph.ItemID == item.si.ShoppingItemID)
+                                .OrderByDescending(ph => ph.PriceDate)
+                                .Select(ph => ph.Amount)
+                                .FirstOrDefault(),
+                            GotItemDate = myDbContext.ShoppingItemList
+                                .Where(sil => sil.ShoppingItemID == item.si.ShoppingItemID)
+                                .OrderByDescending(sil => sil.GotItemDate)
+                                .Select(sil => sil.GotItemDate)
+                                .FirstOrDefault()
+                        }).Where(mm => mm.IsDeleted == false)
+                        .OrderByDescending(mm => mm.GotItemDate)
+                        .ThenBy(mm => mm.ItemName)
+    .ToList();
+
+
 
             return result;
         }
@@ -409,6 +425,21 @@ namespace HomeAppsBlazerServer.Servcies
                 throw;
             }
 
+
+        }
+
+        public async Task<decimal> GetLastestPrice(int itemid, int? storeid)
+        {
+            var LastPriceQuery = myDbContext.PriceHistory.Where(mm => mm.ItemID == itemid);
+
+            if (storeid is not null)
+            {
+                LastPriceQuery.Where(mm => mm.StoreID == storeid);
+            }
+
+            decimal? lastPrice = LastPriceQuery.OrderByDescending(mm => mm.PriceHistoryID).FirstOrDefault().Amount;
+
+            return lastPrice.HasValue ? lastPrice.Value : 0;
 
         }
 

@@ -15,7 +15,7 @@ namespace HomeAppsBlazerServer.Servcies
         #endregion End Store
 
         #region Items
-        Task<List<ShoppingItem>> GetShoppingItemsAsync(bool showallitems = false, string filter = "");
+        Task<List<ShoppingDetailItem>> GetShoppingItemsAsync(bool showallitems = false, string filter = "");
         Task<List<ShoppingItem>> GetShoppingItemsFilterAsync(string filter = "");
 
         Task<ShoppingItem> GetShoppingItemByIDAsync(int id);
