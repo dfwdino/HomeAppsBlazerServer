@@ -21,6 +21,10 @@ namespace HomeAppsBlazerServer.Servcies
         #region Items
         public async Task AddShoppingItemAsyn(ShoppingItem shoppingItem)
         {
+            bool FoundItem = myDbContext.ShoppingItems.Any(x => x.ItemName == shoppingItem.ItemName);
+
+            if (FoundItem) { return; }
+
             shoppingItem.ItemName = shoppingItem.ItemName.ToTileCase();
 
             myDbContext.ShoppingItems.Add(shoppingItem);
@@ -45,11 +49,9 @@ namespace HomeAppsBlazerServer.Servcies
                 shoppingListItem.ShoppingStoreID = shoppingItem.StoreID;
             }
 
-
             myDbContext.ShoppingItemList.Add(shoppingListItem);
 
-
-
+            myDbContext.SaveChanges();
 
 
         }
