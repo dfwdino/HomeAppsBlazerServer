@@ -113,7 +113,8 @@ namespace HomeAppsBlazerServer.Servcies
                 query = query.Where(si => !ListOfAllItemsOnList.Contains(si.ShoppingItemID));
             }
 
-            List<ShoppingDetailItem> result = myDbContext.ShoppingItems
+
+            List<ShoppingDetailItem> result = query
                         .GroupJoin(myDbContext.ShoppingStores,
                             si => si.StoreID,
                             ss => ss.ShoppingStoreID,
@@ -155,9 +156,13 @@ namespace HomeAppsBlazerServer.Servcies
         {
             var shoppingItem = await myDbContext.ShoppingItems.FirstOrDefaultAsync(mm => mm.ShoppingItemID.Equals(id));
 
+
+
             if (shoppingItem != null)
             {
-                myDbContext.ShoppingItems.Remove(shoppingItem);
+                shoppingItem.IsDeleted = true;
+
+                //myDbContext.ShoppingItems.Remove(shoppingItem);
                 try
                 {
                     await myDbContext.SaveChangesAsync();

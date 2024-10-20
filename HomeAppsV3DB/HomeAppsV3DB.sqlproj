@@ -82,7 +82,4 @@
     <Build Include="Security\HomeAppSettings.sql" />
     <Build Include="Shopping\Tables\PriceHistory.sql" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="ChangeIsBadToProject.scmp" />
-  </ItemGroup>
 </Project>
