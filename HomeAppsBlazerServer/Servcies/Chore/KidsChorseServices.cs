@@ -16,7 +16,7 @@ namespace HomeAppsBlazerServer.Servcies.Chore
             _logger = logger;
         }
 
-        public List<KidsNameModel> GetKids()
+        public async Task<List<KidsNameModel>> GetKids()
         {
             List<KidsNameModel> Kids = myDbContext.KidsName.Where(mm => mm.IsDeleted == false).ToList();
 

@@ -1,12 +1,52 @@
 ﻿@page "/kidschore"
 
+@using HomeAppsBlazerServer.Servcies.Chore
+@using HomeAppsBlazerServer.Models
+
 @layout HomeAppsBlazerServer.Components.Layout.KidsChoreLayout
 
+@inject KidsChorseServices _KidsChorseServices;
+
+@* jackes up the view of the table *@
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 
+@* Loads as it as it download it. *@
+@attribute [StreamRendering]
 
 <PageTitle>Home</PageTitle>
 
 <div style="text-align:center;padding-top:10px;">
-    
+
+    @if (_KidsNameModel is null)
+    {
+        <p><em>Loadding shopping items....</em></p>
+    }
+    else if (_KidsNameModel.Count.Equals(0))
+    {
+        <p><em>Did not find any items</em></p>
+    }
+    else
+    {
+        <p>All my kids</p>
+        @foreach (var item in _KidsNameModel)
+        {
+            <div>@item.KidName</div>
+        }
+    }
+
 </div>
+
+
+
+@code {
+    List<KidsNameModel> _KidsNameModel;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        var _KidsNameModel = await _KidsChorseServices.GetKids();
+
+    }
+
+}
