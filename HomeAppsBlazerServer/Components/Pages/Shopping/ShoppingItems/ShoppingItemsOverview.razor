@@ -88,7 +88,6 @@ else
                             <span style="padding-right:5px">- $@item.LastPrice </span>
                         }
 
-
                         @if (item.ElliottDontLike == true)
                         {
                             <span class='strike'>Elliott</span>
@@ -100,6 +99,11 @@ else
                         @if (item.KidsDontLike == true)
                         {
                             <span class='strike'>Kids</span>
+                        }
+
+                        @if (item.GotItemDate.HasValue)
+                        {
+                            <span style="padding-right:5px">- @item.GotItemDate.Value.ToShortDateString() </span>
                         }
                   
                     </td>
