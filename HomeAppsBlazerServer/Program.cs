@@ -1,6 +1,7 @@
 using HomeAppsBlazerServer.Components;
 using HomeAppsBlazerServer.Data;
 using HomeAppsBlazerServer.Servcies;
+using HomeAppsBlazerServer.Servcies.Chore;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,7 @@ builder.Services.AddDbContext<MyDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IShoppingServices, ShoppingServices>();
+builder.Services.AddScoped<KidsChorseServices, KidsChorseServices>();
 
 
 var app = builder.Build();

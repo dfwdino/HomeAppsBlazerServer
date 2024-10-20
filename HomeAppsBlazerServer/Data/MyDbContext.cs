@@ -20,6 +20,8 @@ namespace HomeAppsBlazerServer.Data
 
         public DbSet<PriceHistory> PriceHistory { get; set; }
 
+        public DbSet<KidsNameModel> KidsName { get; set; }
+
 
 
 

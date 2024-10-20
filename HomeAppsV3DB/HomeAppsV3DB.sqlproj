@@ -71,7 +71,6 @@
     <Build Include="Shopping\Tables\ShoppingItemList.sql" />
     <Build Include="Shopping\Tables\ShoppingItems.sql" />
     <Build Include="Shopping\Tables\ShoppingStores.sql" />
-    <Build Include="KidsArea\Tables\ChoreHistory.sql" />
     <Build Include="KidsArea\Tables\Chores.sql" />
     <Build Include="KidsArea\Tables\KidsName.sql" />
     <Build Include="HomeAppSettings\Tables\UsersPermissions.sql" />
@@ -81,5 +80,10 @@
     <Build Include="Security\KidsArea.sql" />
     <Build Include="Security\HomeAppSettings.sql" />
     <Build Include="Shopping\Tables\PriceHistory.sql" />
+    <Build Include="KidsArea\Tables\Location.sql" />
+    <Build Include="KidsArea\Tables\ChoreList.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CantLinuxToProject.scmp" />
   </ItemGroup>
 </Project>
