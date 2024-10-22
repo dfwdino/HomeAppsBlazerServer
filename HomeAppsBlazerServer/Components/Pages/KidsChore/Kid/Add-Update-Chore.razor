@@ -1,0 +1,126 @@
+﻿@page "/Kid-Add-Update"
+@page "/Kid-Add-Update/{Id:int}"
+
+@using HomeAppsBlazerServer.Models
+@using HomeAppsBlazerServer.Servcies
+@using Microsoft.AspNetCore.Mvc
+@using System.ComponentModel.DataAnnotations
+@using HomeAppsBlazerServer.Servcies.Chore
+
+@inject KidsChorseKidsServices kidsChorseKidsServices
+@inject NavigationManager NavigationManager
+
+@rendermode InteractiveServer
+
+@layout HomeAppsBlazerServer.Components.Layout.KidsChoreLayout
+
+
+
+@if (Id is null)
+{
+    <h3>Add Kid</h3>
+    <div style="padding-bottom:10px" />
+}
+else
+{
+    <h3>Update @KidName.KidName</h3>
+}
+
+<EditForm Model="KidName" OnSubmit="HandleSubmit">
+
+    <div class="row">
+
+        <div class="col-lg-2">
+            <label for="itemsname">Kid Name:</label>
+        </div>
+        <div class="col-lg-2">
+            <InputText id="kidname" @bind-Value="@KidName.KidName" />
+        </div>
+    </div>
+
+    <div style="padding-top:20px" />
+
+    <div class="row">
+        <div class="col-lg-1" style="padding-bottom:20px">
+            <button class="btn btn-primary" @onclick="@(() => Cancel())">Cancel</button>
+        </div>
+        <div class="col-lg-1" style="padding-bottom:20px">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+        <div class="col-lg-1">
+            <button class="btn btn-primary" @onclick="@(() => Deleteitems())">Delete</button>
+        </div>
+    </div>
+
+
+</EditForm>
+
+
+@code {
+
+    [Parameter]
+    public int? Id { get; set; }
+
+    public KidsNameModel KidName { get; set; } = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id is not null)
+        {
+            var AKid = await kidsChorseKidsServices.GetKid((int)(Id));
+
+            if (AKid is not null)
+            {
+                KidName = AKid;
+
+            }
+
+        }
+    }
+
+    async Task HandleSubmit()
+    {
+        if (KidName.KidName.Length.Equals(0))
+        {
+            return;
+        }
+        else if (Id is not null) //update
+        {
+
+            kidsChorseKidsServices.UpdateKid(KidName);
+            NavigationManager.NavigateTo($"KidsChore/");
+        }
+        else //add
+        {
+            KidName.KidName = KidName.KidName.ToTileCase();
+            kidsChorseKidsServices.AddKid(KidName);
+
+            KidName = new();
+
+            NavigationManager.NavigateTo($"KidsChore/");
+        }
+
+
+
+    }
+
+
+    async Task Deleteitems()
+    {
+        //delete
+        KidName.IsDeleted = true;
+        kidsChorseKidsServices.UpdateKid(KidName);
+
+        NavigationManager.NavigateTo($"KidsChore/");
+    }
+
+    async Task Cancel()
+    {
+
+        NavigationManager.NavigateTo($"KidsChore/");
+    }
+
+
+
+
+}

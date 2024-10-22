@@ -2,10 +2,11 @@
 
 @using HomeAppsBlazerServer.Servcies.Chore
 @using HomeAppsBlazerServer.Models
+@using HomeAppsBlazerServer.Servcies
 
 @layout HomeAppsBlazerServer.Components.Layout.KidsChoreLayout
 
-@inject KidsChorseServices _KidsChorseServices;
+@inject KidsChorseKidsServices _KidsChorseServices;
 
 @* jackes up the view of the table *@
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
@@ -14,17 +15,21 @@
 @* Loads as it as it download it. *@
 @attribute [StreamRendering]
 
+
+@inject NavigationManager NavigationManger
+@inject IJSRuntime JsRuntime
+
 <PageTitle>Home</PageTitle>
 
 <div style="text-align:center;padding-top:10px;">
 
     @if (_KidsNameModel is null)
     {
-        <p><em>Loadding shopping items....</em></p>
+        <p><em>Loadding kids items....</em></p>
     }
     else if (_KidsNameModel.Count.Equals(0))
     {
-        <p><em>Did not find any items</em></p>
+        <p><em>What happen to the kids?</em></p>
     }
     else
     {
@@ -44,8 +49,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-
-        var _KidsNameModel = await _KidsChorseServices.GetKids();
+        //TEST CODE
+        _KidsNameModel = await _KidsChorseServices.GetKids();
 
     }
 
