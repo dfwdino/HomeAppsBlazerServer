@@ -1,0 +1,93 @@
+﻿@page "/List-Chore"
+
+@using HomeAppsBlazerServer.Models
+@using HomeAppsBlazerServer.Models.Chore
+
+@using HomeAppsBlazerServer.Servcies
+@using HomeAppsBlazerServer.Servcies.Chore
+
+@using Microsoft.AspNetCore.Mvc
+@using System.ComponentModel.DataAnnotations
+
+@inject ChoresChoresServices choresChoresServices
+@inject NavigationManager NavigationManager
+
+@rendermode InteractiveServer
+
+@layout HomeAppsBlazerServer.Components.Layout.KidsChoreLayout
+
+
+
+
+    <h3>List Chore</h3>
+    <div style="padding-bottom:10px" />
+
+@if (Chores is null)
+    {
+        <p><em>Loadding chore items....</em></p>
+    }
+else if (Chores.Count.Equals(0))
+    {
+    <p><em>What happen to the chore?</em></p>
+    }
+    else
+    {
+
+    @foreach (var chore in Chores)
+            {
+
+    <div class="row">
+
+        <div class="col-lg-1">
+                <label for="itemsname">Chore Name:</label>
+        </div>
+        <div class="col-lg-2">
+                <div id="kidname"> @chore.ChoreName </div>
+            @* <td class="link-primary" @onclick="@(() => EditStore(store.ShoppingStoreID))">@store.StoreName @(@store.Address != null ? " - " + store.Address : "")</td> *@
+        </div>
+    </div>
+
+    <div style="padding-top:20px" />
+
+    <div class="row">
+        <div class="col-lg-1" style="padding-bottom:20px">
+            <button class="btn btn-primary" @onclick="@(() => Cancel())">Cancel</button>
+        </div>
+        <div class="col-lg-1" style="padding-bottom:20px">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+        <div class="col-lg-1">
+            <button class="btn btn-primary" @onclick="@(() => Deleteitems())">Delete</button>
+        </div>
+    </div>
+            }}
+
+@code {
+
+   
+    public List<ChoresModel> Chores { get; set; } = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+       
+        Chores = await choresChoresServices.GetChores();
+
+    }
+
+    
+
+    async Task Deleteitems()
+    {
+       
+    }
+
+    async Task Cancel()
+    {
+
+        NavigationManager.NavigateTo($"KidsChore/");
+    }
+
+
+
+
+}

@@ -1,7 +1,5 @@
-﻿using HomeAppsBlazerServer.Components;
-using HomeAppsBlazerServer.Data;
-using HomeAppsBlazerServer.Models;
-using Microsoft.Identity.Client;
+﻿using HomeAppsBlazerServer.Data;
+using HomeAppsBlazerServer.Models.Chore;
 
 namespace HomeAppsBlazerServer.Servcies.Chore
 {
@@ -9,9 +7,9 @@ namespace HomeAppsBlazerServer.Servcies.Chore
     {
 
         private readonly MyDbContext myDbContext;
-        private readonly ILogger<ShoppingServices> _logger;
+        private readonly ILogger<KidsChorseKidsServices> _logger;
 
-        public KidsChorseKidsServices(MyDbContext myDbContext, ILogger<ShoppingServices> logger)
+        public KidsChorseKidsServices(MyDbContext myDbContext, ILogger<KidsChorseKidsServices> logger)
         {
             this.myDbContext = myDbContext;
             _logger = logger;
@@ -54,7 +52,7 @@ namespace HomeAppsBlazerServer.Servcies.Chore
 
         public async void DeleteKid(KidsNameModel kidsNameModel)
         {
-            
+
             myDbContext.KidsName.Remove(kidsNameModel);
         }
 

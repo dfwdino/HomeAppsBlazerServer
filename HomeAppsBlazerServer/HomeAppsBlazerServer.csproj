@@ -37,7 +37,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Components\Pages\KidsChore\Chore\" />
+    <Content Update="Components\Pages\KidsChore\Kid\List-Kids.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
   </ItemGroup>
 	
 

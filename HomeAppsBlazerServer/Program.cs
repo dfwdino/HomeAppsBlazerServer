@@ -16,7 +16,9 @@ builder.Services.AddDbContext<MyDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IShoppingServices, ShoppingServices>();
+
 builder.Services.AddScoped<KidsChorseKidsServices, KidsChorseKidsServices>();
+builder.Services.AddScoped<ChoresChoresServices, ChoresChoresServices>();
 
 
 var app = builder.Build();

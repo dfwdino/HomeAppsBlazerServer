@@ -1,4 +1,5 @@
 ﻿using HomeAppsBlazerServer.Models;
+using HomeAppsBlazerServer.Models.Chore;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -20,9 +21,13 @@ namespace HomeAppsBlazerServer.Data
 
         public DbSet<PriceHistory> PriceHistory { get; set; }
 
+        #region Chores
+
         public DbSet<KidsNameModel> KidsName { get; set; }
+        public DbSet<ChoresModel> KidsChores { get; set; }
 
 
+        #endregion
 
 
     }
