@@ -38,28 +38,17 @@ else if (Chores.Count.Equals(0))
 
     <div class="row">
 
-        <div class="col-lg-1">
+        <div class="col-lg-2">
                 <label for="itemsname">Chore Name:</label>
         </div>
         <div class="col-lg-2">
-                <div id="kidname"> @chore.ChoreName </div>
-            @* <td class="link-primary" @onclick="@(() => EditStore(store.ShoppingStoreID))">@store.StoreName @(@store.Address != null ? " - " + store.Address : "")</td> *@
+                <div id="kidname" @onclick="@(() => EditStore(chore.ChoreID))"> <span class="link-primary"> @chore.ChoreName</span> </div>
         </div>
     </div>
 
     <div style="padding-top:20px" />
 
-    <div class="row">
-        <div class="col-lg-1" style="padding-bottom:20px">
-            <button class="btn btn-primary" @onclick="@(() => Cancel())">Cancel</button>
-        </div>
-        <div class="col-lg-1" style="padding-bottom:20px">
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </div>
-        <div class="col-lg-1">
-            <button class="btn btn-primary" @onclick="@(() => Deleteitems())">Delete</button>
-        </div>
-    </div>
+   
             }}
 
 @code {
@@ -74,20 +63,9 @@ else if (Chores.Count.Equals(0))
 
     }
 
-    
-
-    async Task Deleteitems()
+    void EditStore(int id)
     {
-       
+        NavigationManager.NavigateTo($"/Chore-Add-Update/{id}");
     }
-
-    async Task Cancel()
-    {
-
-        NavigationManager.NavigateTo($"KidsChore/");
-    }
-
-
-
 
 }

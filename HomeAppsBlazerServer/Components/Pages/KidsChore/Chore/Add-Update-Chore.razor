@@ -1,0 +1,128 @@
+﻿@page "/Chore-Add-Update"
+@page "/Chore-Add-Update/{Id:int}"
+
+@using HomeAppsBlazerServer.Models
+@using HomeAppsBlazerServer.Models.Chore
+@using HomeAppsBlazerServer.Servcies
+@using HomeAppsBlazerServer.Servcies.Chore
+@using Microsoft.AspNetCore.Mvc
+@using System.ComponentModel.DataAnnotations
+
+@inject ChoresChoresServices choresChoresServices
+@inject NavigationManager NavigationManager
+
+@rendermode InteractiveServer
+
+@layout HomeAppsBlazerServer.Components.Layout.KidsChoreLayout
+
+
+
+
+@if (Id is null)
+{
+    <h3>Add Chore</h3>
+    <div style="padding-bottom:10px" />
+}
+else
+{
+    <h3>Update @Chore.ChoreName</h3>
+}
+
+<EditForm Model="Chore" OnSubmit="HandleSubmit">
+
+    <div class="row">
+
+        <div class="col-lg-2">
+            <label for="itemsname">ChoreName Name:</label>
+        </div>
+        <div class="col-lg-2">
+            <InputText id="Chorename" @bind-Value="@Chore.ChoreName" />
+        </div>
+    </div>
+
+    <div style="padding-top:20px" />
+
+    <div class="row">
+        <div class="col-lg-1" style="padding-bottom:20px">
+            <button class="btn btn-primary" @onclick="@(() => Cancel())">Cancel</button>
+        </div>
+        <div class="col-lg-1" style="padding-bottom:20px">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+        <div class="col-lg-1">
+            <button class="btn btn-primary" @onclick="@(() => Deleteitems())">Delete</button>
+        </div>
+    </div>
+
+
+</EditForm>
+
+
+@code {
+
+    [Parameter]
+    public int? Id { get; set; }
+
+    public ChoresModel Chore { get; set; } = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id is not null)
+        {
+            var AChore = await choresChoresServices.GetChore((int)(Id));
+
+            if (AChore is not null)
+            {
+                Chore = AChore;
+
+            }
+
+        }
+    }
+
+    async Task HandleSubmit()
+    {
+        if (Chore.ChoreName.Length.Equals(0))
+        {
+            return;
+        }
+        else if (Id is not null) //update
+        {
+
+            choresChoresServices.UpdateChore(Chore);
+            NavigationManager.NavigateTo($"ChoresChore/");
+        }
+        else //add
+        {
+            Chore.ChoreName = Chore.ChoreName.ToTileCase();
+            choresChoresServices.AddChore(Chore);
+
+            Chore = new();
+
+            NavigationManager.NavigateTo($"ChoresChore/");
+        }
+
+
+
+    }
+
+
+    async Task Deleteitems()
+    {
+        //delete
+        Chore.IsDeleted = true;
+        choresChoresServices.UpdateChore(Chore);
+
+        NavigationManager.NavigateTo($"ChoresChore/");
+    }   
+
+    async Task Cancel()
+    {
+
+        NavigationManager.NavigateTo($"ChoresChore/");
+    }
+
+
+
+
+}
