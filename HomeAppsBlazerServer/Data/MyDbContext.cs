@@ -25,6 +25,7 @@ namespace HomeAppsBlazerServer.Data
 
         public DbSet<KidsNameModel> KidsName { get; set; }
         public DbSet<ChoresModel> KidsChores { get; set; }
+        public DbSet<LocationModel> KidsLocation { get; set; }
 
 
         #endregion

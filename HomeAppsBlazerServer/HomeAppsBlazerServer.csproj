@@ -37,6 +37,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="Components\Pages\KidsChore\Location\Add-Update-Location.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
     <Content Update="Components\Pages\KidsChore\Kid\List-Kids.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>

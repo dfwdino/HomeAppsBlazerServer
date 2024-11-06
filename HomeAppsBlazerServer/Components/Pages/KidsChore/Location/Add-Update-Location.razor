@@ -1,0 +1,128 @@
+﻿@page "/Location-Add-Update"
+@page "/Location-Add-Update/{Id:int}"
+
+@using HomeAppsBlazerServer.Models
+@using HomeAppsBlazerServer.Models.Chore
+@using HomeAppsBlazerServer.Servcies
+@using HomeAppsBlazerServer.Servcies.Chore
+@using Microsoft.AspNetCore.Mvc
+@using System.ComponentModel.DataAnnotations
+
+@inject LocationChoresServices LocationChoresServices
+@inject NavigationManager NavigationManager
+
+@rendermode InteractiveServer
+
+@layout HomeAppsBlazerServer.Components.Layout.KidsChoreLayout
+
+
+
+
+@if (Id is null)
+{
+    <h3>Add Chore</h3>
+    <div style="padding-bottom:10px" />
+}
+else
+{
+    <h3>Update @Location.PlaceName</h3>
+}
+
+<EditForm Model="Location" OnSubmit="HandleSubmit">
+
+    <div class="row">
+
+        <div class="col-lg-2">
+            <label for="itemsname">Location Name:</label>
+        </div>
+        <div class="col-lg-2">
+            <InputText id="Locationname" @bind-Value="@Location.PlaceName" />
+        </div>
+    </div>
+
+    <div style="padding-top:20px" />
+
+    <div class="row">
+        <div class="col-lg-1" style="padding-bottom:20px">
+            <button class="btn btn-primary" @onclick="@(() => Cancel())">Cancel</button>
+        </div>
+        <div class="col-lg-1" style="padding-bottom:20px">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+        <div class="col-lg-1">
+            <button class="btn btn-primary" @onclick="@(() => Deleteitems())">Delete</button>
+        </div>
+    </div>
+
+
+</EditForm>
+
+
+@code {
+
+    [Parameter]
+    public int? Id { get; set; }
+
+    public LocationModel Location { get; set; } = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id is not null)
+        {
+            var AChore = await LocationChoresServices.GetLocation((int)(Id));
+
+            if (AChore is not null)
+            {
+                Location = AChore;
+
+            }
+
+        }
+    }
+
+    async Task HandleSubmit()
+    {
+        if (Location.PlaceName.Length.Equals(0))
+        {
+            return;
+        }
+        else if (Id is not null) //update
+        {
+
+            LocationChoresServices.UpdateChore(Location);
+            NavigationManager.NavigateTo($"ChoresChore/");
+        }
+        else //add
+        {
+            Location.PlaceName = Location.PlaceName.ToTileCase();
+            LocationChoresServices.AddLocation(Location);
+
+            Location = new();
+
+            NavigationManager.NavigateTo($"ChoresChore/");
+        }
+
+
+
+    }
+
+
+    async Task Deleteitems()
+    {
+        //delete
+        Location.IsDeleted = true;
+        LocationChoresServices.UpdateChore(Location);
+
+        NavigationManager.NavigateTo($"ChoresChore/");
+    }   
+
+    async Task Cancel()
+    {
+
+        NavigationManager.NavigateTo($"ChoresChore/");
+    }
+
+
+
+
+}

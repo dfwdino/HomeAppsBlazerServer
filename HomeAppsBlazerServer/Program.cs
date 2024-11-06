@@ -20,6 +20,8 @@ builder.Services.AddScoped<IShoppingServices, ShoppingServices>();
 builder.Services.AddScoped<KidsChorseKidsServices, KidsChorseKidsServices>();
 builder.Services.AddScoped<ChoresChoresServices, ChoresChoresServices>();
 
+builder.Services.AddScoped<LocationChoresServices, LocationChoresServices>();
+
 
 var app = builder.Build();
 

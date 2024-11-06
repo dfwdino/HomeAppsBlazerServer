@@ -1,4 +1,4 @@
-﻿@page "/List-Kids"
+﻿@page "/List-Location"
 
 @using HomeAppsBlazerServer.Models
 @using HomeAppsBlazerServer.Models.Chore
@@ -9,7 +9,7 @@
 @using Microsoft.AspNetCore.Mvc
 @using System.ComponentModel.DataAnnotations
 
-@inject KidsChorseKidsServices kidsChorseKidsServices
+@inject LocationChoresServices LocationChoresServices
 @inject NavigationManager NavigationManager
 
 @rendermode InteractiveServer
@@ -22,18 +22,18 @@
     <h3>Add Kid</h3>
     <div style="padding-bottom:10px" />
 
-@if (Kids is null)
+@if (Locations is null)
     {
-        <p><em>Loadding kids items....</em></p>
+        <p><em>Loadding location items....</em></p>
     }
-else if (Kids.Count.Equals(0))
+else if (Locations.Count.Equals(0))
     {
-        <p><em>What happen to the kids?</em></p>
+    <p><em>What happen to the location?</em></p>
     }
     else
     {
 
-     @foreach (var kid in Kids)
+     @foreach (var location in Locations)
             {
 
     <div class="row">
@@ -42,9 +42,8 @@ else if (Kids.Count.Equals(0))
             <label for="itemsname">Kid Name:</label>
         </div>
         <div class="col-lg-2">
-                <div id="kidname" @onclick="@(() => EditStore(kid.IDKidsName))"> @kid.KidName </div>
-            @* <td class="link-primary" @onclick="@(() => EditStore(store.ShoppingStoreID))">@store.StoreName @(@store.Address != null ? " - " + store.Address : "")</td> *@
-        </div>
+                <div id="place" class="link-primary" @onclick="@(() => EditStore(location.ChoreLocationId))"> @location.PlaceName </div>
+         </div>
     </div>
 
     <div style="padding-top:20px" />
@@ -64,25 +63,23 @@ else if (Kids.Count.Equals(0))
 
 @code {
 
-    public List<KidsNameModel> Kids { get; set; } = new();
+    public List<LocationModel> Locations { get; set; } = new();
 
     protected override async Task OnParametersSetAsync()
     {
        
-        Kids = await kidsChorseKidsServices.GetKids();
+        Locations = await LocationChoresServices.GetLocations();
 
-    }
-
-    
-
-    async Task Deleteitems()
-    {
-       
     }
 
     void EditStore(int id)
     {
-        NavigationManager.NavigateTo($"/Kid-Add-Update/{id}");
+        NavigationManager.NavigateTo($"/Location-Add-Update/{id}");
+    }
+
+    async Task Deleteitems()
+    {
+       
     }
 
     async Task Cancel()
