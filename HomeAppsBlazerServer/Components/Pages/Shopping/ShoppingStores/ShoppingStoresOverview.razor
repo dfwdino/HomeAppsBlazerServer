@@ -1,7 +1,8 @@
 ﻿@page "/ShoppingStores"
-@    using HomeAppsBlazerServer.Models
-@    using HomeAppsBlazerServer.Servcies;
-    using HomeAppsBlazerServer.Servcies.Shopping
+
+@using HomeAppsBlazerServer.Models
+@using HomeAppsBlazerServer.Servcies
+@using HomeAppsBlazerServer.Servcies.Shopping
 
 @*Endalbes it*@
 @* @rendermode InteractiveServer *@
@@ -16,7 +17,7 @@
 @inject IShoppingServices ShoppingServices
 @inject NavigationManager NavigationManger
 
-@layout HomeAppsBlazerServer.Components.Layout.ShoppingLayout
+@layout HomeAppsBlazerServer.Components.Layout.Shopping.ShoppingLayout
 
 <PageTitle>Shopping Stores</PageTitle>
 <h3>Shopping Stores</h3>

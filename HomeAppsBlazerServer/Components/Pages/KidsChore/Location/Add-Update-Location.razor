@@ -1,19 +1,20 @@
 ﻿@page "/Location-Add-Update"
 @page "/Location-Add-Update/{Id:int}"
 
-@    using HomeAppsBlazerServer.Models
-@    using HomeAppsBlazerServer.Models.Chore
-@    using HomeAppsBlazerServer.Servcies
-@    using HomeAppsBlazerServer.Servcies.Chore
-@    using Microsoft.AspNetCore.Mvc
-@    using System.ComponentModel.DataAnnotations
+@using HomeAppsBlazerServer.Components.Extensions
+@using HomeAppsBlazerServer.Models
+@using HomeAppsBlazerServer.Models.Chore
+@using HomeAppsBlazerServer.Servcies
+@using HomeAppsBlazerServer.Servcies.Chore
+@using Microsoft.AspNetCore.Mvc
+@using System.ComponentModel.DataAnnotations
 
 @inject LocationChoresServices LocationChoresServices
 @inject NavigationManager NavigationManager
 
 @rendermode InteractiveServer
 
-@layout HomeAppsBlazerServer.Components.Layout.KidsChoreLayout
+@layout HomeAppsBlazerServer.Components.Layout.Chore.KidsChoreLayout
 
 
 
@@ -69,7 +70,7 @@ else
     {
         if (Id is not null)
         {
-            var AChore = await LocationChoresServices.GetLocation((int)(Id));
+            var AChore = await LocationChoresServices.GetLocationAsync((int)(Id));
 
             if (AChore is not null)
             {
@@ -89,13 +90,13 @@ else
         else if (Id is not null) //update
         {
 
-            LocationChoresServices.UpdateChore(Location);
+            LocationChoresServices.UpdateChoreAsync(Location);
             NavigationManager.NavigateTo($"ChoresChore/");
         }
         else //add
         {
             Location.PlaceName = Location.PlaceName.ToTileCase();
-            LocationChoresServices.AddLocation(Location);
+            LocationChoresServices.AddLocationAsync(Location);
 
             Location = new();
 
@@ -111,7 +112,7 @@ else
     {
         //delete
         Location.IsDeleted = true;
-        LocationChoresServices.UpdateChore(Location);
+        LocationChoresServices.UpdateChoreAsync(Location);
 
         NavigationManager.NavigateTo($"ChoresChore/");
     }   

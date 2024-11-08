@@ -1,19 +1,20 @@
 ﻿@page "/Kid-Add-Update"
 @page "/Kid-Add-Update/{Id:int}"
 
-@    using HomeAppsBlazerServer.Models
-@    using HomeAppsBlazerServer.Models.Chore
-@    using HomeAppsBlazerServer.Servcies
-@    using Microsoft.AspNetCore.Mvc
-@    using System.ComponentModel.DataAnnotations
-@    using HomeAppsBlazerServer.Servcies.Chore
+@using HomeAppsBlazerServer.Components.Extensions
+@using HomeAppsBlazerServer.Models
+@using HomeAppsBlazerServer.Models.Chore
+@using HomeAppsBlazerServer.Servcies
+@using Microsoft.AspNetCore.Mvc
+@using System.ComponentModel.DataAnnotations
+@using HomeAppsBlazerServer.Servcies.Chore
 
 @inject KidsChorseKidsServices kidsChorseKidsServices
 @inject NavigationManager NavigationManager
 
 @rendermode InteractiveServer
 
-@layout HomeAppsBlazerServer.Components.Layout.KidsChoreLayout
+@layout HomeAppsBlazerServer.Components.Layout.Chore.KidsChoreLayout
 
 
 

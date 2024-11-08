@@ -1,11 +1,12 @@
 ﻿@page "/Shoppingitems"
 @page "/Shoppingitems/{showallitems:bool}"
+@using HomeAppsBlazerServer.Components.Pages.Shopping.PriceHistory
 
-@    using HomeAppsBlazerServer.Components.Pages.Shopping.PriceHistory
-@    using HomeAppsBlazerServer.Models
+@using HomeAppsBlazerServer.Components.Pages.Shopping.PriceHistory
+@using HomeAppsBlazerServer.Models
 
-@    using HomeAppsBlazerServer.Servcies;
-    using HomeAppsBlazerServer.Servcies.Shopping
+@using HomeAppsBlazerServer.Servcies;
+@using HomeAppsBlazerServer.Servcies.Shopping
 
 @*Endalbes it*@
 @* @rendermode InteractiveServer *@
@@ -22,7 +23,7 @@
 @inject NavigationManager NavigationManger
 @inject IJSRuntime JsRuntime
 
-@layout HomeAppsBlazerServer.Components.Layout.ShoppingLayout
+@layout HomeAppsBlazerServer.Components.Layout.Shopping.ShoppingLayout
 
 
 
