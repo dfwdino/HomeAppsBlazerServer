@@ -68,7 +68,7 @@ else if (Locations.Count.Equals(0))
     protected override async Task OnParametersSetAsync()
     {
        
-        Locations = await LocationChoresServices.GetLocations();
+        Locations = await LocationChoresServices.GetLocationsAsync();
 
     }
 

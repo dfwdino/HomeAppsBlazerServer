@@ -1,7 +1,7 @@
 using HomeAppsBlazerServer.Components;
 using HomeAppsBlazerServer.Data;
-using HomeAppsBlazerServer.Servcies;
 using HomeAppsBlazerServer.Servcies.Chore;
+using HomeAppsBlazerServer.Servcies.Shopping;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,10 +17,10 @@ builder.Services.AddDbContext<MyDbContext>(options =>
 
 builder.Services.AddScoped<IShoppingServices, ShoppingServices>();
 
-builder.Services.AddScoped<KidsChorseKidsServices, KidsChorseKidsServices>();
-builder.Services.AddScoped<ChoresChoresServices, ChoresChoresServices>();
+builder.Services.AddScoped<IKidsChorseKidsServices, KidsChorseKidsServices>();
+builder.Services.AddScoped<IChoresChoresServices, ChoresChoresServices>();
 
-builder.Services.AddScoped<LocationChoresServices, LocationChoresServices>();
+builder.Services.AddScoped<ILocationChoresServices, LocationChoresServices>();
 
 
 var app = builder.Build();

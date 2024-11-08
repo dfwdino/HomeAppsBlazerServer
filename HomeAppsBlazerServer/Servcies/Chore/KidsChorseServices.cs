@@ -1,15 +1,16 @@
-﻿using HomeAppsBlazerServer.Data;
+﻿using HomeAppsBlazerServer.Components.Extensions;
+using HomeAppsBlazerServer.Data;
 using HomeAppsBlazerServer.Models.Chore;
 
 namespace HomeAppsBlazerServer.Servcies.Chore
 {
-    public class KidsChorseKidsServices
+    public class KidsChorseKidsServices : IKidsChorseKidsServices
     {
 
         private readonly MyDbContext myDbContext;
-        private readonly ILogger<KidsChorseKidsServices> _logger;
+        private readonly ILogger<IKidsChorseKidsServices> _logger;
 
-        public KidsChorseKidsServices(MyDbContext myDbContext, ILogger<KidsChorseKidsServices> logger)
+        public KidsChorseKidsServices(MyDbContext myDbContext, ILogger<IKidsChorseKidsServices> logger)
         {
             this.myDbContext = myDbContext;
             _logger = logger;
@@ -33,7 +34,7 @@ namespace HomeAppsBlazerServer.Servcies.Chore
                 return;
             }
 
-            //kidsNameModel.KidName = kidsNameModel.KidName.ToTileCase();
+            kidsNameModel.KidName = kidsNameModel.KidName.ToTileCase();
             myDbContext.KidsName.Add(kidsNameModel);
 
             myDbContext.SaveChanges();

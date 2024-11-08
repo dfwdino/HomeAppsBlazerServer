@@ -1,56 +1,58 @@
-﻿using HomeAppsBlazerServer.Data;
+﻿using HomeAppsBlazerServer.Components.Extensions;
+using HomeAppsBlazerServer.Data;
 using HomeAppsBlazerServer.Models.Chore;
 
 namespace HomeAppsBlazerServer.Servcies.Chore
 {
-    public class LocationChoresServices
+    public class LocationChoresServices : ILocationChoresServices
     {
 
         private readonly MyDbContext myDbContext;
-        private readonly ILogger<LocationChoresServices> _logger;
+        private readonly ILogger<ILocationChoresServices> _logger;
 
-        public LocationChoresServices(MyDbContext myDbContext, ILogger<LocationChoresServices> logger)
+        public LocationChoresServices(MyDbContext myDbContext, ILogger<ILocationChoresServices> logger)
         {
             this.myDbContext = myDbContext;
             _logger = logger;
         }
 
-        public async Task<List<LocationModel>> GetLocations()
+        public async Task<List<LocationModel>> GetLocationsAsync()
         {
             List<LocationModel> Chores = myDbContext.KidsLocation.Where(mm => mm.IsDeleted == false).ToList();
 
             return Chores;
         }
 
-        public async void AddLocation(LocationModel ChoresNameModel)
+        public async void AddLocationAsync(LocationModel location)
         {
-            if (ChoresNameModel is null)
+            if (location is null)
             {
                 return;
             }
-            else if (ChoresNameModel.PlaceName == null)
+            else if (location.PlaceName == null)
             {
                 return;
             }
 
-            //ChoresNameModel.KidName = ChoresNameModel.KidName.ToTileCase();
-            myDbContext.KidsLocation.Add(ChoresNameModel);
+            location.PlaceName = location.PlaceName.ToTileCase();
+            myDbContext.KidsLocation.Add(location);
 
             myDbContext.SaveChanges();
         }
 
-        public async Task<LocationModel> GetLocation(int id)
+        public async Task<LocationModel> GetLocationAsync(int id)
         {
             return myDbContext.KidsLocation.Where(mm => mm.ChoreLocationId == id).FirstOrDefault();
         }
 
-        public async void UpdateChore(LocationModel ChoresNameModel)
+        public async void UpdateChoreAsync(LocationModel location)
         {
-            myDbContext.KidsLocation.Update(ChoresNameModel);
+            myDbContext.KidsLocation.Update(location);
+
             myDbContext.SaveChanges();
         }
 
-        public async void DeleteLocation(LocationModel ChoresNameModel)
+        public async void DeleteLocationAsync(LocationModel ChoresNameModel)
         {
 
             myDbContext.KidsLocation.Remove(ChoresNameModel);

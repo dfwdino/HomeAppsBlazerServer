@@ -1,6 +1,6 @@
 ﻿using HomeAppsBlazerServer.Models;
 
-namespace HomeAppsBlazerServer.Servcies
+namespace HomeAppsBlazerServer.Servcies.Shopping
 {
     public interface IShoppingServices
     {

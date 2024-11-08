@@ -1,11 +1,11 @@
-﻿using HomeAppsBlazerServer.Components;
+﻿using HomeAppsBlazerServer.Components.Extensions;
 using HomeAppsBlazerServer.Data;
 using HomeAppsBlazerServer.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualBasic;
 
-namespace HomeAppsBlazerServer.Servcies
+namespace HomeAppsBlazerServer.Servcies.Shopping
 {
     public class ShoppingServices : IShoppingServices
     {

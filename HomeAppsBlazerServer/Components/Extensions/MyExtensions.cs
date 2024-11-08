@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace HomeAppsBlazerServer.Components
+namespace HomeAppsBlazerServer.Components.Extensions
 {
     public static class MyExtensions
     {
