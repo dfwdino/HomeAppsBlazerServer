@@ -9,12 +9,15 @@
 @using Microsoft.AspNetCore.Mvc
 @using System.ComponentModel.DataAnnotations
 
-@inject LocationChoresServices LocationChoresServices
+@inject ILocationChoresServices LocationChoresServices
 @inject NavigationManager NavigationManager
 
 @rendermode InteractiveServer
 
 @layout HomeAppsBlazerServer.Components.Layout.Chore.KidsChoreLayout
+
+@inject NavigationManager NavigationManger
+@inject IJSRuntime JsRuntime
 
 
 
@@ -42,7 +45,7 @@ else if (Locations.Count.Equals(0))
             <label for="itemsname">Kid Name:</label>
         </div>
         <div class="col-lg-2">
-                <div id="place" class="link-primary" @onclick="@(() => EditStore(location.ChoreLocationId))"> @location.PlaceName </div>
+                <div id="place" class="link-primary" @onclick="@(() => EditLocation(location.ChoreLocationId))"> @location.PlaceName </div>
          </div>
     </div>
 
@@ -65,14 +68,14 @@ else if (Locations.Count.Equals(0))
 
     public List<LocationModel> Locations { get; set; } = new();
 
-    protected override async Task OnParametersSetAsync()
+    protected override async Task OnInitializedAsync()
     {
        
         Locations = await LocationChoresServices.GetLocationsAsync();
 
     }
 
-    void EditStore(int id)
+    void EditLocation(int id)
     {
         NavigationManager.NavigateTo($"/Location-Add-Update/{id}");
     }

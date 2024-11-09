@@ -354,7 +354,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
                 await Console.Out.WriteLineAsync(ex.Message);
             }
 
-            return results;
+            return results.OrderBy(mm => mm.ItemName).ToList();
 
         }
 

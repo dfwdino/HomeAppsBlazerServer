@@ -18,6 +18,7 @@ builder.Services.AddDbContext<MyDbContext>(options =>
 builder.Services.AddScoped<IShoppingServices, ShoppingServices>();
 
 builder.Services.AddScoped<IKidsChorseKidsServices, KidsChorseKidsServices>();
+
 builder.Services.AddScoped<IChoresChoresServices, ChoresChoresServices>();
 
 builder.Services.AddScoped<ILocationChoresServices, LocationChoresServices>();

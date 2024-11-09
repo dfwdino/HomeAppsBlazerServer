@@ -39,7 +39,7 @@ else
     <table class="table">
         <thead>
         <th>Item Name</th>
-        <th>Edit/Delete</th>
+        <th></th>
         </thead>
         <tbody>
             @foreach (var item in CurrentShoppingList)
@@ -61,7 +61,7 @@ else
                        </td>
                    
 
-                    <td><span class="link-primary" @onclick="@(() => EditItem(item.ShoppingItemListID))"> Edit </span> </td>
+                    <td><span class="link-primary" @onclick="@(() => EditItem(item.ShoppingItemListID))"> Update </span> </td>
                 </tr>
             }
         </tbody>

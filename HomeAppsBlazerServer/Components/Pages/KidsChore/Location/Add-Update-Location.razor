@@ -9,7 +9,7 @@
 @using Microsoft.AspNetCore.Mvc
 @using System.ComponentModel.DataAnnotations
 
-@inject LocationChoresServices LocationChoresServices
+@inject ILocationChoresServices LocationChoresServices
 @inject NavigationManager NavigationManager
 
 @rendermode InteractiveServer
@@ -100,7 +100,7 @@ else
 
             Location = new();
 
-            NavigationManager.NavigateTo($"ChoresChore/");
+            NavigationManager.NavigateTo($"List-Location/");
         }
 
 
@@ -114,13 +114,13 @@ else
         Location.IsDeleted = true;
         LocationChoresServices.UpdateChoreAsync(Location);
 
-        NavigationManager.NavigateTo($"ChoresChore/");
+        NavigationManager.NavigateTo($"List-Location/");
     }   
 
     async Task Cancel()
     {
 
-        NavigationManager.NavigateTo($"ChoresChore/");
+        NavigationManager.NavigateTo($"List-Location/");
     }
 
 
