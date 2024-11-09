@@ -54,8 +54,12 @@ namespace HomeAppsBlazerServer.Servcies.Chore
 
         public async void DeleteLocationAsync(LocationModel ChoresNameModel)
         {
+            ChoresNameModel.IsDeleted = true;
 
-            myDbContext.KidsLocation.Remove(ChoresNameModel);
+            myDbContext.KidsLocation.Update(ChoresNameModel);
+
+            myDbContext.SaveChanges();
+            
         }
 
     }

@@ -22,7 +22,7 @@
 
 
 
-    <h3>Add Kid</h3>
+    <h3>All Locations</h3>
     <div style="padding-bottom:10px" />
 
 @if (Locations is null)
@@ -42,26 +42,18 @@ else if (Locations.Count.Equals(0))
     <div class="row">
 
         <div class="col-lg-1">
-            <label for="itemsname">Kid Name:</label>
+            <label for="itemsname">Location:</label>
         </div>
         <div class="col-lg-2">
                 <div id="place" class="link-primary" @onclick="@(() => EditLocation(location.ChoreLocationId))"> @location.PlaceName </div>
          </div>
+            <div class="col-lg-2">
+                <button class="btn btn-primary" @onclick="@(() => Deleteitems(location))">Delete</button>
+            </div>
+   
     </div>
 
-    <div style="padding-top:20px" />
-
-    <div class="row">
-        <div class="col-lg-1" style="padding-bottom:20px">
-            <button class="btn btn-primary" @onclick="@(() => Cancel())">Cancel</button>
-        </div>
-        <div class="col-lg-1" style="padding-bottom:20px">
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </div>
-        <div class="col-lg-1">
-            <button class="btn btn-primary" @onclick="@(() => Deleteitems())">Delete</button>
-        </div>
-    </div>
+   
             }}
 
 @code {
@@ -70,7 +62,7 @@ else if (Locations.Count.Equals(0))
 
     protected override async Task OnInitializedAsync()
     {
-       
+
         Locations = await LocationChoresServices.GetLocationsAsync();
 
     }
@@ -80,9 +72,12 @@ else if (Locations.Count.Equals(0))
         NavigationManager.NavigateTo($"/Location-Add-Update/{id}");
     }
 
-    async Task Deleteitems()
+    //really shoudl be passing in the id not the old object but tis small. :-)
+    async Task Deleteitems(LocationModel locationModel)
     {
-       
+
+        LocationChoresServices.DeleteLocationAsync(locationModel);
+        Locations.Remove(locationModel);
     }
 
     async Task Cancel()
