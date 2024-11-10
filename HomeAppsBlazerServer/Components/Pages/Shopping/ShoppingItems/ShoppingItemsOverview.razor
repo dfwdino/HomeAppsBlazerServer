@@ -35,24 +35,33 @@
 <script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.0/jquery.dataTables.min.js"></script>
 
  *@
+
+ 
+
+
+  <nav class="floating-menu">
+
 @if (_showallitems == false)
 {
     <PageTitle>Shopping Items</PageTitle>
      <h3>Showing All Items</h3>
 
     
-    <span class="link-primary" @onclick="@(() => GetShoppingItems(@_showallitems))">Show Not on the List</span>
+    <span class="link-primary" @onclick="@(() => GetShoppingItems(@_showallitems))">Show Not on the List - </span>
 }
 else
 {
     <PageTitle>Shopping Items</PageTitle>
     <h3>Showing Non-List Items</h3>
-    <span class="link-primary" @onclick="@(() => GetShoppingItems(@_showallitems))">Show All</span>
+    <span class="link-primary" @onclick="@(() => GetShoppingItems(@_showallitems))">Show All - </span>
 
    
 }
 
-<span class="link-primary" @onclick="@(() => NeedList())"> Need List</span>
+<span class="link-primary" @onclick="@(() => NeedList())"> Need List </span> <span class="link-primary" @onclick="@(() => AddItem())">- Add Item</span> 
+</nav>
+
+    <div style="padding-bottom:30px" />
 
 @if (AllShoppingItems is null)
 {
@@ -67,8 +76,7 @@ else
 
     <div style="padding-bottom:10px" />
 
-
-
+       
     <table id="shoppingitems" class="table">
         <thead>
         <th>Item</th>
@@ -202,6 +210,25 @@ else
         text-decoration: line-through;
         color: red;
     }
+
+    .floating-menu {
+        font-family: sans-serif;
+        background-color: white;
+        padding: 5px;
+        ;
+        /*width: 130px;*/
+        z-index: 100;
+        position: fixed;
+    }
+
+        .floating-menu a,
+        .floating-menu h3 {
+            /* font-size: 0.9em;
+        display: block;
+        margin: 0 0.5em;
+        color: white;*/
+        }
+
 </style>
 
 <script>
