@@ -141,8 +141,6 @@ else
         var customers = await ShoppingServices.GetShoppingStoresAsync(request.Filter.Value); // API call
 
         return await Task.FromResult(new AutoCompleteDataProviderResult<ShoppingStore> { Data = customers, TotalCount = customers.Count() });
-
-
     }
 
 

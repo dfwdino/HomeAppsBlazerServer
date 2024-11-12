@@ -1,0 +1,159 @@
+﻿@page "/Add-Update-Chore-List-Item"
+@page "/Add-Update-Chore-List-Item/{Id:int}"
+
+@using HomeAppsBlazerServer.Components.Extensions
+@using HomeAppsBlazerServer.Models
+@using HomeAppsBlazerServer.Models.Chore
+@using HomeAppsBlazerServer.Servcies
+@using HomeAppsBlazerServer.Servcies.Chore
+@using Microsoft.AspNetCore.Mvc
+@using System.ComponentModel.DataAnnotations
+
+@inject ChoresListItemChoresServices ChoresListItemChoresServices
+@inject NavigationManager NavigationManager
+
+@rendermode InteractiveServer
+
+@layout HomeAppsBlazerServer.Components.Layout.Chore.KidsChoreLayout
+
+
+
+
+@if (Id is null)
+{
+    <h3>Add Chore</h3>
+    <div style="padding-bottom:10px" />
+}
+else
+{
+    <h3>Update @Chore.KidsChoreID</h3>
+}
+
+<EditForm Model="Chore" OnSubmit="HandleSubmit">
+
+    <div class="row">
+
+        <div class="col-lg-2">
+            <label for="itemsname">ChoreName Name:</label>
+        </div>
+        <div class="col-lg-2">
+           @*  <InputText id="KidsChoreID" @bind-Value="@Chore.KidsChoreID.ToString()" /> *@
+            <BlazorBootstrap.AutoComplete @bind-Value="ChoreName"
+                                          TItem="ChoreListItemsModel"
+                                          DataProvider="CustomersDataProvider"
+                                          PropertyName="ChoreName"
+                                          Placeholder="Search a ChoreName..."
+                                          OnChanged="(ChoreListItemsModel choreitem) => OnAutoCompleteChanged(choreitem)" />
+        </div>
+    </div>
+
+    <div style="padding-top:20px" />
+
+    <div class="row">
+        <div class="col-lg-1" style="padding-bottom:20px">
+            <button class="btn btn-primary" @onclick="@(() => Cancel())">Cancel</button>
+        </div>
+        <div class="col-lg-1" style="padding-bottom:20px">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+        <div class="col-lg-1">
+            <button class="btn btn-primary" @onclick="@(() => Deleteitems())">Delete</button>
+        </div>
+    </div>
+
+
+</EditForm>
+
+
+@code {
+
+    [Parameter]
+    public int? Id { get; set; }
+
+    public ChoreListItemsModel Chore { get; set; } = new();
+
+    public string ChoreName;
+
+
+    private async Task<AutoCompleteDataProviderResult<ChoreListItemsModel>> 
+                CustomersDataProvider(BlazorBootstrap.AutoCompleteDataProviderRequest<ChoreListItemsModel> request)
+    {
+        //var customers = await ChoresListItemChoresServices.GetChoreItems(request.Filter.Value); // API call
+        var customers = await ChoresListItemChoresServices.GetChoreItems(); // API call
+
+        return await Task.FromResult(new AutoCompleteDataProviderResult<ChoreListItemsModel> { Data = customers, TotalCount = customers.Count() });
+    }
+
+
+    private void OnAutoCompleteChanged(ChoreListItemsModel customer)
+    {
+        if (customer != null)
+            Chore.KidsChoreID = customer.KidsChoreID;
+             //Console.WriteLine($"'{customer?.StoreName}' selected.");
+    }
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id is not null)
+        {
+            var AChore = await ChoresListItemChoresServices.GetChoreItem((int)(Id));
+
+            if (AChore is not null)
+            {
+                Chore = AChore;
+
+            }
+
+        }
+    }
+
+
+
+
+    async Task HandleSubmit()
+    {
+        if (Chore is null)
+        {
+            return;
+        }
+        else if (Id is not null) //update
+        {
+
+            ChoresListItemChoresServices.UpdateChoreItem (Chore);
+            NavigationManager.NavigateTo($"ChoresChore/");
+        }
+        else //add
+        {
+            //Chore.ChoreName = Chore.ChoreName.ToTileCase();
+            ChoresListItemChoresServices.AddChoreItem(Chore);
+
+            Chore = new();
+
+            NavigationManager.NavigateTo($"ChoresChore/");
+        }
+
+
+
+    }
+
+
+    async Task Deleteitems()
+    {
+        //delete
+        Chore.IsDeleted = true;
+        ChoresListItemChoresServices.UpdateChoreItem(Chore);
+
+        NavigationManager.NavigateTo($"ChoresChore/");
+    }   
+
+    async Task Cancel()
+    {
+
+        NavigationManager.NavigateTo($"ChoresChore/");
+    }
+
+
+
+
+}

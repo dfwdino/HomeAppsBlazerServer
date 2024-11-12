@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace HomeAppsBlazerServer.Models.Chore
 {
     [Table("ChoreList", Schema = "KidsArea")]
-    public class ChoreListModel
+    public class ChoreListItemsModel
     {
         [Key]
         public int ChoreHistoryID { get; set; } // PK

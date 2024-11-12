@@ -23,6 +23,8 @@ builder.Services.AddScoped<IChoresChoresServices, ChoresChoresServices>();
 
 builder.Services.AddScoped<ILocationChoresServices, LocationChoresServices>();
 
+builder.Services.AddScoped<ChoresListItemChoresServices, ChoresListItemChoresServices>();
+
 
 var app = builder.Build();
 

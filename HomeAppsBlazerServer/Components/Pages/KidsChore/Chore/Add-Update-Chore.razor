@@ -91,7 +91,7 @@ else
         {
 
             choresChoresServices.UpdateChore(Chore);
-            NavigationManager.NavigateTo($"ChoresChore/");
+            NavigationManager.NavigateTo($"List-Chore/");
         }
         else //add
         {
@@ -100,7 +100,7 @@ else
 
             Chore = new();
 
-            NavigationManager.NavigateTo($"ChoresChore/");
+            NavigationManager.NavigateTo($"List-Chore/");
         }
 
 
@@ -114,13 +114,13 @@ else
         Chore.IsDeleted = true;
         choresChoresServices.UpdateChore(Chore);
 
-        NavigationManager.NavigateTo($"ChoresChore/");
+        NavigationManager.NavigateTo($"List-Chore/");
     }   
 
     async Task Cancel()
     {
 
-        NavigationManager.NavigateTo($"ChoresChore/");
+        NavigationManager.NavigateTo($"List-Chore/");
     }
 
 
