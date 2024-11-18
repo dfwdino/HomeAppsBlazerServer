@@ -19,48 +19,37 @@
 
 
 
-    <h3>Add Kid</h3>
-    <div style="padding-bottom:10px" />
+<h3>Add Kid</h3>
+<div style="padding-bottom:10px" />
 
 @if (Kids is null)
-    {
-        <p><em>Loadding kids items....</em></p>
-    }
+{
+    <p><em>Loadding kids items....</em></p>
+}
 else if (Kids.Count.Equals(0))
+{
+    <p><em>What happen to the kids?</em></p>
+}
+else
+{
+
+    @foreach (var kid in Kids)
     {
-        <p><em>What happen to the kids?</em></p>
-    }
-    else
-    {
 
-     @foreach (var kid in Kids)
-            {
+        <div class="row bordered-row">
 
-    <div class="row">
+            <div class="col-lg-3 ">
+                <label style="font-weight:200;" for="itemsname">Kid Name:</label>
+                <span style="padding-right:20px" id="kidname" @onclick="@(() => EditStore(kid.IDKidsName))"> @kid.KidName </span>
+                    <button class="btn btn-primary" @onclick="@(() => Deleteitems())">Delete</button>
+            </div>
+            
+        </div>
 
-        <div class="col-lg-1">
-            <label for="itemsname">Kid Name:</label>
-        </div>
-        <div class="col-lg-2">
-                <div id="kidname" @onclick="@(() => EditStore(kid.IDKidsName))"> @kid.KidName </div>
-            @* <td class="link-primary" @onclick="@(() => EditStore(store.ShoppingStoreID))">@store.StoreName @(@store.Address != null ? " - " + store.Address : "")</td> *@
-        </div>
-    </div>
+        <div style="padding-top:20px" />
 
-    <div style="padding-top:20px" />
 
-    <div class="row">
-        <div class="col-lg-1" style="padding-bottom:20px">
-            <button class="btn btn-primary" @onclick="@(() => Cancel())">Cancel</button>
-        </div>
-        <div class="col-lg-1" style="padding-bottom:20px">
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </div>
-        <div class="col-lg-1">
-            <button class="btn btn-primary" @onclick="@(() => Deleteitems())">Delete</button>
-        </div>
-    </div>
-            }}
+    }}
 
 @code {
 
@@ -68,16 +57,16 @@ else if (Kids.Count.Equals(0))
 
     protected override async Task OnParametersSetAsync()
     {
-       
+
         Kids = await kidsChorseKidsServices.GetKids();
 
     }
 
-    
+
 
     async Task Deleteitems()
     {
-       
+
     }
 
     void EditStore(int id)
@@ -95,3 +84,12 @@ else if (Kids.Count.Equals(0))
 
 
 }
+
+<style>
+    .bordered-row {
+        border: 1px solid black;
+        border-radius: 5px; /* Optional: Adds rounded corners */
+        padding: 10px; /* Optional: Adds some inner spacing */
+        margin-bottom: 10px; /* Optional: Adds spacing between rows */
+    }
+</style>

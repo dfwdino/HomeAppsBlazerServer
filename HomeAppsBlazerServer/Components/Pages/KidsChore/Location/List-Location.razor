@@ -2,69 +2,55 @@
 
 @using HomeAppsBlazerServer.Models
 @using HomeAppsBlazerServer.Models.Chore
-
-@using HomeAppsBlazerServer.Servcies
 @using HomeAppsBlazerServer.Servcies.Chore
-
-@using Microsoft.AspNetCore.Mvc
-@using System.ComponentModel.DataAnnotations
 
 @inject ILocationChoresServices LocationChoresServices
 @inject NavigationManager NavigationManager
-
-@rendermode InteractiveServer
-
-@layout HomeAppsBlazerServer.Components.Layout.Chore.KidsChoreLayout
-
-@inject NavigationManager NavigationManger
 @inject IJSRuntime JsRuntime
 
+@rendermode InteractiveServer
+@layout HomeAppsBlazerServer.Components.Layout.Chore.KidsChoreLayout
 
+<h3>All Locations</h3>
+<div class="padding-bottom"></div>
 
-
-    <h3>All Locations</h3>
-    <div style="padding-bottom:10px" />
-
-@if (Locations is null)
+@if (Locations is null || Locations.Count == 0)
+{
+    <p><em>@(Locations is null ? "Loading location items..." : "What happened to the locations?")</em></p>
+}
+else
+{
+    @foreach (var location in Locations)
     {
-        <p><em>Loadding location items....</em></p>
-    }
-else if (Locations.Count.Equals(0))
-    {
-    <p><em>What happen to the location?</em></p>
-    }
-    else
-    {
-
-     @foreach (var location in Locations)
-            {
-
-    <div class="row">
-
-        <div class="col-lg-1">
-            <label for="itemsname">Location:</label>
-        </div>
-        <div class="col-lg-2">
-                <div id="place" class="link-primary" @onclick="@(() => EditLocation(location.ChoreLocationId))"> @location.PlaceName </div>
-         </div>
-            <div class="col-lg-2">
-                <button class="btn btn-primary" @onclick="@(() => Deleteitems(location))">Delete</button>
+        <div class="row">
+            <div class="col-lg-1">
+                <label for="itemsname">Location:</label>
             </div>
-   
-    </div>
-
-   
-            }}
+            <div class="col-lg-2">
+                <div id="place" class="link-primary" @onclick="@(() => EditLocation(location.ChoreLocationId))">
+                    @location.PlaceName
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <button class="btn btn-primary" @onclick="@(() => DeleteItems(location))">Delete</button>
+            </div>
+        </div>
+    }
+}
 
 @code {
-
     public List<LocationModel> Locations { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
-
-        Locations = await LocationChoresServices.GetLocationsAsync();
-
+        try
+        {
+            Locations = await LocationChoresServices.GetLocationsAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching locations: {ex.Message}");
+        }
     }
 
     void EditLocation(int id)
@@ -72,21 +58,24 @@ else if (Locations.Count.Equals(0))
         NavigationManager.NavigateTo($"/Location-Add-Update/{id}");
     }
 
-    //really shoudl be passing in the id not the old object but tis small. :-)
-    async Task Deleteitems(LocationModel locationModel)
+    void DeleteItems(LocationModel locationModel)
     {
-
-        LocationChoresServices.DeleteLocationAsync(locationModel);
-        Locations.Remove(locationModel);
+        if (locationModel != null)
+        {
+            try
+            {
+                LocationChoresServices.DeleteLocationAsync(locationModel);
+                Locations.Remove(locationModel);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error deleting location: {ex.Message}");
+            }
+        }
     }
 
-    async Task Cancel()
+    void Cancel()
     {
-
-        NavigationManager.NavigateTo($"KidsChore/");
+        NavigationManager.NavigateTo("KidsChore/");
     }
-
-
-
-
 }
