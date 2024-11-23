@@ -9,7 +9,7 @@
 @using Microsoft.AspNetCore.Mvc
 @using System.ComponentModel.DataAnnotations
 
-@inject IChoresChoresServices choresChoresServices
+@inject ChoresListItemChoresServices choresChoresServices
 @inject NavigationManager NavigationManager
 
 @rendermode InteractiveServer
@@ -42,7 +42,7 @@ else if (Chores.Count.Equals(0))
                 <label for="itemsname">Chore Name:</label>
         </div>
         <div class="col-lg-2">
-                <div id="kidname" @onclick="@(() => EditStore(chore.ChoreID))"> <span class="link-primary"> @chore.ChoreName</span> </div>
+                <div id="kidname" @onclick="@(() => EditStore(chore.ChoreHistoryID))"> <span class="link-primary"> @chore.KidsChoreID</span> </div>
         </div>
     </div>
 
@@ -54,12 +54,12 @@ else if (Chores.Count.Equals(0))
 @code {
 
    
-    public List<ChoresModel> Chores { get; set; } = new();
+    public List<ChoreListItemsModel> Chores { get; set; } = new();
 
     protected override async Task OnParametersSetAsync()
     {
        
-        Chores = await choresChoresServices.GetChores();
+        Chores = await choresChoresServices.GetChoreItems();
 
     }
 
