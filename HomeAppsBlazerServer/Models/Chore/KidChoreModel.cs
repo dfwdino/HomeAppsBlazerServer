@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace HomeAppsBlazerServer.Models.Chore
 {
     [Table("ChoreList", Schema = "KidsArea")]
-    public class ChoreListItemsModel
+    public record class ChoreListItemsModel
     {
         [Key]
         public int ChoreHistoryID { get; set; } // PK
@@ -45,4 +45,21 @@ namespace HomeAppsBlazerServer.Models.Chore
         public string PlaceName { get; set; }
         public bool IsDeleted { get; set; }
     }
+
+
+    public class ChoreListDetailItemsModel
+    {
+        [Key]
+        public int ChoreHistoryID { get; set; } // PK
+        public int KidsChoreID { get; set; } // FK
+        public DateTime DateDone { get; set; }
+        public bool IsDeleted { get; set; }
+        public int KidsNameID { get; set; } // FK
+
+        public string KidsName { get; set; }
+        public string ChoreName { get; set; }
+
+    }
+
+
 }
