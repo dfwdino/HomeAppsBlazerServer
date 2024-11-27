@@ -40,7 +40,7 @@ else
 
 
 <EditForm Model="CurrentShoppingitems" OnSubmit="HandleSubmit">
-
+     <div class="container">
 
     <div class="row">
 
@@ -68,10 +68,10 @@ else
 
 
     <div class="row">
-        <div class="col-lg-2">
+        <div class="col-5">
             <label style="width:130px" for="IsGlutenFree">Gluten Free:</label>
         </div>
-        <div class="col-lg-2">
+        <div class="col-2">
             <InputCheckbox id="IsGlutenFree" @bind-Value="@CurrentShoppingitems.IsGlutenFree" />
         </div>
     </div>
@@ -79,20 +79,20 @@ else
 
 
     <div class="row">
-        <div class="col-lg-2">
+            <div class="col-5">
             <label style="width:130px" for="KidsDontLike">Kids Dont Like:</label>
         </div>
-        <div class="col-lg-3">
+            <div class="col-1">
             <InputCheckbox id="KidsDontLike" @bind-Value="@CurrentShoppingitems.KidsDontLike" />
         </div>
     </div>
 
 
     <div class="row">
-        <div class="col-lg-2">
+        <div class="col-5">
             <label style="width:130px" for="FreddyDontLike">Freddy Dont Like:</label>
         </div>
-        <div class="col-lg-2">
+        <div class="col-1">
             <InputCheckbox id="FreddyDontLike" @bind-Value="@CurrentShoppingitems.FreddyDontLike" />
         </div>
     </div>
@@ -100,28 +100,28 @@ else
 
 
     <div class="row">
-        <div class="col-lg-2">
+        <div class="col-5">
             <label style="width:130px" for="ElliottDontLike">Elliott Dont Like:</label>
         </div>
-        <div class="col-lg-2">
+        <div class="col">
             <InputCheckbox id="ElliottDontLike" @bind-Value="@CurrentShoppingitems.ElliottDontLike" />
         </div>
     </div>
 
-    <div style="padding-top:20px"/>
+    <div style="padding-top:50px"/>
 
     <div class="row">
-        <div class="col-lg-1" style="padding-bottom:20px">
+        <div class="col" style="padding-bottom:20px">
             <button class="btn btn-primary" @onclick="@(() => Cancel())">Cancel</button>
         </div>
-        <div class="col-lg-1" style="padding-bottom:20px">
+        <div class="col" style="padding-bottom:20px">
             <button type="submit" class="btn btn-primary">Submit</button>
         </div>
-        <div class="col-lg-1">
+        <div class="col">
             <button class="btn btn-primary" @onclick="@(() => Deleteitems())">Delete</button>
         </div>
     </div>
-
+    </div>
 </EditForm>
 
 

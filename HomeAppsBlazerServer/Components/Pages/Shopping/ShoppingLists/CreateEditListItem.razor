@@ -122,6 +122,8 @@ else
 
     <button type="submit" class="btn btn-primary">Submit</button>
 
+    <button class="btn btn-primary" @onclick="@(() => Cancel())">Cancel</button>
+
 </EditForm>
 
 @code {
@@ -215,7 +217,7 @@ else
     async Task Cancel()
     {
 
-        NavigationManager.NavigateTo($"ShoppingItems/");
+        NavigationManager.NavigateTo($"ShoppingList/");
     }
 
     async Task HandleSubmit()

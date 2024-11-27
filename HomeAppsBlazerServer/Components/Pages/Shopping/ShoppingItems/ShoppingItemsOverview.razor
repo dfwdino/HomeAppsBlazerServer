@@ -120,8 +120,9 @@ else
                   
                     </td>
                     <td>
-                        <button class="btn btn-primary" @onclick="@(() => EditItem(item.ShoppingItemID))">Edit</button>
-                        <button class="btn btn-primary" @onclick="@(() => DeleteItem(item.ShoppingItemID))">Delete</button>
+                        <a href="#" class="link-primary" @onclick="@(() => EditItem(item.ShoppingItemID))">Edit</a>
+                        <a href="#" class="link-primary" @onclick="@(() => DeleteItem(item.ShoppingItemID))">Delete</a>
+
                     </td>
                 </tr>
             }

@@ -20,21 +20,21 @@ namespace HomeAppsBlazerServer.Servcies.Chore
             List<ChoreListItemsModel> Chores = myDbContext.ChoreListItem.Where(mm => mm.IsDeleted == false).ToList();
 
 
-            var choreDetails = from chore in myDbContex
-                               join kid in myDbContext.KidsName
-                               on chore.KidsChoreID equals kid.IDKidsName
-                               join choreName in myDbContext.KidsChores
-                               on chore.KidsChoreID equals choreName.ChoreID
-                               where chore.IsDeleted == false
-                               select new ChoreListDetailItemsModel
-                               {
-                                   KidsChoreID = chore.KidsChoreID,
-                                   KidsName = kid.KidName,
-                                   ChoreName = choreName.ChoreName,
-                                   chore.IsCompleted
-                               };
+            //var choreDetails = from chore in myDbContex
+            //                   join kid in myDbContext.KidsName
+            //                   on chore.KidsChoreID equals kid.IDKidsName
+            //                   join choreName in myDbContext.KidsChores
+            //                   on chore.KidsChoreID equals choreName.ChoreID
+            //                   where chore.IsDeleted == false
+            //                   select new ChoreListDetailItemsModel
+            //                   {
+            //                       KidsChoreID = chore.KidsChoreID,
+            //                       KidsName = kid.KidName,
+            //                       ChoreName = choreName.ChoreName,
+            //                       chore.IsCompleted
+            //                   };
 
-            var choreDetailsList = choreDetails.ToList();
+            //var choreDetailsList = choreDetails.ToList();
 
 
 

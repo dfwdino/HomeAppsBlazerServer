@@ -27,6 +27,20 @@
 <h3>Shopping Items</h3>
 
 
+<div onclick="document.querySelector('.navbar-toggler').click()">
+    <NavLink  class="link-primary" href="ShoppingItems" style="padding-right:50px">
+        <span aria-hidden="true"></span>All Items
+    </NavLink>
+
+
+    <NavLink href="CreateEditListItem">
+        <span class="link-primary" aria-hidden="true"></span>Add Item to List
+    </NavLink>
+
+</div>
+
+
+
 
 @if(CurrentShoppingList is null)
 {
