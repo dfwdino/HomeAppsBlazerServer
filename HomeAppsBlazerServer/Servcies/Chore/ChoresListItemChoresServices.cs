@@ -15,30 +15,32 @@ namespace HomeAppsBlazerServer.Servcies.Chore
             _logger = logger;
         }
 
-        public async Task<List<ChoreListItemsModel>> GetChoreItems()
+        public async Task<List<ChoreListDetailItemsModel>> GetChoreItems()
         {
-            List<ChoreListItemsModel> Chores = myDbContext.ChoreListItem.Where(mm => mm.IsDeleted == false).ToList();
+            //List<ChoreListItemsModel> Chores = myDbContext.ChoreListItem.Where(mm => mm.IsDeleted == false).ToList();
 
 
-            //var choreDetails = from chore in myDbContex
-            //                   join kid in myDbContext.KidsName
-            //                   on chore.KidsChoreID equals kid.IDKidsName
-            //                   join choreName in myDbContext.KidsChores
-            //                   on chore.KidsChoreID equals choreName.ChoreID
-            //                   where chore.IsDeleted == false
-            //                   select new ChoreListDetailItemsModel
-            //                   {
-            //                       KidsChoreID = chore.KidsChoreID,
-            //                       KidsName = kid.KidName,
-            //                       ChoreName = choreName.ChoreName,
-            //                       chore.IsCompleted
-            //                   };
+            var choreDetails = from chore in myDbContext.ChoreListItem
+                               join kid in myDbContext.KidsName
+                               on chore.KidsChoreID equals kid.IDKidsName
+                               join choreName in myDbContext.KidsChores
+                               on chore.KidsChoreID equals choreName.ChoreID
+                               where chore.IsDeleted == false
+                               select new ChoreListDetailItemsModel
+                               {
+                                   KidsName = kid.KidName,
+                                   ChoreName = choreName.ChoreName,
 
-            //var choreDetailsList = choreDetails.ToList();
+                                   ChoreHistoryID = chore.ChoreHistoryID,
+                                   KidsChoreID = chore.KidsChoreID,
+                                   KidsNameID = chore.KidsNameID,
+                               };
 
 
 
-            return Chores;
+
+            return choreDetails.ToList();
+
         }
 
         public async void AddChoreItem(ChoreListItemsModel ChoresNameModel)

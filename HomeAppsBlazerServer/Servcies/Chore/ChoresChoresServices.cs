@@ -16,11 +16,14 @@ namespace HomeAppsBlazerServer.Servcies.Chore
             _logger = logger;
         }
 
-        public async Task<List<ChoresModel>> GetChores()
+        public Task<List<ChoresModel>> GetChores()
         {
+            _logger.LogInformation("Getting Chores.");
             List<ChoresModel> Chores = myDbContext.KidsChores.Where(mm => mm.IsDeleted == false).ToList();
 
-            return Chores;
+            _logger.LogInformation("Got {NumberOfChors} Chores.", Chores.Count);
+
+            return Task.FromResult(Chores);
         }
 
         public async void AddChore(ChoresModel ChoresNameModel)

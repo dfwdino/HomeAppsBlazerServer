@@ -145,19 +145,23 @@ else
         CurrentShoppingitems = currentShoppingitems;
     }
 
-    private async Task<AutoCompleteDataProviderResult<ShoppingStore>> CustomersDataProvider(BlazorBootstrap.AutoCompleteDataProviderRequest<ShoppingStore> request)
+    private async Task<AutoCompleteDataProviderResult<ShoppingStore>> 
+                CustomersDataProvider(BlazorBootstrap.AutoCompleteDataProviderRequest<ShoppingStore> request)
     {
         var customers = await ShoppingServices.GetShoppingStoresAsync(request.Filter.Value); // API call
 
-        return await Task.FromResult(new AutoCompleteDataProviderResult<ShoppingStore> { Data = customers, TotalCount = customers.Count() });
+        return await Task.FromResult(new AutoCompleteDataProviderResult<ShoppingStore> 
+                                    { Data = customers, TotalCount = customers.Count() });
 
     }
 
-    private async Task<AutoCompleteDataProviderResult<ShoppingItem>> CustomersDataProvider(BlazorBootstrap.AutoCompleteDataProviderRequest<ShoppingItem> request)
+    private async Task<AutoCompleteDataProviderResult<ShoppingItem>> 
+                CustomersDataProvider(BlazorBootstrap.AutoCompleteDataProviderRequest<ShoppingItem> request)
     {
         var customers = await ShoppingServices.GetShoppingItemsFilterAsync(request.Filter.Value); // API call
 
-        return await Task.FromResult(new AutoCompleteDataProviderResult<ShoppingItem> { Data = customers, TotalCount = customers.Count() });
+        return await Task.FromResult(new AutoCompleteDataProviderResult<ShoppingItem> 
+            { Data = customers, TotalCount = customers.Count() });
 
     }
 

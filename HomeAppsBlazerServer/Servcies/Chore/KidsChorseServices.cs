@@ -16,11 +16,16 @@ namespace HomeAppsBlazerServer.Servcies.Chore
             _logger = logger;
         }
 
-        public async Task<List<KidsNameModel>> GetKids()
+        public async Task<List<KidsNameModel>> GetKids(string filter = "")
         {
-            List<KidsNameModel> Kids = myDbContext.KidsName.Where(mm => mm.IsDeleted == false).ToList();
+            IQueryable<KidsNameModel> Kids = myDbContext.KidsName.Where(mm => mm.IsDeleted == false).AsQueryable();
 
-            return Kids;
+            if (filter.Length != 0)
+            {
+                Kids.Where(mm => mm.KidName.Contains(filter));
+            }
+
+            return Kids.ToList();
         }
 
         public async void AddKid(KidsNameModel kidsNameModel)

@@ -81,7 +81,7 @@ else
         }
     }
 
-    async Task HandleSubmit()
+    private async Task HandleSubmit()
     {
         if (Chore.ChoreName.Length.Equals(0))
         {
@@ -108,7 +108,7 @@ else
     }
 
 
-    async Task Deleteitems()
+    private async Task Deleteitems()
     {
         //delete
         Chore.IsDeleted = true;
@@ -117,7 +117,7 @@ else
         NavigationManager.NavigateTo($"List-Chore/");
     }   
 
-    async Task Cancel()
+    private async Task Cancel()
     {
 
         NavigationManager.NavigateTo($"List-Chore/");

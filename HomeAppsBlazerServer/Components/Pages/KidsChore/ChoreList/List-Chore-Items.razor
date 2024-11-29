@@ -9,7 +9,7 @@
 @using Microsoft.AspNetCore.Mvc
 @using System.ComponentModel.DataAnnotations
 
-@inject ChoresListItemChoresServices choresChoresServices
+@inject ChoresListItemChoresServices choresListItemChoresServices
 @inject NavigationManager NavigationManager
 
 @rendermode InteractiveServer
@@ -19,47 +19,73 @@
 
 
 
-    <h3>List Chore</h3>
-    <div style="padding-bottom:10px" />
+<h3>List Chore</h3>
+<div style="padding-bottom:10px" />
 
 @if (Chores is null)
-    {
-        <p><em>Loadding chore items....</em></p>
-    }
+{
+    <p><em>Loadding chore items....</em></p>
+}
 else if (Chores.Count.Equals(0))
-    {
+{
     <p><em>What happen to the chore?</em></p>
-    }
-    else
-    {
+}
+else
+{
+    <div class="container">
 
-    @foreach (var chore in Chores)
-            {
+        @foreach (var chore in Chores)
+        {
 
-    <div class="row">
+            <div class="row">
 
-        <div class="col-lg-2">
-                <label for="itemsname">Chore Name:</label>
-        </div>
-        <div class="col-lg-2">
-                <div id="kidname" @onclick="@(() => EditStore(chore.ChoreHistoryID))"> <span class="link-primary"> @chore.KidsChoreID</span> </div>
-        </div>
+                <div class="col-lg-2">
+                    <label for="itemsname">KidsChoreID:</label>
+                </div>
+                <div class="col-lg-2">
+                    <div id="kidname" @onclick="@(() => EditStore(chore.ChoreHistoryID))"> <span class="link-primary"> @chore.KidsChoreID</span> </div>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-lg-2">
+                    <label for="itemsname">KidsNameID:</label>
+                </div>
+                <div class="col-lg-2">
+                    <div id="kidname" @onclick="@(() => EditStore(chore.ChoreHistoryID))"> <span class="link-primary"> @chore.KidsNameID</span> </div>
+                </div>
+            </div>
+
+           @*  <div class="row">
+
+                <div class="col-lg-2">
+                    <label for="itemsname">RequireDate:</label>
+                </div>
+                <div class="col-lg-2">
+                    <div id="kidname" @onclick="@(() => EditStore(chore.ChoreHistoryID))"> <span class="link-primary"> 
+                            @chore.DateDone</span> </div>
+                </div>
+            </div> *@
+
+            <div style="padding-top:20px" />
+
+
+        }
     </div>
-
-    <div style="padding-top:20px" />
-
-   
-            }}
+}
 
 @code {
 
-   
-    public List<ChoreListItemsModel> Chores { get; set; } = new();
+
+    public List<ChoreListDetailItemsModel> Chores { get; set; } = new();
 
     protected override async Task OnParametersSetAsync()
     {
-       
-        Chores = await choresChoresServices.GetChoreItems();
+
+        List<ChoreListDetailItemsModel> choreListDetailItemsModels = await choresListItemChoresServices.GetChoreItems();
+
+        Chores = choreListDetailItemsModels;
 
     }
 

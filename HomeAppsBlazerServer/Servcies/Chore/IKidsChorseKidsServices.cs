@@ -7,7 +7,7 @@ namespace HomeAppsBlazerServer.Servcies.Chore
         void AddKid(KidsNameModel kidsNameModel);
         void DeleteKid(KidsNameModel kidsNameModel);
         Task<KidsNameModel> GetKid(int id);
-        Task<List<KidsNameModel>> GetKids();
+        Task<List<KidsNameModel>> GetKids(string filter = "");
         void UpdateKid(KidsNameModel kidsNameModel);
     }
 }

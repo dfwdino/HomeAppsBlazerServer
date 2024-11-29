@@ -8,8 +8,11 @@
 @using HomeAppsBlazerServer.Servcies.Chore
 @using Microsoft.AspNetCore.Mvc
 @using System.ComponentModel.DataAnnotations
+@using System.Collections.Generic
 
 @inject ChoresListItemChoresServices ChoresListItemChoresServices
+@inject IKidsChorseKidsServices kidsChorseKidsServices
+
 @inject NavigationManager NavigationManager
 
 @rendermode InteractiveServer
@@ -26,24 +29,36 @@
 }
 else
 {
-    <h3>Update @Chore.KidsChoreID</h3>
+    <h3>Update @choresModel.ChoreName</h3>
 }
 
-<EditForm Model="Chore" OnSubmit="HandleSubmit">
+<EditForm Model="choresModel" OnSubmit="HandleSubmit">
 
     <div class="row">
-
         <div class="col-lg-2">
-            <label for="itemsname">ChoreName Name:</label>
+            <label for="itemsname">Chore Name:</label>
         </div>
         <div class="col-lg-2">
-           @*  <InputText id="KidsChoreID" @bind-Value="@Chore.KidsChoreID.ToString()" /> *@
             <BlazorBootstrap.AutoComplete @bind-Value="ChoreName"
-                                          TItem="ChoreListItemsModel"
-                                          DataProvider="CustomersDataProvider"
-                                          PropertyName="ChoreName"
-                                          Placeholder="Search a ChoreName..."
-                                          OnChanged="(ChoreListItemsModel choreitem) => OnAutoCompleteChanged(choreitem)" />
+            TItem="ChoreListDetailItemsModel"
+            DataProvider="CustomersDataProvider"
+            PropertyName="ChoreName"
+            Placeholder="Search a ChoreName..."
+            OnChanged="(ChoreListDetailItemsModel choreitem) => OnAutoCompleteChanged(choreitem)" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-2">
+            <label for="itemsname">Kids Name:</label>
+        </div>
+        <div class="col-lg-2">
+            <BlazorBootstrap.AutoComplete @bind-Value="KidName"
+            TItem="KidsNameModel"
+            DataProvider="CustomersDataProvider"
+            PropertyName="KidName"
+            Placeholder="Search a Kids..."
+            OnChanged="(KidsNameModel kids) => OnAutoCompleteChanged(kids)" />
         </div>
     </div>
 
@@ -70,27 +85,59 @@ else
     [Parameter]
     public int? Id { get; set; }
 
-    public ChoreListItemsModel Chore { get; set; } = new();
+    public ChoreListItemsModel ChoreList { get; set; } = new();
 
-    public string ChoreName;
+    public ChoresModel choresModel { get; set; } = new();
+
+    public KidsNameModel Kid { get; set; } = new();
+
+    public string ChoreName, KidName = string.Empty;
 
 
-    private async Task<AutoCompleteDataProviderResult<ChoreListItemsModel>> 
-                CustomersDataProvider(BlazorBootstrap.AutoCompleteDataProviderRequest<ChoreListItemsModel> request)
+    private async Task<AutoCompleteDataProviderResult<ChoreListDetailItemsModel>>
+                CustomersDataProvider(BlazorBootstrap.AutoCompleteDataProviderRequest<ChoreListDetailItemsModel> request)
     {
         //var customers = await ChoresListItemChoresServices.GetChoreItems(request.Filter.Value); // API call
         var customers = await ChoresListItemChoresServices.GetChoreItems(); // API call
 
-        return await Task.FromResult(new AutoCompleteDataProviderResult<ChoreListItemsModel> { Data = customers, TotalCount = customers.Count() });
+        return await Task.FromResult(new AutoCompleteDataProviderResult<ChoreListDetailItemsModel> 
+                { Data = customers, TotalCount = customers.Count() });
+    }
+
+    private async Task<AutoCompleteDataProviderResult<KidsNameModel>>
+               CustomersDataProvider(BlazorBootstrap.AutoCompleteDataProviderRequest<KidsNameModel> request)
+    {
+         //var customers = await ChoresListItemChoresServices.GetChoreItems(request.Filter.Value); // API call
+        var kids = await kidsChorseKidsServices.GetKids(request.Filter.Value); // API call
+
+        return await Task.FromResult(new AutoCompleteDataProviderResult<KidsNameModel>
+            { Data = kids, TotalCount = kids.Count() });
     }
 
 
-    private void OnAutoCompleteChanged(ChoreListItemsModel customer)
+    private void OnAutoCompleteChanged(ChoreListDetailItemsModel customer)
     {
-        if (customer != null)
-            Chore.KidsChoreID = customer.KidsChoreID;
+        //if (customer != null)
+        ChoreList.KidsChoreID = customer.KidsChoreID;
+        Console.WriteLine("Chore Item is {choreID}",customer.KidsChoreID);
+
+
              //Console.WriteLine($"'{customer?.StoreName}' selected.");
     }
+
+    private void OnAutoCompleteChanged(KidsNameModel kids)
+    {
+        if (kids != null)
+            Kid.IDKidsName = kids.IDKidsName;
+        //Console.WriteLine($"'{customer?.StoreName}' selected.");
+    }
+
+    // private void OnAutoCompleteChanged<T>(T kids)
+    // {
+    //     if (kids != null)
+    //         Kid.IDKidsName = kids.IDKidsName;
+    //     //Console.WriteLine($"'{customer?.StoreName}' selected.");
+    // }
 
 
     protected override async Task OnParametersSetAsync()
@@ -101,7 +148,7 @@ else
 
             if (AChore is not null)
             {
-                Chore = AChore;
+                choresModel = AChore;
 
             }
 
@@ -113,7 +160,7 @@ else
 
     async Task HandleSubmit()
     {
-        if (Chore is null)
+        if (choresModel is null)
         {
             return;
         }
