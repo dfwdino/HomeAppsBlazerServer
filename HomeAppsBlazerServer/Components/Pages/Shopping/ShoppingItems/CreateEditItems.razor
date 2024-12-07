@@ -135,7 +135,8 @@ else
     [Parameter]
     public int? Id { get; set; }
 
-    public string StoreName, ItemName;
+    public string StoreName { get; set; } = string.Empty;
+    public string ItemName { get; set; } = string.Empty;
 
     public ShoppingItem CurrentShoppingitems { get; set; } = new() { ItemName = string.Empty };
 
@@ -164,6 +165,7 @@ else
             CurrentShoppingitems.ItemName = item.ItemName;
         }
 
+        StateHasChanged();
     }
 
 
@@ -173,7 +175,7 @@ else
         if (customer != null)
             CurrentShoppingitems.StoreID = customer.ShoppingStoreID;
        
-
+        StateHasChanged();
     }
 
 
