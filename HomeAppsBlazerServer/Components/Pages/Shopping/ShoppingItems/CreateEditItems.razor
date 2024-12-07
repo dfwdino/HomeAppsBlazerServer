@@ -48,12 +48,7 @@ else
                 <label>Items Name:</label>
             </div>
             <div class="col-lg-2">
-                <BlazorBootstrap.AutoComplete @bind-Value="ItemName"
-                TItem="ShoppingItem"
-                DataProvider="CustomersDataProvider"
-                PropertyName="ItemName"
-                Placeholder="Search a item..."
-                OnChanged="(ShoppingItem item) => OnAutoCompleteChanged(item)" />
+                <InputText id="itemsname" @bind-Value="@CurrentShoppingitems.ItemName" />
             </div>
         </div>
 
