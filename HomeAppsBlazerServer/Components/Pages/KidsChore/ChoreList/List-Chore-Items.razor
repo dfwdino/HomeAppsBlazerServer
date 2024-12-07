@@ -34,28 +34,49 @@ else
 {
     <div class="container">
 
+
+
+        <div class="row">
+
+            <div class="col">
+                <div>Chore </div>
+            </div>
+            <div class="col">
+                <div> Kid </div>
+            </div>
+
+            <div class="col">
+                <div> Start Date </div>
+            </div>
+
+            <div class="col">
+                <div>Done Date </div>
+            </div>
+        </div>
+
         @foreach (var chore in Chores)
         {
 
-            <div class="row">
 
-                <div class="col-lg-2">
-                    <label for="itemsname">KidsChoreID:</label>
-                </div>
-                <div class="col-lg-2">
-                    <div id="kidname" @onclick="@(() => EditStore(chore.ChoreHistoryID))"> <span class="link-primary"> @chore.KidsChoreID</span> </div>
-                </div>
-            </div>
 
             <div class="row">
 
-                <div class="col-lg-2">
-                    <label for="itemsname">KidsNameID:</label>
+                <div class="col">
+                    <div id="kidname" @onclick="@(() => EditStore(chore.ChoreHistoryID))"> <span class="link-primary"> @chore.ChoreName</span> </div>
                 </div>
-                <div class="col-lg-2">
-                    <div id="kidname" @onclick="@(() => EditStore(chore.ChoreHistoryID))"> <span class="link-primary"> @chore.KidsNameID</span> </div>
+                <div class="col">
+                    <div id="kidname" @onclick="@(() => EditStore(chore.ChoreHistoryID))"> <span class="link-primary"> @chore.KidsName</span> </div>
+                </div>
+
+                <div class="col">
+                    <div id="kidname" @onclick="@(() => EditStore(chore.ChoreHistoryID))"> <span class="link-primary"> @chore.StartDate</span> </div>
+                </div>
+
+                <div class="col">
+                    <div id="kidname" @onclick="@(() => EditStore(chore.ChoreHistoryID))"> <span class="link-primary"> @chore.DateDone</span> </div>
                 </div>
             </div>
+
 
            @*  <div class="row">
 

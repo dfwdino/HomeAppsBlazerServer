@@ -40,87 +40,92 @@ else
 
 
 <EditForm Model="CurrentShoppingitems" OnSubmit="HandleSubmit">
-     <div class="container">
+    <div class="container">
 
-    <div class="row">
+        <div class="row">
 
-        <div class="col-lg-2">
-            <label for="itemsname">Items Name:</label>
+            <div class="col-lg-2">
+                <label>Items Name:</label>
+            </div>
+            <div class="col-lg-2">
+                <BlazorBootstrap.AutoComplete @bind-Value="ItemName"
+                TItem="ShoppingItem"
+                DataProvider="CustomersDataProvider"
+                PropertyName="ItemName"
+                Placeholder="Search a item..."
+                OnChanged="(ShoppingItem item) => OnAutoCompleteChanged(item)" />
+            </div>
         </div>
-        <div class="col-lg-2">
-            <InputText id="itemsname" @bind-Value="@CurrentShoppingitems.ItemName" />
+
+        <div class="row">
+            <div class="col-lg-2">
+                <label>Store:</label>
+            </div>
+            <div class="col-lg-2">
+                <BlazorBootstrap.AutoComplete @bind-Value="StoreName"
+                TItem="ShoppingStore"
+                DataProvider="CustomersDataProvider"
+                PropertyName="StoreName"
+                Placeholder="Search a store..."
+                OnChanged="(ShoppingStore store) => OnAutoCompleteChanged(store)" />
+            </div>
         </div>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-2">
-            <label>Store:</label>
-        </div>
-        <div class="col-lg-2">
-            <BlazorBootstrap.AutoComplete @bind-Value="StoreName"
-                                          TItem="ShoppingStore"
-                                          DataProvider="CustomersDataProvider"
-                                          PropertyName="StoreName"
-                                          Placeholder="Search a store..."
-                                          OnChanged="(ShoppingStore store) => OnAutoCompleteChanged(store)" />
-        </div>
-    </div>
 
 
-    <div class="row">
-        <div class="col-5">
-            <label style="width:130px" for="IsGlutenFree">Gluten Free:</label>
-        </div>
-        <div class="col-2">
-            <InputCheckbox id="IsGlutenFree" @bind-Value="@CurrentShoppingitems.IsGlutenFree" />
-        </div>
-    </div>
-
-
-
-    <div class="row">
+        <div class="row">
             <div class="col-5">
-            <label style="width:130px" for="KidsDontLike">Kids Dont Like:</label>
+                <label style="width:130px" for="IsGlutenFree">Gluten Free:</label>
+            </div>
+            <div class="col-2">
+                <InputCheckbox id="IsGlutenFree" @bind-Value="@CurrentShoppingitems.IsGlutenFree" />
+            </div>
         </div>
+
+
+
+        <div class="row">
+            <div class="col-5">
+                <label style="width:130px" for="KidsDontLike">Kids Dont Like:</label>
+            </div>
             <div class="col-1">
-            <InputCheckbox id="KidsDontLike" @bind-Value="@CurrentShoppingitems.KidsDontLike" />
+                <InputCheckbox id="KidsDontLike" @bind-Value="@CurrentShoppingitems.KidsDontLike" />
+            </div>
         </div>
-    </div>
 
 
-    <div class="row">
-        <div class="col-5">
-            <label style="width:130px" for="FreddyDontLike">Freddy Dont Like:</label>
+        <div class="row">
+            <div class="col-5">
+                <label style="width:130px" for="FreddyDontLike">Freddy Dont Like:</label>
+            </div>
+            <div class="col-1">
+                <InputCheckbox id="FreddyDontLike" @bind-Value="@CurrentShoppingitems.FreddyDontLike" />
+            </div>
         </div>
-        <div class="col-1">
-            <InputCheckbox id="FreddyDontLike" @bind-Value="@CurrentShoppingitems.FreddyDontLike" />
-        </div>
-    </div>
 
 
 
-    <div class="row">
-        <div class="col-5">
-            <label style="width:130px" for="ElliottDontLike">Elliott Dont Like:</label>
+        <div class="row">
+            <div class="col-5">
+                <label style="width:130px" for="ElliottDontLike">Elliott Dont Like:</label>
+            </div>
+            <div class="col">
+                <InputCheckbox id="ElliottDontLike" @bind-Value="@CurrentShoppingitems.ElliottDontLike" />
+            </div>
         </div>
-        <div class="col">
-            <InputCheckbox id="ElliottDontLike" @bind-Value="@CurrentShoppingitems.ElliottDontLike" />
-        </div>
-    </div>
 
-    <div style="padding-top:50px"/>
+        <div style="padding-top:50px"/>
 
-    <div class="row">
-        <div class="col" style="padding-bottom:20px">
-            <button class="btn btn-primary" @onclick="@(() => Cancel())">Cancel</button>
+        <div class="row">
+            <div class="col" style="padding-bottom:20px">
+                <button class="btn btn-primary" @onclick="@(() => Cancel())">Cancel</button>
+            </div>
+            <div class="col" style="padding-bottom:20px">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+            <div class="col">
+                <button class="btn btn-primary" @onclick="@(() => Deleteitems())">Delete</button>
+            </div>
         </div>
-        <div class="col" style="padding-bottom:20px">
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </div>
-        <div class="col">
-            <button class="btn btn-primary" @onclick="@(() => Deleteitems())">Delete</button>
-        </div>
-    </div>
     </div>
 </EditForm>
 
@@ -130,9 +135,10 @@ else
     [Parameter]
     public int? Id { get; set; }
 
-    public string StoreName;
+    public string StoreName, ItemName;
 
     public ShoppingItem CurrentShoppingitems { get; set; } = new() { ItemName = string.Empty };
+
 
 
 
@@ -143,12 +149,31 @@ else
         return await Task.FromResult(new AutoCompleteDataProviderResult<ShoppingStore> { Data = customers, TotalCount = customers.Count() });
     }
 
+    private async Task<AutoCompleteDataProviderResult<ShoppingItem>> CustomersDataProvider(BlazorBootstrap.AutoCompleteDataProviderRequest<ShoppingItem> request)
+    {
+        var customers = await ShoppingServices.GetShoppingItemsFilterAsync(request.Filter.Value); // API call
+
+        return await Task.FromResult(new AutoCompleteDataProviderResult<ShoppingItem> { Data = customers, TotalCount = customers.Count() });
+    }
+
+    private void OnAutoCompleteChanged(ShoppingItem item)
+    {
+        if (item != null)
+        {    CurrentShoppingitems.ShoppingItemID = item.ShoppingItemID;
+
+            CurrentShoppingitems.ItemName = item.ItemName;
+        }
+
+    }
+
+
 
     private void OnAutoCompleteChanged(ShoppingStore customer)
     {
         if (customer != null)
-        CurrentShoppingitems.StoreID = customer.ShoppingStoreID;
-        //Console.WriteLine($"'{customer?.StoreName}' selected.");
+            CurrentShoppingitems.StoreID = customer.ShoppingStoreID;
+       
+
     }
 
 

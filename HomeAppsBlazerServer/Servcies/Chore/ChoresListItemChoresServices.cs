@@ -22,9 +22,9 @@ namespace HomeAppsBlazerServer.Servcies.Chore
 
             var choreDetails = from chore in myDbContext.ChoreListItem
                                join kid in myDbContext.KidsName
-                               on chore.KidsChoreID equals kid.IDKidsName
+                                    on chore.KidsNameID equals kid.IDKidsName
                                join choreName in myDbContext.KidsChores
-                               on chore.KidsChoreID equals choreName.ChoreID
+                                    on chore.KidsChoreID equals choreName.ChoreID
                                where chore.IsDeleted == false
                                select new ChoreListDetailItemsModel
                                {
@@ -34,12 +34,14 @@ namespace HomeAppsBlazerServer.Servcies.Chore
                                    ChoreHistoryID = chore.ChoreHistoryID,
                                    KidsChoreID = chore.KidsChoreID,
                                    KidsNameID = chore.KidsNameID,
+                                   StartDate = chore.StartDate,
+                                   DateDone = chore.DoneDate
                                };
 
 
 
 
-            return choreDetails.ToList();
+            return choreDetails.ToList(); //Chores;
 
         }
 

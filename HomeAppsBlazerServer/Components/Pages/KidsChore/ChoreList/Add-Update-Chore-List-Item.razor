@@ -10,8 +10,10 @@
 @using System.ComponentModel.DataAnnotations
 @using System.Collections.Generic
 
+@inject IChoresChoresServices choresChoresServices
 @inject ChoresListItemChoresServices ChoresListItemChoresServices
 @inject IKidsChorseKidsServices kidsChorseKidsServices
+
 
 @inject NavigationManager NavigationManager
 
@@ -40,11 +42,11 @@ else
         </div>
         <div class="col-lg-2">
             <BlazorBootstrap.AutoComplete @bind-Value="ChoreName"
-            TItem="ChoreListDetailItemsModel"
+                                          TItem="ChoresModel"
             DataProvider="CustomersDataProvider"
             PropertyName="ChoreName"
             Placeholder="Search a ChoreName..."
-            OnChanged="(ChoreListDetailItemsModel choreitem) => OnAutoCompleteChanged(choreitem)" />
+             OnChanged="(ChoresModel choreitem) => OnAutoCompleteChanged(choreitem)" />
         </div>
     </div>
 
@@ -91,16 +93,16 @@ else
 
     public KidsNameModel Kid { get; set; } = new();
 
-    public string ChoreName, KidName = string.Empty;
+    public string ChoreName, KidName, pressedKey = string.Empty;
 
 
-    private async Task<AutoCompleteDataProviderResult<ChoreListDetailItemsModel>>
-                CustomersDataProvider(BlazorBootstrap.AutoCompleteDataProviderRequest<ChoreListDetailItemsModel> request)
+    private async Task<AutoCompleteDataProviderResult<ChoresModel>>
+                CustomersDataProvider(BlazorBootstrap.AutoCompleteDataProviderRequest<ChoresModel> request)
     {
         //var customers = await ChoresListItemChoresServices.GetChoreItems(request.Filter.Value); // API call
-        var customers = await ChoresListItemChoresServices.GetChoreItems(); // API call
+        var customers = await choresChoresServices.GetChores(); // API call
 
-        return await Task.FromResult(new AutoCompleteDataProviderResult<ChoreListDetailItemsModel> 
+        return await Task.FromResult(new AutoCompleteDataProviderResult<ChoresModel>
                 { Data = customers, TotalCount = customers.Count() });
     }
 
@@ -115,20 +117,18 @@ else
     }
 
 
-    private void OnAutoCompleteChanged(ChoreListDetailItemsModel customer)
+    private void OnAutoCompleteChanged(ChoresModel chore)
     {
         //if (customer != null)
-        ChoreList.KidsChoreID = customer.KidsChoreID;
-        Console.WriteLine("Chore Item is {choreID}",customer.KidsChoreID);
-
-
-             //Console.WriteLine($"'{customer?.StoreName}' selected.");
+        ChoreList.KidsChoreID = chore.ChoreID;
+        Console.WriteLine("Chore Item is {chore.ChoreID}");
+    
     }
 
     private void OnAutoCompleteChanged(KidsNameModel kids)
     {
         if (kids != null)
-            Kid.IDKidsName = kids.IDKidsName;
+            ChoreList.KidsNameID = kids.IDKidsName;
         //Console.WriteLine($"'{customer?.StoreName}' selected.");
     }
 
@@ -148,7 +148,7 @@ else
 
             if (AChore is not null)
             {
-                choresModel = AChore;
+                ChoreList = AChore;
 
             }
 
@@ -156,28 +156,39 @@ else
     }
 
 
-
+    private void HandleKeyDown(KeyboardEventArgs e)
+    {
+        pressedKey = e.Key;
+    }
 
     async Task HandleSubmit()
     {
-        if (choresModel is null)
+
+        //Want to pass if they hit enter to select a itme or store.
+        if (pressedKey.Equals("enter", StringComparison.OrdinalIgnoreCase))
+        {
+            pressedKey = string.Empty;
+            return;
+        }
+
+        if (ChoreList is null)
         {
             return;
         }
         else if (Id is not null) //update
         {
 
-            ChoresListItemChoresServices.UpdateChoreItem (Chore);
-            NavigationManager.NavigateTo($"ChoresChore/");
+            ChoresListItemChoresServices.UpdateChoreItem(ChoreList);
+            NavigationManager.NavigateTo($"List-Chore-Items/");
         }
         else //add
         {
             //Chore.ChoreName = Chore.ChoreName.ToTileCase();
-            ChoresListItemChoresServices.AddChoreItem(Chore);
+            ChoresListItemChoresServices.AddChoreItem(ChoreList);
 
-            Chore = new();
+            ChoreList = new();
 
-            NavigationManager.NavigateTo($"ChoresChore/");
+            NavigationManager.NavigateTo($"List-Chore-Items/");
         }
 
 
@@ -188,16 +199,16 @@ else
     async Task Deleteitems()
     {
         //delete
-        Chore.IsDeleted = true;
-        ChoresListItemChoresServices.UpdateChoreItem(Chore);
+        ChoreList.IsDeleted = true;
+        ChoresListItemChoresServices.UpdateChoreItem(ChoreList);
 
-        NavigationManager.NavigateTo($"ChoresChore/");
+        NavigationManager.NavigateTo($"List-Chore-Items/");
     }   
 
     async Task Cancel()
     {
 
-        NavigationManager.NavigateTo($"ChoresChore/");
+        NavigationManager.NavigateTo($"List-Chore-Items/");
     }
 
 
