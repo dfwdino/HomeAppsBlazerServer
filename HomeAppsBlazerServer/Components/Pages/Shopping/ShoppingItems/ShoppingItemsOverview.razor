@@ -9,10 +9,10 @@
 @using HomeAppsBlazerServer.Servcies.Shopping
 
 @*Endalbes it*@
-@* @rendermode InteractiveServer *@
+@rendermode InteractiveServer
 
 @* jackes up the view of the table *@
-@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@* @rendermode @(new InteractiveServerRenderMode(prerender: false)) *@
 
 
 @* Loads as it as it download it. *@
@@ -28,13 +28,13 @@
 
 
 
-@* <link rel="stylesheet" type="text/css" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.0/css/jquery.dataTables.css">
+<link rel="stylesheet" type="text/css" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.0/css/jquery.dataTables.css">
 
 
 <script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.1.min.js"></script>
 <script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.0/jquery.dataTables.min.js"></script>
 
- *@
+
 
  
 
@@ -59,6 +59,7 @@ else
 }
 
 <span class="link-primary" @onclick="@(() => NeedList())"> Need List </span> <span class="link-primary" @onclick="@(() => AddItem())">- Add Item</span> 
+
 </nav>
 
     <div style="padding-bottom:30px" />
@@ -97,7 +98,7 @@ else
 
                         @if (item.LastPrice > 0)
                         {
-                            <span style="padding-right:5px"> - $@item.LastPrice</span>
+                            <span @onclick="@(() => ShowHistory(item.ShoppingItemID))" style="padding-right:5px"> - $@item.LastPrice</span>
                         }
 
                         @if (item.ElliottDontLike == true)
@@ -131,10 +132,11 @@ else
 
     <button class="btn btn-primary" @onclick="AddItem">Add Item</button>
 
-    <PriceHistoryOverview @ref="popupRef" />
+   
 
 }
 
+<PriceHistoryOverview @ref="popupRef" />
 
 
 
