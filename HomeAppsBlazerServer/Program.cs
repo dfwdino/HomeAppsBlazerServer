@@ -25,6 +25,13 @@ builder.Services.AddScoped<ILocationChoresServices, LocationChoresServices>();
 
 builder.Services.AddScoped<ChoresListItemChoresServices, ChoresListItemChoresServices>();
 
+builder.Services.AddServerSideBlazor()
+    .AddHubOptions(options =>
+    {
+        options.ClientTimeoutInterval = TimeSpan.FromSeconds(60);
+        options.HandshakeTimeout = TimeSpan.FromSeconds(30);
+    });
+
 
 var app = builder.Build();
 
