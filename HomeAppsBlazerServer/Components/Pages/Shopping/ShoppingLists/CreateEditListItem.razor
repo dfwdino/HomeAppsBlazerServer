@@ -236,7 +236,7 @@ else
         if (Id is not null)
         {
              await ShoppingServices.AddPriceToHistry(CurrentShoppingitems.ShoppingItemList.ShoppingItemID, 
-                        CurrentShoppingitems.Price.Equals("") ? Convert.ToDecimal(0.0) : Convert.ToDecimal(CurrentShoppingitems.Price), 
+                        string.IsNullOrEmpty(CurrentShoppingitems.Price) ? Convert.ToDecimal(0.0) : Convert.ToDecimal(CurrentShoppingitems.Price), 
                          CurrentShoppingitems.ShoppingItemList.ShoppingStoreID);
 
             //update
