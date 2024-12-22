@@ -67,6 +67,17 @@ else
     <div style="padding-top:20px" />
 
     <div class="row">
+
+        <div class="col-lg-2">
+            <label for="itemsname">Start date:</label>
+        </div>
+        <div class="col-lg-2">
+            <DatePicker @bind-SelectedDate="@ChoreList.StartDate" Label="Due Date" />
+           
+        </div>
+    </div>
+
+    <div class="row">
         <div class="col-lg-1" style="padding-bottom:20px">
             <button class="btn btn-primary" @onclick="@(() => Cancel())">Cancel</button>
         </div>
