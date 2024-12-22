@@ -23,7 +23,6 @@
 
 
 
-
 @if (Id is null)
 {
     <h3>Add Chore</h3>
@@ -34,7 +33,7 @@ else
     <h3>Update @choresModel.ChoreName</h3>
 }
 
-<EditForm Model="choresModel" OnSubmit="HandleSubmit">
+<EditForm Model="choresModel" OnSubmit="HandleSubmit" @onkeydown="HandleKeyDown">
 
     <div class="row">
         <div class="col-lg-2">
@@ -46,7 +45,8 @@ else
             DataProvider="CustomersDataProvider"
             PropertyName="ChoreName"
             Placeholder="Search a ChoreName..."
-             OnChanged="(ChoresModel choreitem) => OnAutoCompleteChanged(choreitem)" />
+            OnChanged="(ChoresModel choreitem) => OnAutoCompleteChanged(choreitem)"
+            @onsubmit:preventDefault />
         </div>
     </div>
 
@@ -64,20 +64,21 @@ else
         </div>
     </div>
 
-    <div style="padding-top:20px" />
-
     <div class="row">
 
         <div class="col-lg-2">
             <label for="itemsname">Start date:</label>
         </div>
         <div class="col-lg-2">
-            <DatePicker @bind-SelectedDate="@ChoreList.StartDate" Label="Due Date" />
+           
+            <InputDate id="needDate" @bind-Value="ChoreList.StartDate" class="form-control" />
            
         </div>
     </div>
 
-    <div class="row">
+    
+
+    <div class="row buttons">
         <div class="col-lg-1" style="padding-bottom:20px">
             <button class="btn btn-primary" @onclick="@(() => Cancel())">Cancel</button>
         </div>
@@ -93,6 +94,16 @@ else
 </EditForm>
 
 
+<style>
+    .row{
+        padding-bottom: 10px;
+    }
+
+    .buttons {
+        padding-top: 20px;
+    }
+</style>
+
 @code {
 
     [Parameter]
@@ -106,11 +117,12 @@ else
 
     public string ChoreName, KidName, pressedKey = string.Empty;
 
+    bool isLoading = true;
+
 
     private async Task<AutoCompleteDataProviderResult<ChoresModel>>
                 CustomersDataProvider(BlazorBootstrap.AutoCompleteDataProviderRequest<ChoresModel> request)
     {
-        //var customers = await ChoresListItemChoresServices.GetChoreItems(request.Filter.Value); // API call
         var customers = await choresChoresServices.GetChores(); // API call
 
         return await Task.FromResult(new AutoCompleteDataProviderResult<ChoresModel>
@@ -120,7 +132,6 @@ else
     private async Task<AutoCompleteDataProviderResult<KidsNameModel>>
                CustomersDataProvider(BlazorBootstrap.AutoCompleteDataProviderRequest<KidsNameModel> request)
     {
-         //var customers = await ChoresListItemChoresServices.GetChoreItems(request.Filter.Value); // API call
         var kids = await kidsChorseKidsServices.GetKids(request.Filter.Value); // API call
 
         return await Task.FromResult(new AutoCompleteDataProviderResult<KidsNameModel>
@@ -133,7 +144,7 @@ else
         //if (customer != null)
         ChoreList.KidsChoreID = chore.ChoreID;
         Console.WriteLine("Chore Item is {chore.ChoreID}");
-    
+
     }
 
     private void OnAutoCompleteChanged(KidsNameModel kids)
@@ -143,16 +154,12 @@ else
         //Console.WriteLine($"'{customer?.StoreName}' selected.");
     }
 
-    // private void OnAutoCompleteChanged<T>(T kids)
-    // {
-    //     if (kids != null)
-    //         Kid.IDKidsName = kids.IDKidsName;
-    //     //Console.WriteLine($"'{customer?.StoreName}' selected.");
-    // }
 
 
     protected override async Task OnParametersSetAsync()
     {
+        StateHasChanged();
+
         if (Id is not null)
         {
             var AChore = await ChoresListItemChoresServices.GetChoreItem((int)(Id));
@@ -165,6 +172,7 @@ else
 
         }
     }
+
 
 
     private void HandleKeyDown(KeyboardEventArgs e)
@@ -207,6 +215,9 @@ else
     }
 
 
+
+
+
     async Task Deleteitems()
     {
         //delete
@@ -218,6 +229,10 @@ else
 
     async Task Cancel()
     {
+        // if (ChoreList is null || ChoreList.KidsChoreID == 0 || ChoreList.KidsNameID == 0)
+        // {
+        //     return;
+        // }
 
         NavigationManager.NavigateTo($"List-Chore-Items/");
     }
