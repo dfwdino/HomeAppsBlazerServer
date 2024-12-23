@@ -39,6 +39,7 @@
 
 </div>
 
+<div style="padding-top:20px" />
 
 
 
@@ -53,37 +54,42 @@ else if (CurrentShoppingList.Count.Equals(0))
 else
 {
 
+    <div class="container">
+        <!-- Headers Row -->
+        <div class="row border-bottom py-2 fw-bold">
+            <div class="col-md-10">Item Name</div>
+            <div class="col-md-2"></div>
+        </div>
 
-    <table class="table">
-        <thead>
-        <th>Item Name</th>
-        <th></th>
-        </thead>
-        <tbody>
-            @foreach (var item in CurrentShoppingList)
-            {
-                <tr id="@item.ShoppingItemListID">
-                    <td> <span class="link-primary" @onclick="@(() => GotItem(item.ShoppingItemListID))"> @item.ItemName </span> 
-                        @if(item.NumberOfItems.HasValue)
-                        {
-                             <span> - @item.NumberOfItems</span> 
-                        }
-                        @if(item.Price.HasValue && item.Price.Value > 0)
-                        {
-                                <span @onclick="@(() => ShowHistory(item.ItemID))"> $@item.Price </span/> <!--Need to pass the Item ID not ItekListID-->
-                        }
-                        @if(item.storename != null){
-                            <span> - @item.storename</span> 
-                        }
-
-                       </td>
-                   
-
-                    <td><span class="link-primary" @onclick="@(() => EditItem(item.ShoppingItemListID))"> Update </span> </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+        <!-- Data Rows -->
+        @foreach (var item in CurrentShoppingList)
+        {
+            <div class="row border-bottom py-2" id="@item.ShoppingItemListID">
+                <div class="col-md-10">
+                    <span class="link-primary" @onclick="@(() => GotItem(item.ShoppingItemListID))">
+                        @item.ItemName
+                    </span>
+                    @if (item.NumberOfItems.HasValue)
+                    {
+                        <span> - @item.NumberOfItems</span>
+                    }
+                    @if (item.Price.HasValue && item.Price.Value > 0)
+                    {
+                        <span @onclick="@(() => ShowHistory(item.ItemID))"> $@item.Price</span>
+                    }
+                    @if (item.storename != null)
+                    {
+                        <span> - @item.storename</span>
+                    }
+                </div>
+                <div class="col-md-2">
+                    <span class="link-primary" @onclick="@(() => EditItem(item.ShoppingItemListID))">
+                        Update
+                    </span>
+                </div>
+            </div>
+        }
+    </div>
 
 }
 

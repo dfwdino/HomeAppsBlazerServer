@@ -32,25 +32,30 @@ else if (AllShoppingStores.Count.Equals(0))
 }
 else
 {
-    <table class="table">
-        <thead>
-        <th>Store Name</th>
-        <th>Deleted</th>
-        <th>Delete</th>
-        </thead>
-        <tbody>
-            @foreach (var store in AllShoppingStores)
-            {
-                <tr>
-                    <td class="link-primary" @onclick="@(() => EditStore(store.ShoppingStoreID))">@store.StoreName @(@store.Address != null ? " - " + store.Address : "")</td>
-                    <td> @(store.IsDeleted == false ? "Active" : "Hidden")</td>
-                    <td>
-                        <button class="btn btn-primary" @onclick="@(() => DeleteStore(store.ShoppingStoreID))">Delete</button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div class="container">
+        <!-- Headers Row -->
+        <div class="row border-bottom py-2 fw-bold">
+            <div class="col-md-4">Store Name</div>
+            <div class="col-md-2">Status</div>
+        </div>
+
+        <!-- Data Rows -->
+        @foreach (var store in AllShoppingStores)
+        {
+            <div class="row border-bottom py-2">
+                <div class="col-md-4 link-primary" @onclick="@(() => EditStore(store.ShoppingStoreID))">
+                    @store.StoreName @(@store.Address != null ? " - " + store.Address : "")
+                </div>
+                <div class="col-md-2">
+                    <span class="link-primary" @onclick="@(() => DeleteStore(store.ShoppingStoreID))">
+                        @(store.IsDeleted == false ? "Active" : "Hidden")
+                    </span>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div style="padding-top:40px" />
 
     <button class="btn btn-primary" @onclick="AddStore">Add Store</button>
 
