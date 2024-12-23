@@ -235,13 +235,17 @@ else
 
         if (Id is not null)
         {
-             await ShoppingServices.AddPriceToHistry(CurrentShoppingitems.ShoppingItemList.ShoppingItemID, 
-                        string.IsNullOrEmpty(CurrentShoppingitems.Price) ? Convert.ToDecimal(0.0) : Convert.ToDecimal(CurrentShoppingitems.Price), 
-                         CurrentShoppingitems.ShoppingItemList.ShoppingStoreID);
 
+        if(!string.IsNullOrEmpty(CurrentShoppingitems.Price))
+        {
+            await ShoppingServices.AddPriceToHistry(CurrentShoppingitems.ShoppingItemList.ShoppingItemID, 
+                        Convert.ToDecimal(CurrentShoppingitems.Price), 
+                        CurrentShoppingitems.ShoppingItemList.ShoppingStoreID);
+        }
             //update
             ShoppingServices.UpdateListItem(CurrentShoppingitems.ShoppingItemList, (int)Id);
             NavigationManager.NavigateTo($"ShoppingList/");
+            
         }
         else if (String.IsNullOrEmpty(ItemName))
         {

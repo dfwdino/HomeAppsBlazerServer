@@ -68,7 +68,7 @@ else
                         {
                              <span> - @item.NumberOfItems</span> 
                         }
-                        @if(item.Price.HasValue)
+                        @if(item.Price.HasValue && item.Price.Value > 0)
                         {
                                 <span @onclick="@(() => ShowHistory(item.ItemID))"> $@item.Price </span/> <!--Need to pass the Item ID not ItekListID-->
                         }
