@@ -5,9 +5,12 @@
 @using HomeAppsBlazerServer.Servcies
 @using HomeAppsBlazerServer.Servcies.Shopping
 @using Microsoft.AspNetCore.Mvc
+@using System.ComponentModel.DataAnnotations
 
 @inject IShoppingServices ShoppingServices
 @inject NavigationManager NavigationManger
+
+
 
 @rendermode InteractiveServer
 
@@ -23,39 +26,53 @@ else
 }
 
 
-<EditForm Model="CurrentShoppingStore" OnSubmit="HandleSubmit" >
+<EditForm Model="CurrentShoppingStore" OnValidSubmit="HandleSubmit">
+    <DataAnnotationsValidator />
+   
+    <div class="container">
 
+        <div class="row">
 
-    <div class="row">
-
-        <div class="col-lg-2">
-            <label for="itemsname">Store Name:</label>
+            <div class="col-lg-2">
+                <label for="itemsname">Store Name:</label>
+            </div>
+            <div class="col-lg-2">
+                <InputText id="storename" @bind-Value="@CurrentShoppingStore.StoreName" />
+                <div class="text-danger">
+                    <ValidationMessage For="@(() => CurrentShoppingStore.StoreName)" />
+                </div>
+            </div>
         </div>
-        <div class="col-lg-2">
-            <InputText id="storename" @bind-Value="@CurrentShoppingStore.StoreName" />
+
+
+        <div class="row">
+
+            <div class="col-lg-2">
+                <label for="itemsname">Store Address:</label>
+            </div>
+            <div class="col-lg-2">
+                <InputText id="storeaddress" @bind-Value="@CurrentShoppingStore.Address" />
+            </div>
         </div>
+
+
+        <div style="padding-bottom:20px" />
+
+        <div class="row">
+            <div class="col-md-2" style="padding-bottom:20px">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+            <div class="col-md-2" style="padding-bottom:20px">
+                <button type="button" class="btn btn-primary" @onclick="@(() => Cancel())">Cancel</button>
+            </div>
+        </div>
+
+        @if (Id is not null)
+        {
+            <button class="btn btn-primary" @onclick="@(() => DeleteStore())">Delete</button>
+        }
+
     </div>
-
-
-    <div class="row">
-
-        <div class="col-lg-2">
-            <label for="itemsname">Store Address:</label>
-        </div>
-        <div class="col-lg-2">
-            <InputText id="storeaddress" @bind-Value="@CurrentShoppingStore.Address" />
-        </div>
-    </div>
-
-
-    <div style="padding-bottom:20px" />
-
-    <button type="submit" class="btn btn-primary">Submit</button>
-
-    @if (Id is not null)
-    {
-        <button class="btn btn-primary" @onclick="@(() => DeleteStore())">Delete</button>
-    }
 
 </EditForm>
 
@@ -94,28 +111,35 @@ else
 
     async Task HandleSubmit()
     {
+        if (string.IsNullOrEmpty(CurrentShoppingStore.StoreName))
+            return;
+
         if (Id is not null)
         {
             //update
             await ShoppingServices.UpdateShoppingStore(CurrentShoppingStore, (int)Id);
             NavigationManger.NavigateTo($"/ShoppingStores/");
         }
-        else
+        else 
         {
             //add
             await ShoppingServices.AddShoppingStoreAsyn(CurrentShoppingStore);
             NavigationManger.NavigateTo($"/ShoppingStores/");
         }
 
-       
-
     }
+
+    async Task Cancel()
+    {
+        NavigationManger.NavigateTo($"ShoppingStores/");
+    }
+
 
 }
 
 
-        <style>
+<style>
     .row {
         padding-bottom: 5px;
     }
-        </style>
+</style>
