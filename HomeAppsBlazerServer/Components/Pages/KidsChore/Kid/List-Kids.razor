@@ -32,24 +32,32 @@ else if (Kids.Count.Equals(0))
 }
 else
 {
-
+     <div class="container">
     @foreach (var kid in Kids)
     {
 
         <div class="row bordered-row">
 
-            <div class="col-lg-3 ">
-                <label style="font-weight:200;" for="itemsname">Kid Name:</label>
-                <span style="padding-right:20px" id="kidname" @onclick="@(() => EditStore(kid.IDKidsName))"> @kid.KidName </span>
-                    <button class="btn btn-primary" @onclick="@(() => Deleteitems())">Delete</button>
+            <div class="col-md-2">
+                <label style="font-weight:bold;" for="itemsname">Kid Name:</label>
             </div>
-            
+
+            <div class="col-md-2 ">
+                    <span id="kidname" @onclick="@(() => Edit(kid.IDKidsName))"> @kid.KidName </span>
+            </div>
+
+                <div class="col-md-2">
+                    <button class="btn btn-primary" @onclick="@(() => Delete(kid.IDKidsName))">Delete</button>
+                </div>
+                
         </div>
 
         <div style="padding-top:20px" />
 
-
-    }}
+       
+    }
+    </div>
+    }
 
 @code {
 
@@ -64,12 +72,12 @@ else
 
 
 
-    async Task Deleteitems()
+    async Task Delete(int id)
     {
 
     }
 
-    void EditStore(int id)
+    void Edit(int id)
     {
         NavigationManager.NavigateTo($"/Kid-Add-Update/{id}");
     }
@@ -77,7 +85,7 @@ else
     async Task Cancel()
     {
 
-        NavigationManager.NavigateTo($"KidsChore/");
+        NavigationManager.NavigateTo($"List-Kids/");
     }
 
 

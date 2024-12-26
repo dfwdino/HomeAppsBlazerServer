@@ -49,9 +49,12 @@ else
         <div class="col-lg-1" style="padding-bottom:20px">
             <button type="submit" class="btn btn-primary">Submit</button>
         </div>
-        <div class="col-lg-1">
-            <button class="btn btn-primary" @onclick="@(() => Deleteitems())">Delete</button>
+        @if (Id is not null)
+        {
+            <div class="col-lg-1">
+                <button class="btn btn-primary" @onclick="@(() => Deleteitems())">Delete</button>
         </div>
+        }
     </div>
 
 
