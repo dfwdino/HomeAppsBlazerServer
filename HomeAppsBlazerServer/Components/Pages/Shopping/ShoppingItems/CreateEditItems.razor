@@ -118,9 +118,12 @@ else
             <div class="col-md-2" style="padding-bottom:20px">
                 <button type="submit" class="btn btn-primary">Submit</button>
             </div>
-            <div class="col-md-2">
-                <button class="btn btn-primary" @onclick="@(() => Deleteitems())">Delete</button>
-            </div>
+            @if (Id is not null)
+            {
+                <div class="col-md-2">
+                    <button class="btn btn-primary" @onclick="@(() => Deleteitems())">Delete</button>
+                </div>
+            }
         </div>
     </div>
 </EditForm>
