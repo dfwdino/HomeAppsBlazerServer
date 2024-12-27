@@ -32,75 +32,90 @@ else
 {
     <h3>Update @choresModel.ChoreName</h3>
 }
+<div class="container">
+    <EditForm Model="choresModel" OnSubmit="HandleSubmit" @onkeydown="HandleKeyDown">
 
-<EditForm Model="choresModel" OnSubmit="HandleSubmit" @onkeydown="HandleKeyDown">
-
-    <div class="row">
-        <div class="col-lg-2">
-            <label for="itemsname">Chore Name:</label>
+        <div class="row">
+            <div class="col-lg-2">
+                <label for="itemsname">Chore Name:</label>
+            </div>
+            <div class="col-lg-2">
+                <BlazorBootstrap.AutoComplete @bind-Value="ChoreName"
+                TItem="ChoresModel"
+                DataProvider="CustomersDataProvider"
+                PropertyName="ChoreName"
+                Placeholder="Search a ChoreName..."
+                OnChanged="(ChoresModel choreitem) => OnAutoCompleteChanged(choreitem)"
+                @onsubmit:preventDefault />
+            </div>
         </div>
-        <div class="col-lg-2">
-            <BlazorBootstrap.AutoComplete @bind-Value="ChoreName"
-                                          TItem="ChoresModel"
-            DataProvider="CustomersDataProvider"
-            PropertyName="ChoreName"
-            Placeholder="Search a ChoreName..."
-            OnChanged="(ChoresModel choreitem) => OnAutoCompleteChanged(choreitem)"
-            @onsubmit:preventDefault />
-        </div>
-    </div>
 
-    <div class="row">
-        <div class="col-lg-2">
-            <label for="itemsname">Kids Name:</label>
+        <div class="row">
+            <div class="col-lg-2">
+                <label for="itemsname">Kids Name:</label>
+            </div>
+            <div class="col-lg-2">
+                <BlazorBootstrap.AutoComplete @bind-Value="KidName"
+                TItem="KidsNameModel"
+                DataProvider="CustomersDataProvider"
+                PropertyName="KidName"
+                Placeholder="Search a Kids..."
+                OnChanged="(KidsNameModel kids) => OnAutoCompleteChanged(kids)" />
+            </div>
         </div>
-        <div class="col-lg-2">
-            <BlazorBootstrap.AutoComplete @bind-Value="KidName"
-            TItem="KidsNameModel"
-            DataProvider="CustomersDataProvider"
-            PropertyName="KidName"
-            Placeholder="Search a Kids..."
-            OnChanged="(KidsNameModel kids) => OnAutoCompleteChanged(kids)" />
-        </div>
-    </div>
 
-    <div class="row">
+        <div class="row">
 
-        <div class="col-lg-2">
-            <label for="itemsname">Start date:</label>
-        </div>
-        <div class="col-lg-2">
-           
-            <InputDate id="needDate" @bind-Value="ChoreList.StartDate" class="form-control" />
-           
-        </div>
-    </div>
+            <div class="col-lg-2">
+                <label for="itemsname">Start:</label>
+            </div>
+            <div class="col-lg-2">
 
-    
+                <InputDate id="needDate" @bind-Value="ChoreList.StartDate" class="form-control" />
 
-    <div class="row buttons">
-        <div class="col-lg-1" style="padding-bottom:20px">
-            <button class="btn btn-primary" @onclick="@(() => Cancel())">Cancel</button>
+            </div>
         </div>
-        <div class="col-lg-1" style="padding-bottom:20px">
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </div>
-        <div class="col-lg-1">
-            <button class="btn btn-primary" @onclick="@(() => Deleteitems())">Delete</button>
-        </div>
-    </div>
+
+        @if(Id is not null) {
+            <div class="row">
+
+                <div class="col-lg-2">
+                    <label for="itemsname">Finished:</label>
+                </div>
+                <div class="col-lg-2">
+
+                    <InputDate id="needDate" @bind-Value="ChoreList.DoneDate" class="form-control" />
+
+                </div>
+            </div>
+        }
 
 
-</EditForm>
+        <div class="row buttons">
+            <div class="col-lg-1" style="padding-bottom:20px">
+                <button class="btn btn-primary" @onclick="@(() => Cancel())">Cancel</button>
+            </div>
+            <div class="col-lg-1" style="padding-bottom:20px">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+            @if(Id is not null){}
+            <div class="col-lg-1">
+                <button class="btn btn-primary" @onclick="@(() => Deleteitems())">Delete</button>
+            </div>
+            }
+        </div>
 
+
+    </EditForm>
+</div>
 
 <style>
     .row{
-        padding-bottom: 10px;
+    padding-bottom: 10px;
     }
 
     .buttons {
-        padding-top: 20px;
+    padding-top: 20px;
     }
 </style>
 
@@ -168,6 +183,13 @@ else
             {
                 ChoreList = AChore;
 
+                ///WTF BAD CODE... Need to fix this.
+                choresModel = choresChoresServices.GetChores().Result.Where(mm => mm.ChoreID.Equals(ChoreList.KidsChoreID)).FirstOrDefault();
+                ChoreName = choresModel.ChoreName;
+
+                Kid = kidsChorseKidsServices.GetKids().Result.Where(mm => mm.IDKidsName.Equals(ChoreList.KidsNameID)).FirstOrDefault();
+                KidName = Kid.KidName;
+
             }
 
         }
@@ -210,12 +232,7 @@ else
             NavigationManager.NavigateTo($"List-Chore-Items/");
         }
 
-
-
     }
-
-
-
 
 
     async Task Deleteitems()

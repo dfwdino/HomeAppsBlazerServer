@@ -29,32 +29,38 @@ else
     <h3>Update @Chore.ChoreName</h3>
 }
 
+   
+
 <EditForm Model="Chore" OnSubmit="HandleSubmit">
+    <div class="container">
+        <div class="row border-bottom py-2 fw-bold">
 
-    <div class="row">
+            <div class="col-lg-2 ">
+                <label for="itemsname">Chore Name:</label>
+            </div>
+            <div class="col-lg-2">
+                <InputText id="Chorename" @bind-Value="@Chore.ChoreName" />
+            </div>
+        </div>
 
-        <div class="col-lg-2">
-            <label for="itemsname">ChoreName Name:</label>
+        <div style="padding-top:20px" />
+
+        <div class="row">
+            <div class="col-lg-1" style="padding-bottom:20px">
+                <button class="btn btn-primary" @onclick="@(() => Cancel())">Cancel</button>
+            </div>
+            <div class="col-lg-1" style="padding-bottom:20px">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+
+            @if (Id is not null)
+            {
+                <div class="col-lg-1">
+                    <button class="btn btn-primary" @onclick="@(() => Deleteitems())">Delete</button>
         </div>
-        <div class="col-lg-2">
-            <InputText id="Chorename" @bind-Value="@Chore.ChoreName" />
-        </div>
+            }
     </div>
-
-    <div style="padding-top:20px" />
-
-    <div class="row">
-        <div class="col-lg-1" style="padding-bottom:20px">
-            <button class="btn btn-primary" @onclick="@(() => Cancel())">Cancel</button>
-        </div>
-        <div class="col-lg-1" style="padding-bottom:20px">
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </div>
-        <div class="col-lg-1">
-            <button class="btn btn-primary" @onclick="@(() => Deleteitems())">Delete</button>
-        </div>
     </div>
-
 
 </EditForm>
 

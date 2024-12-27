@@ -1,5 +1,6 @@
 ﻿using HomeAppsBlazerServer.Data;
 using HomeAppsBlazerServer.Models.Chore;
+using Microsoft.EntityFrameworkCore;
 
 namespace HomeAppsBlazerServer.Servcies.Chore
 {
@@ -45,7 +46,7 @@ namespace HomeAppsBlazerServer.Servcies.Chore
 
         }
 
-        public async void AddChoreItem(ChoreListItemsModel ChoresNameModel)
+        public void AddChoreItem(ChoreListItemsModel ChoresNameModel)
         {
             if (ChoresNameModel is null)
             {
@@ -58,18 +59,31 @@ namespace HomeAppsBlazerServer.Servcies.Chore
             myDbContext.SaveChanges();
         }
 
-        public async Task<ChoreListItemsModel> GetChoreItem(int id)
+        public async Task<ChoreListItemsModel?> GetChoreItem(int id)
         {
-            return myDbContext.ChoreListItem.Where(mm => mm.KidsChoreID == id).FirstOrDefault();
+            return await myDbContext.ChoreListItem.Where(mm => mm.ChoreHistoryID == id).FirstOrDefaultAsync();
         }
 
         public async void UpdateChoreItem(ChoreListItemsModel ChoresNameModel)
         {
             myDbContext.ChoreListItem.Update(ChoresNameModel);
-            myDbContext.SaveChanges();
+            await myDbContext.SaveChangesAsync();
+
         }
 
-        public async void DeleteChore(ChoreListItemsModel ChoresNameModel)
+        public async void MakeAsDone(int id)
+        {
+            var donechore = await myDbContext.ChoreListItem.Where(mm => mm.ChoreHistoryID == id).FirstOrDefaultAsync();
+
+            if (donechore != null)
+            {
+                donechore.DoneDate = DateTime.Now;
+                myDbContext.ChoreListItem.Update(donechore);
+                await myDbContext.SaveChangesAsync();
+            }
+        }
+
+        public void DeleteChore(ChoreListItemsModel ChoresNameModel)
         {
             ChoresNameModel.IsDeleted = true;
             myDbContext.ChoreListItem.Update(ChoresNameModel);

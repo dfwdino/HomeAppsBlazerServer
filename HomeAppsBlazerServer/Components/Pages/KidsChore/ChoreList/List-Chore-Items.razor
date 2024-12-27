@@ -56,29 +56,30 @@ else
 
         @foreach (var chore in Chores)
         {
-
-
-
             <div class="row">
 
                 <div class="col">
-                    <div id="kidname" @onclick="@(() => EditStore(chore.ChoreHistoryID))"> <span class="link-primary"> @chore.ChoreName</span> </div>
+                    <div id="kidname" @onclick="@(() => Edit(chore.ChoreHistoryID))"> <span class="link-primary"> @chore.ChoreName</span> </div>
                 </div>
                 <div class="col">
-                    <div id="kidname" @onclick="@(() => EditStore(chore.ChoreHistoryID))"> <span class="link-primary"> @chore.KidsName</span> </div>
-                </div>
-
-                <div class="col">
-                    <div id="kidname" @onclick="@(() => EditStore(chore.ChoreHistoryID))"> <span class="link-primary"> @chore.StartDate</span> </div>
+                    <div id="kidname" @onclick="@(() => Edit(chore.ChoreHistoryID))"> <span class="link-primary"> @chore.KidsName</span> </div>
                 </div>
 
                 <div class="col">
-                    <div id="kidname" @onclick="@(() => EditStore(chore.ChoreHistoryID))"> <span class="link-primary"> @chore.DateDone</span> </div>
+                    <div id="kidname" @onclick="@(() => Edit(chore.ChoreHistoryID))"> <span class="link-primary"> @chore.StartDate</span> </div>
+                </div>
+
+                <div class="col">
+                    <div id="kidname" @onclick="@(() => Edit(chore.ChoreHistoryID))"> <span class="link-primary"> @chore.DateDone</span> </div>
+                </div>
+
+                <div class="col">
+                    <div id="status" @onclick="@(() => Edit(chore.ChoreHistoryID))"> <span class="link-primary">Done?</span> </div>
                 </div>
             </div>
 
 
-           @*  <div class="row">
+            @*  <div class="row">
 
                 <div class="col-lg-2">
                     <label for="itemsname">RequireDate:</label>
@@ -110,9 +111,15 @@ else
 
     }
 
-    void EditStore(int id)
+    void MakeAsDone(int id){
+
+        choresListItemChoresServices.MakeAsDone(id);
+
+    }
+
+    void Edit(int id)
     {
-        NavigationManager.NavigateTo($"/Add-Update-Chore/{id}");
+        NavigationManager.NavigateTo($"/Add-Update-Chore-List-Item/{id}");
     }
 
 }

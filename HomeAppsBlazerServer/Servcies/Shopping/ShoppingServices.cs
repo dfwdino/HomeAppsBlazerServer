@@ -29,7 +29,6 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
 
             myDbContext.ShoppingItems.Add(shoppingItem);
 
-
             try
             {
                 await myDbContext.SaveChangesAsync();
@@ -52,8 +51,6 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
             myDbContext.ShoppingItemList.Add(shoppingListItem);
 
             myDbContext.SaveChanges();
-
-
         }
 
         public async Task<ShoppingItem> GetShoppingItemByIDAsync(int id)
@@ -444,15 +441,14 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
         {
             var LastPriceQuery = myDbContext.PriceHistory.Where(mm => mm.ItemID == itemid);
 
-            if (storeid is not null)
+            if (storeid.HasValue)
             {
-                LastPriceQuery.Where(mm => mm.StoreID == storeid);
+                LastPriceQuery = LastPriceQuery.Where(mm => mm.StoreID == storeid);
             }
 
-            decimal? lastPrice = LastPriceQuery.OrderByDescending(mm => mm.PriceHistoryID).FirstOrDefault().Amount;
-
-            return lastPrice.HasValue ? lastPrice.Value : 0;
-
+            var lastPriceRecord = await LastPriceQuery.OrderByDescending(mm => mm.PriceHistoryID).FirstOrDefaultAsync();
+            
+            return lastPriceRecord?.Amount ?? 0; // Return 0 if no price record found
         }
 
         public async Task<List<PriceHistory>> GetPriceHisotry(int itemid)

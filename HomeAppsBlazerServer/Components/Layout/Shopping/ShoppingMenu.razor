@@ -6,10 +6,11 @@
     </div>
 </div>
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+<input type="checkbox" title="Navigation menu" class="navbar-toggler" aria-expanded="false" id="navbar-toggle" />
+<label for="navbar-toggle" class="navbar-toggler-label">Toggle Navigation</label>
 
 
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+<div class="nav-scrollable" onclick="document.querySelector('#navbar-toggle').click()">
 
     <nav class="flex-column">
         <div class="nav-item px-3">
