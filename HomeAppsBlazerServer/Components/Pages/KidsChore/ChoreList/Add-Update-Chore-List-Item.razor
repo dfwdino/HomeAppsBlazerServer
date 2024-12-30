@@ -33,7 +33,7 @@ else
     <h3>Update @choresModel.ChoreName</h3>
 }
 <div class="container">
-    <EditForm Model="choresModel" OnSubmit="HandleSubmit" @onkeydown="HandleKeyDown">
+    <EditForm Model="choresModel" OnValidSubmit="HandleSubmit" @onkeydown="HandleKeyDown">
 
         <div class="row">
             <div class="col-lg-2">
@@ -93,14 +93,14 @@ else
 
         <div class="row buttons">
             <div class="col-lg-1" style="padding-bottom:20px">
-                <button class="btn btn-primary" @onclick="@(() => Cancel())">Cancel</button>
+                <button type="button" class="btn btn-primary" @onclick="@(() => Cancel())">Cancel</button>
             </div>
             <div class="col-lg-1" style="padding-bottom:20px">
                 <button type="submit" class="btn btn-primary">Submit</button>
             </div>
             @if(Id is not null){}
             <div class="col-lg-1">
-                <button class="btn btn-primary" @onclick="@(() => Deleteitems())">Delete</button>
+                <button type="button" class="btn btn-primary" @onclick="@(() => Deleteitems())">Delete</button>
             </div>
             }
         </div>

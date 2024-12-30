@@ -16,7 +16,7 @@ namespace HomeAppsBlazerServer.Servcies.Chore
             _logger = logger;
         }
 
-        public async Task<List<ChoreListDetailItemsModel>> GetChoreItems()
+        public async Task<List<ChoreListDetailItemsModel>> GetChoreItems(int? kidid = null)
         {
             //List<ChoreListItemsModel> Chores = myDbContext.ChoreListItem.Where(mm => mm.IsDeleted == false).ToList();
 
@@ -26,7 +26,8 @@ namespace HomeAppsBlazerServer.Servcies.Chore
                                     on chore.KidsNameID equals kid.IDKidsName
                                join choreName in myDbContext.KidsChores
                                     on chore.KidsChoreID equals choreName.ChoreID
-                               where chore.IsDeleted == false
+                               where chore.IsDeleted == false  &&
+                                            (kidid == null || chore.KidsNameID == kidid)
                                select new ChoreListDetailItemsModel
                                {
                                    KidsName = kid.KidName,
