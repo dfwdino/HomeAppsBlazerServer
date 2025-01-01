@@ -32,19 +32,31 @@ else if (Chores.Count.Equals(0))
 }
 else
 {
-       <div class="container">
-    @foreach (var chore in Chores)
-    {
-
-            <div class="row  border-bottom py-2">
+    <div class="container">
+        <div class="row  border-bottom py-2">
 
             <div class="col-md-2" style="font-weight:bold">
                 <label for="itemsname">Chore Name:</label>
             </div>
-            <div class="col-md-2">
-                <div id="kidname" @onclick="@(() => EditStore(chore.ChoreID))"> <span class="link-primary"> @chore.ChoreName</span> </div>
+
+            <div class="col-md-2" style="font-weight:bold">
+                <label for="itemsname">Amount</label>
             </div>
         </div>
+        @foreach (var chore in Chores){
+            <div class="row  border-bottom py-2">
+
+                <div class="col-md-2">
+                    <div id="kidname" @onclick="@(() => EditStore(chore.ChoreID))"> <span class="link-primary"> @chore.ChoreName</span> </div>
+                </div>
+
+                @if (chore.Amount > 0)
+                {
+                    <div class="col-md-2">
+                        <div id="amount">$@chore.Amount </div>
+                </div>}
+            </div>
+
 
         <div style="padding-top:20px" />
 

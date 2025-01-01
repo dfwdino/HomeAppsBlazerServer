@@ -46,6 +46,9 @@ else
             <div class="col-lg-1">
                 <div> Kid </div>
             </div>
+            <div class="col-lg-1">
+                <div>Amount</div>
+            </div>
 
             <div class="col-lg-1">
                 <div>Start Date</div>
@@ -63,8 +66,13 @@ else
                 <div class="col-lg-2 border-start border-end">
                     <div id="kchorename" @onclick="@(() => Edit(chore.ChoreHistoryID))"> <span class="link-primary"> @chore.ChoreName</span> </div>
                 </div>
+
                 <div class="col-lg-1 border-start border-end">
                     <div id="kidname" @onclick="@(() => GetOnlyByKidNmae(chore.KidsNameID))"> <span class="link-primary"> @chore.KidsName</span> </div>
+                </div>
+
+                <div class="col-lg-1 border-start border-end">
+                    <div>@chore.Amount</div>
                 </div>
 
                 <div class="col-lg-1 border-start border-end">

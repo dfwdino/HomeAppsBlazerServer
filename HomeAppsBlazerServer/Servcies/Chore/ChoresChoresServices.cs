@@ -19,6 +19,7 @@ namespace HomeAppsBlazerServer.Servcies.Chore
         public Task<List<ChoresModel>> GetChores()
         {
             _logger.LogInformation("Getting Chores.");
+
             List<ChoresModel> Chores = myDbContext.KidsChores.Where(mm => mm.IsDeleted == false).ToList();
 
             _logger.LogInformation("Got {NumberOfChors} Chores.", Chores.Count);

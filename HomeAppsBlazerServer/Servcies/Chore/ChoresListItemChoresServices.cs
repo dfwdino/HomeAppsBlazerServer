@@ -18,15 +18,12 @@ namespace HomeAppsBlazerServer.Servcies.Chore
 
         public async Task<List<ChoreListDetailItemsModel>> GetChoreItems(int? kidid = null)
         {
-            //List<ChoreListItemsModel> Chores = myDbContext.ChoreListItem.Where(mm => mm.IsDeleted == false).ToList();
-
-
             var choreDetails = from chore in myDbContext.ChoreListItem
                                join kid in myDbContext.KidsName
                                     on chore.KidsNameID equals kid.IDKidsName
                                join choreName in myDbContext.KidsChores
                                     on chore.KidsChoreID equals choreName.ChoreID
-                               where chore.IsDeleted == false  &&
+                               where chore.IsDeleted == false &&
                                             (kidid == null || chore.KidsNameID == kidid)
                                select new ChoreListDetailItemsModel
                                {
@@ -37,7 +34,8 @@ namespace HomeAppsBlazerServer.Servcies.Chore
                                    KidsChoreID = chore.KidsChoreID,
                                    KidsNameID = chore.KidsNameID,
                                    StartDate = chore.StartDate,
-                                   DateDone = chore.DoneDate
+                                   DateDone = chore.DoneDate,
+                                   Amount = chore.Amount == null ? choreName.Amount : chore.Amount
                                };
 
 
