@@ -19,7 +19,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
         Task<List<ShoppingItem>> GetShoppingItemsFilterAsync(string filter = "");
 
         Task<ShoppingItem> GetShoppingItemByIDAsync(int id);
-        Task AddShoppingItemAsyn(ShoppingItem shoppingItem);
+        Task<ShoppingItem> AddShoppingItemAsyn(ShoppingItem shoppingItem);
         Task RemoveShoppingItem(int id);
         Task UpdateShoppingItem(ShoppingItem shoppingItem, int id);
 

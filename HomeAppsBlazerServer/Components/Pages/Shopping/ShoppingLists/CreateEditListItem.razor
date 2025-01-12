@@ -51,12 +51,14 @@ else
             <label for="itemsname">Items Name:</label>
         </div>
         <div class="col-lg-2">
-            <BlazorBootstrap.AutoComplete @bind-Value="ItemName"
-                                          TItem="ShoppingItem"
-                                          DataProvider="CustomersDataProvider"
-                                          PropertyName="ItemName"
-                                          Placeholder="Search a item..."
-                                          OnChanged="(ShoppingItem item) => OnAutoCompleteChanged(item)" />
+            <BlazorBootstrap.AutoComplete 
+            @bind-Value="ItemName"
+            TItem="ShoppingItem"
+            DataProvider="CustomersDataProvider"
+            PropertyName="ItemName"
+            Placeholder="Search a item..."
+            OnChanged="(ShoppingItem item) => OnAutoCompleteChanged(item)"
+                                          />
         </div>
     </div>
 
@@ -68,11 +70,11 @@ else
         </div>
         <div class="col-lg-2">
             <BlazorBootstrap.AutoComplete @bind-Value="StoreName"
-                                          TItem="ShoppingStore"
-                                          DataProvider="CustomersDataProvider"
-                                          PropertyName="StoreName"
-                                          Placeholder="Search a store..."
-                                          OnChanged="(ShoppingStore store) => OnAutoCompleteChanged(store)" />
+            TItem="ShoppingStore"
+            DataProvider="CustomersDataProvider"
+            PropertyName="StoreName"
+            Placeholder="Search a store..."
+            OnChanged="(ShoppingStore store) => OnAutoCompleteChanged(store)" />
         </div>
     </div>
 
@@ -181,18 +183,18 @@ else
 
     protected override async Task OnParametersSetAsync()
     {
-        if (Id is not null)
+        if (Id.HasValue)
         {
-            var shoppingitems = await ShoppingServices.GetListItem((int)(Id));
+            var shoppingitems = await ShoppingServices.GetListItem(Id.Value);
 
-            if (shoppingitems is not null)
+            if (shoppingitems != null)
             {
                 CurrentShoppingitems = shoppingitems;
                 StoreName = CurrentShoppingitems.StoreName;
                 ItemName = CurrentShoppingitems.ItemName;
                 CurrentShoppingitems.ShoppingItemList = shoppingitems.ShoppingItemList;
                 CurrentShoppingitems.ShoppingItemList.NeedDate = shoppingitems.ShoppingItemList.NeedDate;
-                
+
             }
 
         }
@@ -229,20 +231,29 @@ else
         if (Id is not null)
         {
 
-        if(!string.IsNullOrEmpty(CurrentShoppingitems.Price))
-        {
-            await ShoppingServices.AddPriceToHistry(CurrentShoppingitems.ShoppingItemList.ShoppingItemID, 
-                        Convert.ToDecimal(CurrentShoppingitems.Price), 
-                        CurrentShoppingitems.ShoppingItemList.ShoppingStoreID);
-        }
+            if(!string.IsNullOrEmpty(CurrentShoppingitems.Price))
+            {
+                await ShoppingServices.AddPriceToHistry(CurrentShoppingitems.ShoppingItemList.ShoppingItemID, 
+                            Convert.ToDecimal(CurrentShoppingitems.Price), 
+                            CurrentShoppingitems.ShoppingItemList.ShoppingStoreID);
+            }
             //update
             ShoppingServices.UpdateListItem(CurrentShoppingitems.ShoppingItemList, (int)Id);
             NavigationManager.NavigateTo($"ShoppingList/");
-            
+
         }
         else if (String.IsNullOrEmpty(ItemName))
         {
-            //Should automaticall create new one. 
+            ShoppingItem newshoppingitem = new ShoppingItem() { ItemName = ItemName };
+         
+            newshoppingitem = await ShoppingServices.AddShoppingItemAsyn(newshoppingitem);
+
+            ShoppingServices.CreateListItem(CurrentShoppingitems.ShoppingItemList);
+
+            NavigationManager.NavigateTo($"ShoppingList/");
+
+
+
             return;
         }
         else

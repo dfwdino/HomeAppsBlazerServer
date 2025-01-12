@@ -25,6 +25,12 @@ builder.Services.AddScoped<ILocationChoresServices, LocationChoresServices>();
 
 builder.Services.AddScoped<ChoresListItemChoresServices, ChoresListItemChoresServices>();
 
+builder.Services.AddServerSideBlazor().AddCircuitOptions(options =>
+{
+    options.DetailedErrors = true;
+});
+
+
 builder.Services.AddServerSideBlazor()
     .AddHubOptions(options =>
     {

@@ -19,11 +19,13 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
         }
 
         #region Items
-        public async Task AddShoppingItemAsyn(ShoppingItem shoppingItem)
+        public async Task<ShoppingItem> AddShoppingItemAsyn(ShoppingItem shoppingItem)
         {
+
+
             bool FoundItem = myDbContext.ShoppingItems.Any(x => x.ItemName == shoppingItem.ItemName);
 
-            if (FoundItem) { return; }
+            if (FoundItem) { return null; }
 
             shoppingItem.ItemName = shoppingItem.ItemName.ToTileCase();
 
@@ -51,6 +53,8 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
             myDbContext.ShoppingItemList.Add(shoppingListItem);
 
             myDbContext.SaveChanges();
+
+            return shoppingItem;
         }
 
         public async Task<ShoppingItem> GetShoppingItemByIDAsync(int id)
@@ -103,15 +107,16 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
 
             if (!showallitems)
             {
-                IList<int> ListOfAllItemsOnList = new List<int>();
+                IList<int> ItemsNotGotten = new List<int>();
 
-                ListOfAllItemsOnList = myDbContext.ShoppingItemList.Where(mm => mm.GotItem.Equals(false)).Select(m => m.ShoppingItemID).ToList();
+                ItemsNotGotten = myDbContext.ShoppingItemList.Where(mm => mm.GotItem.Equals(false)).Select(m => m.ShoppingItemID).ToList();
 
-                query = query.Where(si => !ListOfAllItemsOnList.Contains(si.ShoppingItemID));
+                query = query.Where(si => !ItemsNotGotten.Contains(si.ShoppingItemID));
             }
 
 
             List<ShoppingDetailItem> result = query
+                        .Where(mm => mm.IsDeleted == false)
                         .GroupJoin(myDbContext.ShoppingStores,
                             si => si.StoreID,
                             ss => ss.ShoppingStoreID,
@@ -139,10 +144,10 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
                                 .OrderByDescending(sil => sil.GotItemDate)
                                 .Select(sil => sil.GotItemDate)
                                 .FirstOrDefault()
-                        }).Where(mm => mm.IsDeleted == false)
+                        })
                         .OrderByDescending(mm => mm.GotItemDate)
                         .ThenBy(mm => mm.ItemName)
-    .ToList();
+                        .ToList();
 
 
 
@@ -447,7 +452,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
             }
 
             var lastPriceRecord = await LastPriceQuery.OrderByDescending(mm => mm.PriceHistoryID).FirstOrDefaultAsync();
-            
+
             return lastPriceRecord?.Amount ?? 0; // Return 0 if no price record found
         }
 

@@ -16,7 +16,28 @@ namespace HomeAppsBlazerServer.Servcies.Chore
             _logger = logger;
         }
 
-        public async Task<List<ChoreListDetailItemsModel>> GetChoreItems(int? kidid = null)
+        public DateTime GetNextSunday(DateTime dateTime)
+        {
+            DateTime today = dateTime;
+
+            // Calculate the days until next Sunday
+            int daysUntilSunday = ((int)DayOfWeek.Sunday - (int)dateTime.DayOfWeek + 7) % 7;
+
+            // If today is Sunday, set the next Sunday to 7 days later
+            if (daysUntilSunday == 0)
+            {
+                daysUntilSunday = 7;
+            }
+
+            // Get the next Sunday date
+            DateTime nextSunday = dateTime.AddDays(daysUntilSunday);
+
+            return nextSunday;
+
+        }
+
+
+        public async Task<List<ChoreListDetailItemsModel>> GetChoreItemsByKid(int? kidid = null)
         {
             var choreDetails = from chore in myDbContext.ChoreListItem
                                join kid in myDbContext.KidsName
@@ -25,6 +46,8 @@ namespace HomeAppsBlazerServer.Servcies.Chore
                                     on chore.KidsChoreID equals choreName.ChoreID
                                where chore.IsDeleted == false &&
                                             (kidid == null || chore.KidsNameID == kidid)
+                               //&& (chore.DoneDate == null && chore.DoneDate.Value <= GetNextSunday(DateTime.Now))
+
                                select new ChoreListDetailItemsModel
                                {
                                    KidsName = kid.KidName,
@@ -38,11 +61,7 @@ namespace HomeAppsBlazerServer.Servcies.Chore
                                    Amount = chore.Amount == null ? choreName.Amount : chore.Amount
                                };
 
-
-
-
-            return choreDetails.ToList(); //Chores;
-
+            return await choreDetails.ToListAsync();
         }
 
         public void AddChoreItem(ChoreListItemsModel ChoresNameModel)

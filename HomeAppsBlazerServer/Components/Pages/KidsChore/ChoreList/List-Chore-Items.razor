@@ -106,16 +106,17 @@ else
 
     public List<ChoreListDetailItemsModel> Chores { get; set; } = new();
 
+
+    
     protected override async Task OnParametersSetAsync()
     {
         if (Id.HasValue)
         {
-            Chores = await choresListItemChoresServices.GetChoreItems(Id);
+            Chores = await choresListItemChoresServices.GetChoreItemsByKid(Id);
 
         }
         else{
-            Chores = await choresListItemChoresServices.GetChoreItems();
-
+            Chores = await choresListItemChoresServices.GetChoreItemsByKid();
 
         }
 
@@ -134,10 +135,10 @@ else
 
     void MakeAsDone(int id)
     {
-        DateTime now = DateTime.Now;
-        var asdf = Chores.Where(x => x.ChoreHistoryID == id).FirstOrDefault();
+      
+        var MakeDoneChore = Chores.Where(x => x.ChoreHistoryID == id).FirstOrDefault();
 
-        asdf.DateDone = now;
+        MakeDoneChore.DateDone = DateTime.Now;
 
         choresListItemChoresServices.MakeAsDone(id);
 
