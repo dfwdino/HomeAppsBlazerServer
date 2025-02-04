@@ -61,7 +61,7 @@ namespace HomeAppsBlazerServer.Servcies.Chore
                                    Amount = chore.Amount == null ? choreName.Amount : chore.Amount
                                };
 
-            return await choreDetails.ToListAsync();
+            return choreDetails.ToList();
         }
 
         public void AddChoreItem(ChoreListItemsModel ChoresNameModel)

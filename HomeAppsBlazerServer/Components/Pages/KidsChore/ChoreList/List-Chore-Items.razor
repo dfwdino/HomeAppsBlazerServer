@@ -1,6 +1,21 @@
 ﻿@page "/List-Chore-Items"
 @page "/List-Chore-Items/{Id:int}"
 
+@using Microsoft.AspNetCore.Mvc
+@using System.ComponentModel.DataAnnotations
+
+
+
+@*Endalbes it*@
+@rendermode InteractiveServer
+
+@* jackes up the view of the table *@
+@* @rendermode @(new InteractiveServerRenderMode(prerender: false)) *@
+
+
+@* Loads as it as it download it. *@
+@attribute [StreamRendering]
+
 
 @using HomeAppsBlazerServer.Models
 @using HomeAppsBlazerServer.Models.Chore
@@ -8,17 +23,18 @@
 @using HomeAppsBlazerServer.Servcies
 @using HomeAppsBlazerServer.Servcies.Chore
 
-@using Microsoft.AspNetCore.Mvc
-@using System.ComponentModel.DataAnnotations
-
 @inject ChoresListItemChoresServices choresListItemChoresServices
-@inject NavigationManager NavigationManager
 
-@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JsRuntime
 
 @layout HomeAppsBlazerServer.Components.Layout.Chore.KidsChoreLayout
 
+<link rel="stylesheet" type="text/css" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.0/css/jquery.dataTables.css">
 
+
+<script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.0/jquery.dataTables.min.js"></script>
 
 
 <h3>List Chore</h3>
@@ -107,29 +123,37 @@ else
     public List<ChoreListDetailItemsModel> Chores { get; set; } = new();
 
 
-    
+
     protected override async Task OnParametersSetAsync()
     {
+       
+        await GetChorseByKid(Id);
+
+    }
+
+
+
+    async Task GetChorseByKid(int? Id){
+
         if (Id.HasValue)
         {
             Chores = await choresListItemChoresServices.GetChoreItemsByKid(Id);
 
         }
-        else{
+        else
+        {
             Chores = await choresListItemChoresServices.GetChoreItemsByKid();
 
         }
-
-
     }
 
     void GetOnlyByKidNmae(int id)
     {
         if(Id.HasValue){
-            NavigationManager.NavigateTo($"/List-Chore-Items/");}
+            NavigationManager.NavigateTo($"List-Chore-Items/");}
         else
         {
-            NavigationManager.NavigateTo($"/List-Chore-Items/{id}");
+            NavigationManager.NavigateTo($"List-Chore-Items/{id}");
         }
     }
 
@@ -146,7 +170,7 @@ else
 
     void Edit(int id)
     {
-        NavigationManager.NavigateTo($"/Add-Update-Chore-List-Item/{id}");
+        NavigationManager.NavigateTo($"Add-Update-Chore-List-Item/{id}");
     }
 
 }
