@@ -343,8 +343,8 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
                     results.Add(new ShoppingItemResult
                     {
                         ItemID = item.ShoppingItemID,
-                        ItemName = shoppingItems.Where(mm => mm.ShoppingItemID == item.ShoppingItemID).Select(mm => mm.ItemName).First(),
-                        storename = shoppingStores.Where(mm => mm.ShoppingStoreID == item.ShoppingStoreID).Select(mm => mm.StoreName).FirstOrDefault(),
+                        ItemName = shoppingItems.Where(mm => mm.ShoppingItemID == item.ShoppingItemID).Select(mm => mm.ItemName).FirstOrDefault(),
+                        storename = shoppingStores.Where(mm => mm.ShoppingStoreID == item.ShoppingStoreID).FirstOrDefault()?.StoreName,
                         Price = priceHistory.Where(mm => mm.ItemID == item.ShoppingItemID).OrderByDescending(mm => mm.PriceDate).Select(mm => mm.Amount).FirstOrDefault(),
                         NumberOfItems = item.NumberOfItems,
                         ShoppingItemListID = item.ShoppingItemListID
