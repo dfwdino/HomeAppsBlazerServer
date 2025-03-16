@@ -60,11 +60,13 @@ else
    
 }
 
-<span class="link-primary" @onclick="@(() => NeedList())"> Need List </span> <span class="link-primary" @onclick="@(() => AddItem())">- Add Item</span> 
+    <span class="link-primary" @onclick="@(() => NeedList())">Need List </span> 
+    <br/>
+    <span class="link-primary" @onclick="@(() => AddItem())">Add New Item</span> <span class="link-primary" @onclick="@(() => AddListItem())">- Add Item To List</span>
 
 </nav>
 
-    <div style="padding-bottom:30px" />
+    <div style="padding-bottom:50px" />
 
 @if (AllShoppingItems is null)
 {
@@ -190,6 +192,11 @@ else
     void AddItem()
     {
         NavigationManger.NavigateTo($"edit-item/");
+    }
+
+    void AddListItem()
+    {
+        NavigationManger.NavigateTo($"CreateEditListItem/");
     }
 
     async Task AddItemToList(int id)

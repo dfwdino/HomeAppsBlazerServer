@@ -28,13 +28,17 @@
 
 
 <div onclick="document.querySelector('.navbar-toggler').click()">
-    <NavLink  class="link-primary" href="ShoppingItems" style="padding-right:50px">
-        <span aria-hidden="true"></span>All Items
+    <NavLink  class="link-primary" href="ShoppingItems" style="padding-right:35px">
+        <span aria-hidden="true">All Items</span>
     </NavLink>
 
 
-    <NavLink href="CreateEditListItem">
-        <span class="link-primary" aria-hidden="true"></span>Add Item to List
+    <NavLink href="CreateEditListItem" style="padding-right:35px">
+        <span class="link-primary" aria-hidden="true">Add Item to List</span>
+    </NavLink>
+
+    <NavLink href="edit-item">
+        <span class="link-primary" aria-hidden="true">Add New Item</span>
     </NavLink>
 
 </div>
@@ -65,7 +69,7 @@ else
         @foreach (var item in CurrentShoppingList)
         {
             <div class="row border-bottom py-2" id="@item.ShoppingItemListID">
-                <div class="col-md-10">
+                <div class="col-10">
                     <span class="link-primary" @onclick="@(() => GotItem(item.ShoppingItemListID))">
                         @item.ItemName
                     </span>
@@ -82,7 +86,7 @@ else
                         <span> - @item.storename</span>
                     }
                 </div>
-                <div class="col-md-2">
+                <div class="col-2">
                     <span class="link-primary" @onclick="@(() => EditItem(item.ShoppingItemListID))">
                         Update
                     </span>
