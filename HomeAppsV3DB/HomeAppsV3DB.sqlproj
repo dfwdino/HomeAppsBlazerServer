@@ -82,6 +82,7 @@
     <Build Include="Shopping\Tables\PriceHistory.sql" />
     <Build Include="KidsArea\Tables\Location.sql" />
     <Build Include="KidsArea\Tables\ChoreList.sql" />
+    <Build Include="KidsArea\Tables\ChoreAmount.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CantLinuxToProject.scmp" />
