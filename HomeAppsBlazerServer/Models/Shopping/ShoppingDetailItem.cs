@@ -1,4 +1,4 @@
-﻿namespace HomeAppsBlazerServer.Models
+﻿namespace HomeAppsBlazerServer.Models.Shopping
 {
     public class ShoppingDetailItem
     {

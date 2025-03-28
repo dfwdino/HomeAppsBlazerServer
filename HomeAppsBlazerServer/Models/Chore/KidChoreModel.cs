@@ -15,7 +15,7 @@ namespace HomeAppsBlazerServer.Models.Chore
         public DateTime? DoneDate { get; set; }
         public bool IsDeleted { get; set; }
         public int KidsNameID { get; set; } // FK
-        public decimal? Amount { get; set; }
+
     }
 
     // KidsArea.Chores
@@ -48,24 +48,6 @@ namespace HomeAppsBlazerServer.Models.Chore
         public int ChoreLocationId { get; set; } // PK
         public string PlaceName { get; set; }
         public bool IsDeleted { get; set; }
-    }
-
-
-    public class ChoreListDetailItemsModel
-    {
-        [Key]
-        public int ChoreHistoryID { get; set; } // PK
-        public int KidsChoreID { get; set; } // FK
-        public DateTime? DateDone { get; set; }
-        public DateTime? StartDate { get; set; }
-        public bool IsDeleted { get; set; }
-        public int KidsNameID { get; set; } // FK
-
-        public decimal? Amount { get; set; }
-
-        public string KidsName { get; set; }
-        public string ChoreName { get; set; }
-
     }
 
 

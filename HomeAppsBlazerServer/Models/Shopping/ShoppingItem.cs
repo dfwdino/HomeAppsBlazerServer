@@ -1,7 +1,7 @@
-﻿using HomeAppsBlazerServer.Models.Interface;
+﻿using HomeAppsBlazerServer.Models.Shopping.Interface;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace HomeAppsBlazerServer.Models
+namespace HomeAppsBlazerServer.Models.Shopping
 {
     [Table("ShoppingItems", Schema = "Shopping")]
     public class ShoppingItem : IShoppingItem

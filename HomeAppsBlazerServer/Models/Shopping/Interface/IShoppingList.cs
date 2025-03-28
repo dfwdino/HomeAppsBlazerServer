@@ -1,4 +1,4 @@
-﻿namespace HomeAppsBlazerServer.Models.Interface
+﻿namespace HomeAppsBlazerServer.Models.Shopping.Interface
 {
     public interface IShoppingList
     {

@@ -1,4 +1,6 @@
-﻿namespace HomeAppsBlazerServer.Models
+﻿using HomeAppsBlazerServer.Models.Shopping;
+
+namespace HomeAppsBlazerServer.Models
 {
     public class ListItemModel
     {

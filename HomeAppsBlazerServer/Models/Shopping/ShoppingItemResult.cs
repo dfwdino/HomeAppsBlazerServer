@@ -1,7 +1,6 @@
-﻿
-using HomeAppsBlazerServer.Models.Interface;
+﻿using HomeAppsBlazerServer.Models.Shopping.Interface;
 
-namespace HomeAppsBlazerServer.Models
+namespace HomeAppsBlazerServer.Models.Shopping
 {
     public class ShoppingItemResult : IShoppingItemResult
     {

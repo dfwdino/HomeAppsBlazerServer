@@ -1,11 +1,12 @@
 ﻿@page "/edit-item"
 @page "/edit-item/{Id:int}"
 
+@using System.ComponentModel.DataAnnotations
 @using HomeAppsBlazerServer.Models
+@using HomeAppsBlazerServer.Models.Shopping
 @using HomeAppsBlazerServer.Servcies
 @using HomeAppsBlazerServer.Servcies.Shopping
 @using Microsoft.AspNetCore.Mvc
-@using System.ComponentModel.DataAnnotations
 
 @inject IShoppingServices ShoppingServices
 @inject NavigationManager NavigationManager

@@ -1,4 +1,4 @@
-﻿using HomeAppsBlazerServer.Models.Interface;
+﻿using HomeAppsBlazerServer.Models.Shopping.Interface;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
