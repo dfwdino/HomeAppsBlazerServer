@@ -9,9 +9,21 @@ namespace HomeAppsBlazerServer.Servcies.Chore
         Task<ChoresModel> GetChore(int id);
         Task<List<ChoresModel>> GetChores();
         void UpdateChore(ChoresModel ChoresNameModel);
-
-        Task<ChoreAmountModel> GetChoreAmount(int id);
-
         Task<List<ChoresModel>> GetChoresFilter(string filter);
+
+
+        #region Amount
+
+        void AddChoreAmount(ChoreAmountDetailModel choreAmountModel);
+
+        Task<ChoreAmountDetailModel> GetChoreAmount(int id);
+
+        void UpdateChoreAmount(ChoreAmountDetailModel choreAmountDetailModel);
+
+
+
+        Task<List<ChoreAmountDetailModel>> GetChoreAmounts();
+
+        #endregion End Amount
     }
 }

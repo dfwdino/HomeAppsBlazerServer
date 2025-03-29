@@ -1,7 +1,6 @@
 ﻿using HomeAppsBlazerServer.Components.Extensions;
 using HomeAppsBlazerServer.Data;
 using HomeAppsBlazerServer.Models.Chore;
-using Microsoft.EntityFrameworkCore;
 
 namespace HomeAppsBlazerServer.Servcies.Chore
 {
@@ -55,25 +54,6 @@ namespace HomeAppsBlazerServer.Servcies.Chore
             return myDbContext.KidsChores.Where(mm => mm.ChoreName.Contains(filter)).ToList();
         }
 
-        public async Task<ChoreAmountModel> GetChoreAmount(int id)
-        {
-
-            var choreAmount = await (from ca in myDbContext.ChoreAmount
-                                     join c in myDbContext.KidsChores on ca.ChoreID equals c.ChoreID
-                                     where ca.ChoreID == id
-                                     select new ChoreAmountModel
-                                     {
-                                         ID = ca.ID,
-                                         ChoreID = ca.ChoreID,
-                                         Amount = ca.Amount,
-                                         IsDeleted = ca.IsDeleted,
-                                         ChoreName = c.ChoreName
-                                     }).FirstOrDefaultAsync();
-
-
-            return choreAmount;
-        }
-
         public async void UpdateChore(ChoresModel ChoresNameModel)
         {
             myDbContext.KidsChores.Update(ChoresNameModel);
@@ -85,6 +65,67 @@ namespace HomeAppsBlazerServer.Servcies.Chore
 
             myDbContext.KidsChores.Remove(ChoresNameModel);
         }
+
+
+        #region Amount
+
+        public async void AddChoreAmount(ChoreAmountDetailModel ChoreAmountModel)
+        {
+
+            myDbContext.ChoreAmount.Add(new ChoreAmountModel { Amount = ChoreAmountModel.Amount, ChoreID = ChoreAmountModel.ChoreID });
+            myDbContext.SaveChanges();
+
+        }
+
+
+        public async Task<List<ChoreAmountDetailModel>> GetChoreAmounts()
+        {
+
+            var choreAmount = (from ca in myDbContext.ChoreAmount
+                               join c in myDbContext.KidsChores on ca.ChoreID equals c.ChoreID
+                               select new ChoreAmountDetailModel
+                               {
+                                   ID = ca.ID,
+                                   ChoreID = ca.ChoreID,
+                                   Amount = ca.Amount,
+                                   IsDeleted = ca.IsDeleted,
+                                   ChoreName = c.ChoreName
+                               });
+
+            return choreAmount.ToList();
+
+        }
+
+        public async Task<ChoreAmountDetailModel> GetChoreAmount(int id)
+        {
+
+            var choreAmount = (from ca in myDbContext.ChoreAmount
+                               join c in myDbContext.KidsChores on ca.ChoreID equals c.ChoreID
+                               where ca.ID == id
+                               select new ChoreAmountDetailModel
+                               {
+                                   ID = ca.ID,
+                                   ChoreID = ca.ChoreID,
+                                   Amount = ca.Amount,
+                                   IsDeleted = ca.IsDeleted,
+                                   ChoreName = c.ChoreName
+                               });
+
+
+            return choreAmount.FirstOrDefault();
+
+        }
+
+        public void UpdateChoreAmount(ChoreAmountDetailModel choreAmountDetailModel)
+        {
+            var choreAmount = myDbContext.ChoreAmount.Where(mm => mm.ID == choreAmountDetailModel.ID).FirstOrDefault();
+            choreAmount.Amount = choreAmountDetailModel.Amount;
+            myDbContext.SaveChanges();
+        }
+
+
+        #endregion End Amount
+
 
     }
 }

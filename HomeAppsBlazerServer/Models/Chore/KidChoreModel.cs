@@ -3,13 +3,25 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HomeAppsBlazerServer.Models.Chore
 {
+
+
     [Table("ChoreAmount", Schema = "KidsArea")]
     public record class ChoreAmountModel
     {
         [Key]
         public int ID { get; set; } // PK
         public int ChoreID { get; set; } // FK  
-        public decimal Amount { get; set; }
+        public decimal? Amount { get; set; }
+        public bool IsDeleted { get; set; }
+
+    }
+
+    public record class ChoreAmountDetailModel
+    {
+        [Key]
+        public int ID { get; set; } // PK
+        public int ChoreID { get; set; } // FK  
+        public decimal? Amount { get; set; }
         public bool IsDeleted { get; set; }
 
         public string ChoreName { get; set; }

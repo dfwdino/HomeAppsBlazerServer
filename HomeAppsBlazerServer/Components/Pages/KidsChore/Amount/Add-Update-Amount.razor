@@ -23,7 +23,7 @@
 }
 else
 {
-    <h3>Update @choreAmountModel.ChoreID.ToString()</h3>
+    <h3>Update @choreAmountModel.ChoreName</h3>
 }
 
 <EditForm Model="choreAmountModel" OnSubmit="HandleSubmit">
@@ -31,48 +31,61 @@ else
     <div class="container">
         <div class="row border-bottom py-2 fw-bold">
 
-            @if (Id is null)
-            {
-                <div class="row mb-3">
-                    <div class="col-md-3">
+            <div class="row">
+                <div class="col-2">
                     <label for="chorename" class="form-label">Item Name:</label>
                 </div>
-                <div class="col-md-9">
-                    <BlazorBootstrap.AutoComplete @bind-Value="ChoreName"
-                    TItem="ChoresModel"
-                    DataProvider="CustomersDataProvider"
-                                                  PropertyName="ChoreName"
-                    Placeholder="Search for an item..."
-                    OnChanged="(ChoresModel item) => OnAutoCompleteChanged(item)"
-                    class="form-control" />
-                </div>
-            </div>
-            }
-            else{
+                <div class="col-9">
 
-            <div class="col-lg-2">
-                <label for="choreid">Chore name:</label>
-            </div>
-            <div class="col-lg-2">
-                <InputText id="chorename1" @bind-Value="@choreAmountModel.ChoreName" />
-            </div>
-            }
-            @* <div class="col-lg-2">
-                <label for="choreid">Chore ID:</label>
-            </div>
-            <div class="col-lg-2">
-                <InputNumber id="choreid" @bind-Value="@choreAmountModel.ChoreID" />
-            </div> *@
+
+                    @if (Id is null)
+                    {
+
+                        <BlazorBootstrap.AutoComplete @bind-Value="ChoreName"
+                        TItem="ChoresModel"
+                        DataProvider="CustomersDataProvider"
+                        PropertyName="ChoreName"
+                        Placeholder="Search for an item..."
+                        OnChanged="(ChoresModel item) => OnAutoCompleteChanged(item)"
+                        class="form-control" />
+                    }
+                    else
+                    {
+                        <InputText id="chorename1" @bind-Value="@choreAmountModel.ChoreName" />
+                    }
+                   
+
+
+                    </div>
+                </div>
+            
         </div>
 
         <div class="row border-bottom py-2 fw-bold">
-            <div class="col-lg-2">
-                <label for="choreid">Chore ID:</label>
+            <div class="col-2">
+                <label for="choreid">Amount ID:</label>
             </div>
-            <div class="col-lg-2">
+            <div class="col-9">
                 <InputNumber id="choreamount" @bind-Value="@choreAmountModel.Amount" />
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-lg-1" style="padding-bottom:20px">
+                <button type="button" class="btn btn-primary" @onclick="@(() => Cancel())">Cancel</button>
+            </div>
+            <div class="col-lg-1" style="padding-bottom:20px">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+
+            @*  @if (Id is not null)
+            {
+                <div class="col-lg-1">
+                    <button type="button" class="btn btn-primary" @onclick="@(() => Deleteitems())">Delete</button>
+        </div>} *@
+
+        </div>
+
     </div>
 
 </EditForm>
@@ -81,8 +94,8 @@ else
     [Parameter]
     public int? Id { get; set; }
 
-    public ChoreAmountModel choreAmountModel { get; set; } = new();
-    public ChoresModel choresModel { get; set; } = new ();
+    public ChoreAmountDetailModel choreAmountModel { get; set; } = new();
+    public ChoresModel choresModel { get; set; } = new();
     public string ChoreName { get; set; } = string.Empty;
 
 
@@ -99,8 +112,8 @@ else
     private void OnAutoCompleteChanged(ChoresModel customer)
     {
         choreAmountModel.ChoreID = customer.ChoreID;
-        choreAmountModel.ChoreName = customer.ChoreName;
-        //choresModel.ChoreName = customer.ChoreName;
+        choreAmountModel.Amount = customer.Amount;
+
         Console.WriteLine($"'{customer?.ChoreName}' selected.");
     }
 
@@ -125,13 +138,13 @@ else
         }
         else if (Id is not null) // update
         {
-            //await choresChoresServices.UpdateChoreAmount(choreAmountModel);
+            choresChoresServices.UpdateChoreAmount(choreAmountModel);
             NavigationManager.NavigateTo("List-Chore");
         }
         else // add
         {
-            //await choresChoresServices.AddChoreAmount(choreAmountModel);
-            choreAmountModel = new ChoreAmountModel();
+            choresChoresServices.AddChoreAmount(choreAmountModel);
+            choreAmountModel = new ChoreAmountDetailModel();
             NavigationManager.NavigateTo("List-Chore");
         }
     }
