@@ -1,6 +1,7 @@
 ﻿using HomeAppsBlazerServer.Components.Extensions;
 using HomeAppsBlazerServer.Data;
 using HomeAppsBlazerServer.Models.Chore;
+using Microsoft.EntityFrameworkCore;
 
 namespace HomeAppsBlazerServer.Servcies.Chore
 {
@@ -47,6 +48,30 @@ namespace HomeAppsBlazerServer.Servcies.Chore
         public async Task<ChoresModel> GetChore(int id)
         {
             return myDbContext.KidsChores.Where(mm => mm.ChoreID == id).FirstOrDefault();
+        }
+
+        public async Task<List<ChoresModel>> GetChoresFilter(string filter)
+        {
+            return myDbContext.KidsChores.Where(mm => mm.ChoreName.Contains(filter)).ToList();
+        }
+
+        public async Task<ChoreAmountModel> GetChoreAmount(int id)
+        {
+
+            var choreAmount = await (from ca in myDbContext.ChoreAmount
+                                     join c in myDbContext.KidsChores on ca.ChoreID equals c.ChoreID
+                                     where ca.ChoreID == id
+                                     select new ChoreAmountModel
+                                     {
+                                         ID = ca.ID,
+                                         ChoreID = ca.ChoreID,
+                                         Amount = ca.Amount,
+                                         IsDeleted = ca.IsDeleted,
+                                         ChoreName = c.ChoreName
+                                     }).FirstOrDefaultAsync();
+
+
+            return choreAmount;
         }
 
         public async void UpdateChore(ChoresModel ChoresNameModel)

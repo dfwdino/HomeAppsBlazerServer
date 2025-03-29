@@ -37,32 +37,32 @@ namespace HomeAppsBlazerServer.Servcies.Chore
         }
 
 
-        public async Task<List<ChoreListDetailItemsModel>> GetChoreItemsByKid(int? kidid = null)
-        {
-            var choreDetails = from chore in myDbContext.ChoreListItem
-                               join kid in myDbContext.KidsName
-                                    on chore.KidsNameID equals kid.IDKidsName
-                               join choreName in myDbContext.KidsChores
-                                    on chore.KidsChoreID equals choreName.ChoreID
-                               where chore.IsDeleted == false &&
-                                            (kidid == null || chore.KidsNameID == kidid)
-                               //&& (chore.DoneDate == null && chore.DoneDate.Value <= GetNextSunday(DateTime.Now))
+        //public async Task<List<ChoreListDetailItemsModel>> GetChoreItemsByKid(int? kidid = null)
+        //{
+        //    var choreDetails = from chore in myDbContext.ChoreListItem
+        //                       join kid in myDbContext.KidsName
+        //                            on chore.KidsNameID equals kid.IDKidsName
+        //                       join choreName in myDbContext.KidsChores
+        //                            on chore.KidsChoreID equals choreName.ChoreID
+        //                       where chore.IsDeleted == false &&
+        //                                    (kidid == null || chore.KidsNameID == kidid)
+        //                       //&& (chore.DoneDate == null && chore.DoneDate.Value <= GetNextSunday(DateTime.Now))
 
-                               select new ChoreListDetailItemsModel
-                               {
-                                   KidsName = kid.KidName,
-                                   ChoreName = choreName.ChoreName,
+        //                       select new ChoreListDetailItemsModel
+        //                       {
+        //                           KidsName = kid.KidName,
+        //                           ChoreName = choreName.ChoreName,
 
-                                   ChoreHistoryID = chore.ChoreHistoryID,
-                                   KidsChoreID = chore.KidsChoreID,
-                                   KidsNameID = chore.KidsNameID,
-                                   StartDate = chore.StartDate,
-                                   DateDone = chore.DoneDate,
-                                   Amount = chore.Amount == null ? choreName.Amount : chore.Amount
-                               };
+        //                           ChoreHistoryID = chore.ChoreHistoryID,
+        //                           KidsChoreID = chore.KidsChoreID,
+        //                           KidsNameID = chore.KidsNameID,
+        //                           StartDate = chore.StartDate,
+        //                           DateDone = chore.DoneDate,
+        //                           Amount = chore.Amount == null ? choreName.Amount : chore.Amount
+        //                       };
 
-            return choreDetails.ToList();
-        }
+        //    return choreDetails.ToList();
+        //}
 
         public void AddChoreItem(ChoreListItemsModel ChoresNameModel)
         {

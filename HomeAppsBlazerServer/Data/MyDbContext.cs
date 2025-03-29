@@ -30,6 +30,7 @@ namespace HomeAppsBlazerServer.Data
 
         public DbSet<ChoreListItemsModel> ChoreListItem { get; set; }
 
+        public DbSet<ChoreAmountModel> ChoreAmount { get; set; }
 
         #endregion
 

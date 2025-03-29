@@ -1,0 +1,153 @@
+﻿@page "/Add-Update-Amount"
+@page "/Add-Update-Amount/{Id:int}"
+
+@using HomeAppsBlazerServer.Components.Extensions
+@using HomeAppsBlazerServer.Models
+@using HomeAppsBlazerServer.Models.Chore
+@using HomeAppsBlazerServer.Servcies
+@using HomeAppsBlazerServer.Servcies.Chore
+@using Microsoft.AspNetCore.Mvc
+@using System.ComponentModel.DataAnnotations
+
+@inject IChoresChoresServices choresChoresServices
+@inject NavigationManager NavigationManager
+
+@rendermode InteractiveServer
+
+@layout HomeAppsBlazerServer.Components.Layout.Chore.KidsChoreLayout
+
+@if (Id is null)
+{
+    <h3>Add Amount</h3>
+    <div style="padding-bottom:10px" />
+}
+else
+{
+    <h3>Update @choreAmountModel.ChoreID.ToString()</h3>
+}
+
+<EditForm Model="choreAmountModel" OnSubmit="HandleSubmit">
+
+    <div class="container">
+        <div class="row border-bottom py-2 fw-bold">
+
+            @if (Id is null)
+            {
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                    <label for="chorename" class="form-label">Item Name:</label>
+                </div>
+                <div class="col-md-9">
+                    <BlazorBootstrap.AutoComplete @bind-Value="ChoreName"
+                    TItem="ChoresModel"
+                    DataProvider="CustomersDataProvider"
+                                                  PropertyName="ChoreName"
+                    Placeholder="Search for an item..."
+                    OnChanged="(ChoresModel item) => OnAutoCompleteChanged(item)"
+                    class="form-control" />
+                </div>
+            </div>
+            }
+            else{
+
+            <div class="col-lg-2">
+                <label for="choreid">Chore name:</label>
+            </div>
+            <div class="col-lg-2">
+                <InputText id="chorename1" @bind-Value="@choreAmountModel.ChoreName" />
+            </div>
+            }
+            @* <div class="col-lg-2">
+                <label for="choreid">Chore ID:</label>
+            </div>
+            <div class="col-lg-2">
+                <InputNumber id="choreid" @bind-Value="@choreAmountModel.ChoreID" />
+            </div> *@
+        </div>
+
+        <div class="row border-bottom py-2 fw-bold">
+            <div class="col-lg-2">
+                <label for="choreid">Chore ID:</label>
+            </div>
+            <div class="col-lg-2">
+                <InputNumber id="choreamount" @bind-Value="@choreAmountModel.Amount" />
+            </div>
+        </div>
+    </div>
+
+</EditForm>
+
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+
+    public ChoreAmountModel choreAmountModel { get; set; } = new();
+    public ChoresModel choresModel { get; set; } = new ();
+    public string ChoreName { get; set; } = string.Empty;
+
+
+    private async Task<AutoCompleteDataProviderResult<ChoresModel>>
+            CustomersDataProvider(BlazorBootstrap.AutoCompleteDataProviderRequest<ChoresModel> request)
+    {
+        var customers = await choresChoresServices.GetChoresFilter(request.Filter.Value); // API call
+
+        return await Task.FromResult(new AutoCompleteDataProviderResult<ChoresModel>
+            { Data = customers, TotalCount = customers.Count() });
+
+    }
+
+    private void OnAutoCompleteChanged(ChoresModel customer)
+    {
+        choreAmountModel.ChoreID = customer.ChoreID;
+        choreAmountModel.ChoreName = customer.ChoreName;
+        //choresModel.ChoreName = customer.ChoreName;
+        Console.WriteLine($"'{customer?.ChoreName}' selected.");
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id is not null)
+        {
+            var AChore = await choresChoresServices.GetChoreAmount((int)Id);
+
+            if (AChore is not null)
+            {
+                choreAmountModel = AChore;
+            }
+        }
+    }
+
+    private async Task HandleSubmit()
+    {
+        if (choreAmountModel is null)
+        {
+            return;
+        }
+        else if (Id is not null) // update
+        {
+            //await choresChoresServices.UpdateChoreAmount(choreAmountModel);
+            NavigationManager.NavigateTo("List-Chore");
+        }
+        else // add
+        {
+            //await choresChoresServices.AddChoreAmount(choreAmountModel);
+            choreAmountModel = new ChoreAmountModel();
+            NavigationManager.NavigateTo("List-Chore");
+        }
+    }
+
+    private async Task DeleteItems()
+    {
+        if (choreAmountModel is not null)
+        {
+            choreAmountModel.IsDeleted = true;
+            //await choresChoresServices.UpdateChoreAmount(choreAmountModel);
+            NavigationManager.NavigateTo("List-Chore");
+        }
+    }
+
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("List-Chore");
+    }
+}
