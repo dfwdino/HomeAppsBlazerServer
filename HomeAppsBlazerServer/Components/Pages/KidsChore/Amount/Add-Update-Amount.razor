@@ -53,12 +53,12 @@ else
                     {
                         <InputText id="chorename1" @bind-Value="@choreAmountModel.ChoreName" />
                     }
-                   
 
 
-                    </div>
+
                 </div>
-            
+            </div>
+
         </div>
 
         <div class="row border-bottom py-2 fw-bold">
@@ -125,7 +125,7 @@ else
 
             if (AChore is not null)
             {
-                choreAmountModel = AChore;
+                choreAmountModel =  new ChoreAmountDetailModel() { ChoreID = AChore.ChoreID, Amount = AChore.Amount } ;
             }
         }
     }

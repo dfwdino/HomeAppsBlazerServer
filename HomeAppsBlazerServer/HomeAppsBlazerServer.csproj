@@ -44,11 +44,6 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Components\Pages\KidsChore\ChoreList\" />
-    <Folder Include="Components\Pages\KidsChore\List\" />
-  </ItemGroup>
 	
 
 </Project>

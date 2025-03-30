@@ -33,9 +33,6 @@ namespace HomeAppsBlazerServer.Models.Chore
         [Key]
         public int ChoreHistoryID { get; set; } // PK
         public int KidsChoreID { get; set; } // FK
-
-        public DateTime? StartDate { get; set; }
-        public DateTime? RequireDate { get; set; }
         public DateTime? DoneDate { get; set; }
         public bool IsDeleted { get; set; }
         public int KidsNameID { get; set; } // FK
