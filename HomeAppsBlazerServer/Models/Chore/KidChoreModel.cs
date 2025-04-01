@@ -46,7 +46,6 @@ namespace HomeAppsBlazerServer.Models.Chore
         [Key]
         public int ChoreID { get; set; } // PK
         public string ChoreName { get; set; }
-        public decimal? Amount { get; set; }
         public bool IsDeleted { get; set; }
         public int? ChoreLocationID { get; set; } // FK, nullable
     }
@@ -71,5 +70,22 @@ namespace HomeAppsBlazerServer.Models.Chore
         public bool IsDeleted { get; set; }
     }
 
+
+    public class ChoreDetailViewModel
+    {
+        public string ChoreName { get; set; }
+        public string KidName { get; set; }
+        public DateTime? DoneDate { get; set; }
+        public decimal Amount { get; set; }
+        public int ChoreHistoryID { get; set; }
+    }
+
+    // Summary model for weekly totals per kid
+    public class WeeklyKidTotalViewModel
+    {
+        public string KidName { get; set; }
+        public decimal TotalAmount { get; set; }
+        public List<ChoreDetailViewModel> ChoreDetails { get; set; }
+    }
 
 }

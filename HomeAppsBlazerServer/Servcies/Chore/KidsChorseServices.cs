@@ -20,9 +20,9 @@ namespace HomeAppsBlazerServer.Servcies.Chore
         {
             IQueryable<KidsNameModel> Kids = myDbContext.KidsName.Where(mm => mm.IsDeleted == false).AsQueryable();
 
-            if (filter.Length != 0)
+            if (!string.IsNullOrEmpty(filter))
             {
-                Kids.Where(mm => mm.KidName.Contains(filter));
+                Kids = Kids.Where(mm => mm.KidName.Contains(filter));
             }
 
             return Kids.ToList();

@@ -50,11 +50,12 @@ else
                     <div id="kidname" @onclick="@(() => EditStore(chore.ChoreID))"> <span class="link-primary"> @chore.ChoreName</span> </div>
                 </div>
 
-                @if (chore.Amount > 0)
+               @*  @if (chore.Amount > 0)
                 {
                     <div class="col-md-2">
                         <div id="amount">$@chore.Amount </div>
-                </div>}
+                </div>
+                } *@
             </div>
 
 

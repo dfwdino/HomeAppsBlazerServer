@@ -1,6 +1,7 @@
 ﻿using HomeAppsBlazerServer.Data;
 using HomeAppsBlazerServer.Models.Chore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 
 namespace HomeAppsBlazerServer.Servcies.Chore
 {
@@ -23,7 +24,11 @@ namespace HomeAppsBlazerServer.Servcies.Chore
                 return;
             }
 
-            //ChoresNameModel.ChoreName = ChoresNameModel.ChoreName.ToTileCase();
+            if (ChoresNameModel.DoneDate is null)
+            {
+                ChoresNameModel.DoneDate = DateAndTime.Now;
+            }
+
             myDbContext.ChoreListItem.Add(ChoresNameModel);
 
             myDbContext.SaveChanges();
@@ -39,7 +44,42 @@ namespace HomeAppsBlazerServer.Servcies.Chore
             return myDbContext.ChoreListItem.ToList();
         }
 
+        public List<WeeklyKidTotalViewModel> GetWeeklyChoreReport(DateTime startDate, DateTime endDate)
+        {
+            // Define the date range for the week
+            var weekStart = startDate.Date;
+            var weekEnd = endDate.Date.AddDays(1).AddSeconds(-1); // End of the specified end date
 
+            // Join the tables to get all chore details
+            var choreDetails = (from choreList in myDbContext.ChoreListItem
+                                join chore in myDbContext.KidsChores on choreList.KidsChoreID equals chore.ChoreID
+                                join kid in myDbContext.KidsName on choreList.KidsNameID equals kid.IDKidsName
+                                join amount in myDbContext.ChoreAmount on chore.ChoreID equals amount.ChoreID
+                                where !choreList.IsDeleted && !chore.IsDeleted && !kid.IsDeleted && !amount.IsDeleted
+                                && choreList.DoneDate >= weekStart && choreList.DoneDate <= weekEnd
+                                select new ChoreDetailViewModel
+                                {
+                                    ChoreName = chore.ChoreName,
+                                    KidName = kid.KidName,
+                                    DoneDate = choreList.DoneDate,
+                                    ChoreHistoryID = choreList.ChoreHistoryID,
+                                    Amount = amount.Amount ?? 0m // Handle null amounts
+                                }).ToList();
+
+            // Group by kid and calculate totals
+            var kidWeeklyTotals = choreDetails
+                .GroupBy(c => c.KidName)
+                .Select(g => new WeeklyKidTotalViewModel
+                {
+                    KidName = g.Key,
+                    TotalAmount = g.Sum(c => c.Amount),
+                    ChoreDetails = g.ToList()
+                })
+                .OrderBy(k => k.KidName)
+                .ToList();
+
+            return kidWeeklyTotals;
+        }
 
         public async void UpdateChoreItem(ChoreListItemsModel ChoresNameModel)
         {
@@ -48,12 +88,14 @@ namespace HomeAppsBlazerServer.Servcies.Chore
 
         }
 
-       
 
-        public void DeleteChore(ChoreListItemsModel ChoresNameModel)
+
+        public void DeleteChoreHistory(int id)
         {
-            ChoresNameModel.IsDeleted = true;
-            myDbContext.ChoreListItem.Update(ChoresNameModel);
+            var KidsChore = myDbContext.ChoreListItem.Where(mm => mm.ChoreHistoryID == id).FirstOrDefault();
+            KidsChore.IsDeleted = true;
+            myDbContext.ChoreListItem.Update(KidsChore);
+            myDbContext.SaveChanges();
         }
 
     }

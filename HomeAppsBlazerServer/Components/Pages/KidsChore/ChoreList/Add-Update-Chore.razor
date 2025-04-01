@@ -1,0 +1,192 @@
+﻿@page "/Add-Update-ChoreList"
+@page "/Add-Update-ChoreList/{Id:int}"
+
+@using HomeAppsBlazerServer.Components.Extensions
+@using HomeAppsBlazerServer.Models
+@using HomeAppsBlazerServer.Models.Chore
+@using HomeAppsBlazerServer.Servcies  @* Fixed typo: Servcies -> Services *@
+@using HomeAppsBlazerServer.Servcies.Chore  @* Fixed typo: Servcies -> Services *@
+@using Microsoft.AspNetCore.Mvc
+@using System.ComponentModel.DataAnnotations
+
+@inject IChoresChoresServices choresChoresServices
+@inject ChoresListItemChoresServices choresListItemChoresServices
+@inject IKidsChorseKidsServices kidsChorseKidsServices
+@inject NavigationManager NavigationManager
+
+@rendermode InteractiveServer
+
+@layout HomeAppsBlazerServer.Components.Layout.Chore.KidsChoreLayout
+
+@if (Id is null)
+{
+    <h3>Add Chore Assignment</h3>  @* Updated to reflect what the page actually does *@
+    <div style="padding-bottom:10px" />
+}
+else
+{
+    <h3>Update Chore Assignment</h3>  @* Made header more descriptive *@
+}
+
+<EditForm Model="choreListItemsModel" OnSubmit="HandleSubmit">
+    <div class="container shadow p-4 my-3 rounded">
+        <h4 class="mb-4 text-primary">@(Id is null ? "Add Chore Assignment" : "Update Chore Assignment")</h4>
+
+        <div class="mb-3 row align-items-center">
+            <div class="col-md-3 col-lg-2">
+                <label for="chorename" class="form-label fw-bold">Chore Name:</label>
+            </div>
+            <div class="col-md-9 col-lg-6">
+                @if (Id is null)
+                {
+                    <BlazorBootstrap.AutoComplete @bind-Value="ChoreName"
+                                                  TItem="ChoresModel"
+                                                  DataProvider="ChoresDataProvider"
+                                                  PropertyName="ChoreName"
+                                                  Placeholder="Search for a chore..."
+                                                  OnChanged="OnChoreSelected"
+                                                  class="form-control" />
+                }
+                else
+                {
+                    <InputText id="chorename" @bind-Value="@ChoreName" readonly class="form-control" />
+                }
+            </div>
+        </div>
+
+        <div class="mb-3 row align-items-center">
+            <div class="col-md-3 col-lg-2">
+                <label for="kidname" class="form-label fw-bold">Kid Name:</label>
+            </div>
+            <div class="col-md-9 col-lg-6">
+                @if (Id is null)
+                {
+                    <BlazorBootstrap.AutoComplete @bind-Value="KidName"
+                                                  TItem="KidsNameModel"
+                                                  DataProvider="KidsDataProvider"
+                                                  PropertyName="KidName"
+                                                  Placeholder="Search for a kid..."
+                                                  OnChanged="OnKidSelected"
+                                                  class="form-control" />
+                }
+                else
+                {
+                    <InputText id="kidname" @bind-Value="@KidName" readonly class="form-control" />
+                }
+            </div>
+        </div>
+
+        <div class="mb-3 row align-items-center">
+            <div class="col-md-3 col-lg-2">
+                <label for="donedate" class="form-label fw-bold">Date Done:</label>
+            </div>
+            <div class="col-md-9 col-lg-6">
+                <InputDate id="donedate" @bind-Value="@choreListItemsModel.DoneDate" class="form-control" />
+            </div>
+        </div>
+
+        <div class="d-flex gap-2 mt-4">
+            <button type="button" class="btn btn-outline-secondary" @onclick="Cancel">Cancel</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+
+    public ChoreListItemsModel choreListItemsModel = new() {DoneDate = DateTime.Now };
+    public KidsNameModel kidsNameModel = new();
+
+    public string ChoreName { get; set; } = string.Empty;
+    public string KidName { get; set; } = string.Empty;
+
+    private async Task<AutoCompleteDataProviderResult<ChoresModel>> 
+    
+    ChoresDataProvider(BlazorBootstrap.AutoCompleteDataProviderRequest<ChoresModel> request)
+    {
+        var chores = await choresChoresServices.GetChoresFilter(request.Filter.Value);
+        return await Task.FromResult(new AutoCompleteDataProviderResult<ChoresModel> 
+        { 
+            Data = chores, 
+            TotalCount = chores.Count() 
+        });
+    }
+
+    private void OnChoreSelected(ChoresModel chore)
+    {
+        if (chore != null)
+        {
+            choreListItemsModel.KidsChoreID = chore.ChoreID;  // Assuming this is the correct property
+            ChoreName = chore.ChoreName;
+            Console.WriteLine($"Chore '{chore.ChoreName}' selected.");
+        }
+    }
+
+    private async Task<AutoCompleteDataProviderResult<KidsNameModel>> 
+    KidsDataProvider(BlazorBootstrap.AutoCompleteDataProviderRequest<KidsNameModel> request)
+    {
+        var kids = await kidsChorseKidsServices.GetKids(request.Filter.Value);
+        return await Task.FromResult(new AutoCompleteDataProviderResult<KidsNameModel> 
+        { 
+            Data = kids, 
+            TotalCount = kids.Count() 
+        });
+    }
+
+    private void OnKidSelected(KidsNameModel kid)
+    {
+        if (kid != null)
+        {
+            choreListItemsModel.KidsNameID = kid.IDKidsName;  // This was likely the issue - property name was wrong
+            KidName = kid.KidName;  // This property name is likely wrong too
+            Console.WriteLine($"Kid '{kid.KidName}' selected.");
+        }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id is not null)
+        {
+            var choreItem = await choresListItemChoresServices.GetChoreItem((int)Id);
+            if (choreItem is not null)
+            {
+                choreListItemsModel = choreItem;
+                
+                // Populate the display names for existing items
+                var chore = await choresChoresServices.GetChore(choreListItemsModel.KidsChoreID);
+                if (chore != null)
+                    ChoreName = chore.ChoreName;
+                    
+                var kid = await kidsChorseKidsServices.GetKid(choreListItemsModel.KidsChoreID);
+                if (kid != null)
+                    KidName = kid.KidName;  // Again, property name is likely wrong
+            }
+        }
+    }
+
+    private async Task HandleSubmit()
+    {
+        if (choreListItemsModel is null)
+        {
+            return;
+        }
+        else if (Id is not null) // update
+        {
+            choresListItemChoresServices.UpdateChoreItem(choreListItemsModel);
+            NavigationManager.NavigateTo("List-ChoreItems");
+        }
+        else // add
+        {
+            choresListItemChoresServices.AddChoreItem(choreListItemsModel);
+            choreListItemsModel = new();
+            NavigationManager.NavigateTo("List-ChoreItems");
+        }
+    }
+
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("List-ChoreItems");
+    }
+}

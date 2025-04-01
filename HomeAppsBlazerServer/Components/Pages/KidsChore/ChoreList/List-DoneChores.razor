@@ -1,0 +1,107 @@
+﻿@page "/List-ChoreItems"
+
+@using HomeAppsBlazerServer.Models
+@using HomeAppsBlazerServer.Models.Chore
+
+@using HomeAppsBlazerServer.Servcies
+@using HomeAppsBlazerServer.Servcies.Chore
+
+@using Microsoft.AspNetCore.Mvc
+@using System.ComponentModel.DataAnnotations
+
+@inject ChoresListItemChoresServices choresChoresServices
+@inject NavigationManager NavigationManager
+
+@rendermode InteractiveServer
+
+@layout HomeAppsBlazerServer.Components.Layout.Chore.KidsChoreLayout
+
+
+
+
+<h3>List Chore from @StartDate.ToShortDateString() to @EndDate.ToShortDateString()</h3>
+<div style="padding-bottom:30px" />
+
+@if (Chores is null)
+{
+    <p><em>Loadding chore items....</em></p>
+}
+else if (Chores.Count.Equals(0))
+{
+    <p><em>What happen to the chore?</em></p>
+}
+else
+{
+    @foreach (var kidTotal in Chores)
+    {
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4>@kidTotal.KidName - Total: $@kidTotal.TotalAmount.ToString("F2")</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+
+                            <th>Chore Name</th>
+                            <th>Date Done</th>
+                            <th>Amount</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var chore in kidTotal.ChoreDetails)
+                        {
+                            <tr>
+                                <td @onclick="@(() => EditItem(chore.ChoreHistoryID))">@chore.ChoreName</td>
+                                <td>@chore.DoneDate?.ToShortDateString()</td>
+                                <td>$@chore.Amount.ToString("F2")</td>
+                                <td @onclick="@(() => DeleteItem(chore.ChoreHistoryID))">Delete</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+
+}
+
+
+@code {
+
+
+    public List<WeeklyKidTotalViewModel> Chores { get; set; } = new();
+
+    private DateTime StartDate = DateTime.Now.AddDays(-14);
+
+    private DateTime EndDate = DateTime.Now.AddDays(14);
+
+    protected override async Task OnParametersSetAsync()
+    {
+
+        Chores = choresChoresServices.GetWeeklyChoreReport(DateTime.Now.AddDays(-14), DateTime.Now.AddDays(14));
+
+    }
+
+    void EditItem(int id)
+    {
+        NavigationManager.NavigateTo($"/Add-Update-Amount/{id}");
+    }
+
+    void DeleteItem(int id)
+    {
+        choresChoresServices.DeleteChoreHistory(id);
+
+        //NavigationManager.NavigateTo($"/Add-Update-Amount/{id}");
+    }
+
+
+}
+
+
+<style>
+    label:{
+        font-weight:bold;
+    }         
+</style>
