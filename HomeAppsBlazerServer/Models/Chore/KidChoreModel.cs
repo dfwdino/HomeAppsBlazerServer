@@ -76,7 +76,7 @@ namespace HomeAppsBlazerServer.Models.Chore
         public string ChoreName { get; set; }
         public string KidName { get; set; }
         public DateTime? DoneDate { get; set; }
-        public decimal Amount { get; set; }
+        public decimal Amount { get; set; } = 0m;
         public int ChoreHistoryID { get; set; }
     }
 
@@ -85,6 +85,8 @@ namespace HomeAppsBlazerServer.Models.Chore
     {
         public string KidName { get; set; }
         public decimal TotalAmount { get; set; }
+        public decimal SavingAmount { get; set; }
+        public decimal RetirementAmount { get; set; }
         public List<ChoreDetailViewModel> ChoreDetails { get; set; }
     }
 

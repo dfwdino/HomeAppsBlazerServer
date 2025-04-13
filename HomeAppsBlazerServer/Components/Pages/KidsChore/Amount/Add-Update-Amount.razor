@@ -51,7 +51,7 @@ else
                     }
                     else
                     {
-                        <InputText id="chorename1" @bind-Value="@choreAmountModel.ChoreName" />
+                        <label>@choreAmountModel.ChoreName</label>
                     }
 
 
@@ -125,7 +125,11 @@ else
 
             if (AChore is not null)
             {
-                choreAmountModel =  new ChoreAmountDetailModel() { ChoreID = AChore.ChoreID, Amount = AChore.Amount } ;
+                choreAmountModel =  new ChoreAmountDetailModel() { ID = AChore.ID, Amount = AChore.Amount, ChoreName = AChore.ChoreName } ;
+                ChoreName = AChore.ChoreName;
+                choresModel.ChoreName = AChore.ChoreName;
+                choresModel.ChoreID = AChore.ChoreID;
+              
             }
         }
     }

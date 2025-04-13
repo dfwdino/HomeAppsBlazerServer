@@ -16,12 +16,6 @@
 
 @layout HomeAppsBlazerServer.Components.Layout.Chore.KidsChoreLayout
 
-
-
-
-<h3>List Chore</h3>
-<div style="padding-bottom:30px" />
-
 @if (Chores is null)
 {
     <p><em>Loadding chore items....</em></p>
@@ -32,38 +26,34 @@ else if (Chores.Count.Equals(0))
 }
 else
 {
-    <div class="container">
-        <div class="row  border-bottom py-2">
-
-            <div class="col-md-2" style="font-weight:bold">
-                <label for="itemsname">Chore Name:</label>
-            </div>
-
-            <div class="col-md-2" style="font-weight:bold">
-                <label for="itemsname">Amount</label>
-            </div>
+    <div class="lcars-container">
+        <div class="lcars-header">
+            <div class="lcars-elbow-left"></div>
+            <div class="lcars-title">List Chore DATABASE</div>
+            <div class="lcars-elbow-right"></div>
         </div>
-        @foreach (var chore in Chores){
-            <div class="row  border-bottom py-2">
 
-                <div class="col-md-2">
-                    <div id="kidname" @onclick="@(() => EditStore(chore.ChoreID))"> <span class="link-primary"> @chore.ChoreName</span> </div>
-                </div>
+        <div class="lcars-row header-row">
+            <div class="lcars-pill"></div>
+            <div class="lcars-label">DESIGNATION</div>
+        </div>
 
-               @*  @if (chore.Amount > 0)
-                {
-                    <div class="col-md-2">
-                        <div id="amount">$@chore.Amount </div>
-                </div>
-                } *@
+        @foreach (var chore in Chores)
+        {
+            <div class="lcars-row data-row" @onclick="@(() => EditStore(chore.ChoreID))">
+                <div class="lcars-indicator"></div>
+                <div class="lcars-text">@chore.ChoreName</div>
             </div>
+        }
 
-
-        <div style="padding-top:20px" />
-
-
-    }
+        <div class="lcars-footer">
+            <div class="lcars-pill-small"></div>
+            <div class="lcars-status">FEDERATION STANDARD • STARDATE @DateTime.Now.ToString("yyMMdd.HHmm")</div>
+        </div>
     </div>
+
+
+   
 }
 
 @code {
@@ -85,9 +75,130 @@ else
 
 }
 
-
 <style>
-    label:{
-        font-weight:bold;
-    }         
+    :root {
+        --lcars-orange: #FF9C00;
+        --lcars-purple: #CC99CC;
+        --lcars-blue: #99CCFF;
+        --lcars-pink: #CC6699;
+        --lcars-red: #FF6600;
+        --lcars-bg: #000000;
+        --lcars-text: #FFFFFF;
+        --lcars-font: 'Arial', sans-serif;
+    }
+
+    .lcars-container {
+        background-color: var(--lcars-bg);
+        color: var(--lcars-text);
+        border-radius: 20px;
+        padding: 10px;
+        font-family: var(--lcars-font);
+        margin: 20px 0;
+        border: 2px solid var(--lcars-orange);
+    }
+
+    .lcars-header {
+        display: flex;
+        height: 60px;
+        margin-bottom: 20px;
+    }
+
+    .lcars-elbow-left {
+        width: 80px;
+        height: 60px;
+        background-color: var(--lcars-purple);
+        border-top-left-radius: 30px;
+        border-bottom-left-radius: 15px;
+    }
+
+    .lcars-elbow-right {
+        width: 80px;
+        height: 60px;
+        background-color: var(--lcars-blue);
+        border-top-right-radius: 30px;
+        border-bottom-right-radius: 15px;
+    }
+
+    .lcars-title {
+        flex-grow: 1;
+        background-color: var(--lcars-orange);
+        display: flex;
+        align-items: center;
+        padding-left: 20px;
+        font-size: 28px;
+        font-weight: bold;
+        letter-spacing: 2px;
+    }
+
+    .lcars-row {
+        display: flex;
+        margin-bottom: 10px;
+        align-items: center;
+        height: 40px;
+    }
+
+    .lcars-pill {
+        width: 100px;
+        height: 100%;
+        background-color: var(--lcars-pink);
+        border-top-left-radius: 20px;
+        border-bottom-left-radius: 20px;
+    }
+
+    .lcars-pill-small {
+        width: 60px;
+        height: 100%;
+        background-color: var(--lcars-red);
+        border-radius: 20px;
+        margin-right: 10px;
+    }
+
+    .lcars-indicator {
+        width: 30px;
+        height: 30px;
+        background-color: var(--lcars-blue);
+        border-radius: 50%;
+        margin-right: 15px;
+        margin-left: 15px;
+    }
+
+    .lcars-label {
+        flex-grow: 1;
+        font-size: 20px;
+        color: var(--lcars-orange);
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
+
+    .lcars-text {
+        flex-grow: 1;
+        font-size: 18px;
+        cursor: pointer;
+    }
+
+    .lcars-footer {
+        display: flex;
+        align-items: center;
+        height: 40px;
+        margin-top: 20px;
+    }
+
+    .lcars-status {
+        flex-grow: 1;
+        font-size: 14px;
+        color: var(--lcars-blue);
+    }
+
+    .data-row {
+        transition: background-color 0.3s;
+    }
+
+        .data-row:hover {
+            background-color: rgba(255, 156, 0, 0.2);
+            cursor: pointer;
+        }
+
+    .header-row {
+        margin-bottom: 15px;
+    }
 </style>

@@ -20,7 +20,7 @@ namespace HomeAppsBlazerServer.Servcies.Chore
         {
             _logger.LogInformation("Getting Chores.");
 
-            List<ChoresModel> Chores = myDbContext.KidsChores.Where(mm => mm.IsDeleted == false).ToList();
+            List<ChoresModel> Chores = myDbContext.KidsChores.Where(mm => mm.IsDeleted == false).OrderBy(mm => mm.ChoreName).ToList();
 
             _logger.LogInformation("Got {NumberOfChors} Chores.", Chores.Count);
 
@@ -100,7 +100,7 @@ namespace HomeAppsBlazerServer.Servcies.Chore
         {
 
             var choreAmount = (from ca in myDbContext.ChoreAmount
-                               join c in myDbContext.KidsChores on ca.ChoreID equals c.ChoreID
+                               join kc in myDbContext.KidsChores on ca.ChoreID equals kc.ChoreID
                                where ca.ID == id
                                select new ChoreAmountDetailModel
                                {
@@ -108,7 +108,7 @@ namespace HomeAppsBlazerServer.Servcies.Chore
                                    ChoreID = ca.ChoreID,
                                    Amount = ca.Amount,
                                    IsDeleted = ca.IsDeleted,
-                                   ChoreName = c.ChoreName
+                                   ChoreName = kc.ChoreName
                                });
 
 

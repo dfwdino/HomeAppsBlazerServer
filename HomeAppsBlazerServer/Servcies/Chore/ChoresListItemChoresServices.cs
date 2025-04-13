@@ -47,6 +47,7 @@ namespace HomeAppsBlazerServer.Servcies.Chore
         public List<WeeklyKidTotalViewModel> GetWeeklyChoreReport(DateTime startDate, DateTime endDate)
         {
             // Define the date range for the week
+
             var weekStart = startDate.Date;
             var weekEnd = endDate.Date.AddDays(1).AddSeconds(-1); // End of the specified end date
 
@@ -54,8 +55,10 @@ namespace HomeAppsBlazerServer.Servcies.Chore
             var choreDetails = (from choreList in myDbContext.ChoreListItem
                                 join chore in myDbContext.KidsChores on choreList.KidsChoreID equals chore.ChoreID
                                 join kid in myDbContext.KidsName on choreList.KidsNameID equals kid.IDKidsName
-                                join amount in myDbContext.ChoreAmount on chore.ChoreID equals amount.ChoreID
-                                where !choreList.IsDeleted && !chore.IsDeleted && !kid.IsDeleted && !amount.IsDeleted
+                                join amount in myDbContext.ChoreAmount.Where(a => !a.IsDeleted).DefaultIfEmpty()
+                                     on chore.ChoreID equals amount.ChoreID into amountGroup
+                                from amount in amountGroup.DefaultIfEmpty()
+                                where !choreList.IsDeleted && !chore.IsDeleted && !kid.IsDeleted
                                 && choreList.DoneDate >= weekStart && choreList.DoneDate <= weekEnd
                                 select new ChoreDetailViewModel
                                 {
@@ -63,7 +66,7 @@ namespace HomeAppsBlazerServer.Servcies.Chore
                                     KidName = kid.KidName,
                                     DoneDate = choreList.DoneDate,
                                     ChoreHistoryID = choreList.ChoreHistoryID,
-                                    Amount = amount.Amount ?? 0m // Handle null amounts
+                                    Amount = amount != null ? amount.Amount ?? 0m : 0m // Handle both null amount record and null Amount value
                                 }).ToList();
 
             // Group by kid and calculate totals
@@ -73,6 +76,8 @@ namespace HomeAppsBlazerServer.Servcies.Chore
                 {
                     KidName = g.Key,
                     TotalAmount = g.Sum(c => c.Amount),
+                    SavingAmount = g.Sum(c => c.Amount) / 4,
+                    RetirementAmount = g.Sum(c => c.Amount) / 4,
                     ChoreDetails = g.ToList()
                 })
                 .OrderBy(k => k.KidName)
