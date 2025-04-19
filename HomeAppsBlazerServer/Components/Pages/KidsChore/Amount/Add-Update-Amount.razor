@@ -27,67 +27,67 @@ else
 }
 
 <EditForm Model="choreAmountModel" OnSubmit="HandleSubmit">
+    <div class="container shadow rounded p-4 my-4 bg-white">
+        <h4 class="text-primary mb-4">@(Id is null ? "Add New Item" : "Edit Item")</h4>
 
-    <div class="container">
-        <div class="row border-bottom py-2 fw-bold">
+        <div class="row mb-3 align-items-center">
+            <div class="col-md-3">
+                <label for="chorename" class="form-label text-secondary fw-medium">Item Name</label>
+            </div>
+            <div class="col-md-9">
+                @if (Id is null)
+                {
+                    <BlazorBootstrap.AutoComplete @bind-Value="ChoreName"
+                                                  TItem="ChoresModel"
+                                                  DataProvider="CustomersDataProvider"
+                                                  PropertyName="ChoreName"
+                                                  Placeholder="Search for an item..."
+                                                  OnChanged="(ChoresModel item) => OnAutoCompleteChanged(item)"
+                                                  class="form-control form-control-lg rounded-pill shadow-sm" />
+                }
+                else
+                {
+                    <div class="form-control-plaintext fw-medium">@choreAmountModel.ChoreName</div>
+                }
+            </div>
+        </div>
 
-            <div class="row">
-                <div class="col-2">
-                    <label for="chorename" class="form-label">Item Name:</label>
+        <div class="row mb-3 align-items-center">
+            <div class="col-md-3">
+                <label for="choreamount" class="form-label text-secondary fw-medium">Amount</label>
+            </div>
+            <div class="col-md-9">
+                <InputNumber id="choreamount" @bind-Value="@choreAmountModel.Amount"
+                             class="form-control form-control-lg rounded-pill shadow-sm" />
+            </div>
+        </div>
+
+        <div class="row mb-4 align-items-center">
+            <div class="col-md-3">
+                <label for="choredelete" class="form-label text-secondary fw-medium">Mark as Deleted</label>
+            </div>
+            <div class="col-md-9">
+                <div class="form-check form-switch">
+                    <InputCheckbox id="choredelete" @bind-Value="@choreAmountModel.IsDeleted"
+                                   class="form-check-input" />
                 </div>
-                <div class="col-9">
-
-
-                    @if (Id is null)
-                    {
-
-                        <BlazorBootstrap.AutoComplete @bind-Value="ChoreName"
-                        TItem="ChoresModel"
-                        DataProvider="CustomersDataProvider"
-                        PropertyName="ChoreName"
-                        Placeholder="Search for an item..."
-                        OnChanged="(ChoresModel item) => OnAutoCompleteChanged(item)"
-                        class="form-control" />
-                    }
-                    else
-                    {
-                        <label>@choreAmountModel.ChoreName</label>
-                    }
-
-
-
-                </div>
-            </div>
-
-        </div>
-
-        <div class="row border-bottom py-2 fw-bold">
-            <div class="col-2">
-                <label for="choreid">Amount ID:</label>
-            </div>
-            <div class="col-9">
-                <InputNumber id="choreamount" @bind-Value="@choreAmountModel.Amount" />
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-lg-1" style="padding-bottom:20px">
-                <button type="button" class="btn btn-primary" @onclick="@(() => Cancel())">Cancel</button>
+        <div class="row justify-content-end mt-4">
+            <div class="col-auto">
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4 me-2" @onclick="@(() => Cancel())">
+                    <i class="bi bi-x-circle me-1"></i> Cancel
+                </button>
             </div>
-            <div class="col-lg-1" style="padding-bottom:20px">
-                <button type="submit" class="btn btn-primary">Submit</button>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary rounded-pill px-4">
+                    <i class="bi bi-check-circle me-1"></i> Save Changes
+                </button>
             </div>
-
-            @*  @if (Id is not null)
-            {
-                <div class="col-lg-1">
-                    <button type="button" class="btn btn-primary" @onclick="@(() => Deleteitems())">Delete</button>
-        </div>} *@
 
         </div>
-
     </div>
-
 </EditForm>
 
 @code {
@@ -143,13 +143,13 @@ else
         else if (Id is not null) // update
         {
             choresChoresServices.UpdateChoreAmount(choreAmountModel);
-            NavigationManager.NavigateTo("List-Chore");
+            NavigationManager.NavigateTo("List-Amount");
         }
         else // add
         {
             choresChoresServices.AddChoreAmount(choreAmountModel);
             choreAmountModel = new ChoreAmountDetailModel();
-            NavigationManager.NavigateTo("List-Chore");
+            NavigationManager.NavigateTo("List-Amount");
         }
     }
 
@@ -159,12 +159,12 @@ else
         {
             choreAmountModel.IsDeleted = true;
             //await choresChoresServices.UpdateChoreAmount(choreAmountModel);
-            NavigationManager.NavigateTo("List-Chore");
+            NavigationManager.NavigateTo("List-Amount");
         }
     }
 
     private void Cancel()
     {
-        NavigationManager.NavigateTo("List-Chore");
+        NavigationManager.NavigateTo("List-Amount");
     }
 }

@@ -83,6 +83,8 @@ namespace HomeAppsBlazerServer.Servcies.Chore
 
             var choreAmount = (from ca in myDbContext.ChoreAmount
                                join c in myDbContext.KidsChores on ca.ChoreID equals c.ChoreID
+                               orderby c.ChoreName
+                               where ca.IsDeleted == false
                                select new ChoreAmountDetailModel
                                {
                                    ID = ca.ID,
@@ -119,7 +121,22 @@ namespace HomeAppsBlazerServer.Servcies.Chore
         public void UpdateChoreAmount(ChoreAmountDetailModel choreAmountDetailModel)
         {
             var choreAmount = myDbContext.ChoreAmount.Where(mm => mm.ID == choreAmountDetailModel.ID).FirstOrDefault();
-            choreAmount.Amount = choreAmountDetailModel.Amount;
+
+            if (choreAmountDetailModel.IsDeleted == true)
+            {
+                choreAmount.IsDeleted = true;
+            }
+            else
+            {
+
+                ChoreAmountModel newchore = new();
+                newchore.Amount = choreAmountDetailModel.Amount;
+                newchore.ChoreID = choreAmount.ChoreID;
+
+                myDbContext.ChoreAmount.Add(newchore);
+            }
+
+
             myDbContext.SaveChanges();
         }
 
