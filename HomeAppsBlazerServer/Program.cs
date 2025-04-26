@@ -30,6 +30,16 @@ builder.Services.AddServerSideBlazor().AddCircuitOptions(options =>
     options.DetailedErrors = true;
 });
 
+builder.Services.AddSignalR(options =>
+{
+    // Increase timeout to handle slower mobile connections
+    options.ClientTimeoutInterval = TimeSpan.FromSeconds(60);
+    options.KeepAliveInterval = TimeSpan.FromSeconds(30);
+
+    // Add transport fallback options
+    options.EnableDetailedErrors = true;
+});
+
 
 builder.Services.AddServerSideBlazor()
     .AddHubOptions(options =>

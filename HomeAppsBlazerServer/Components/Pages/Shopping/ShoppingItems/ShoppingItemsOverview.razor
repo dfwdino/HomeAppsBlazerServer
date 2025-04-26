@@ -37,40 +37,25 @@
 
 
 
- 
 
+<PageTitle>Shopping Items</PageTitle>
+
+<PriceHistoryOverview @ref="popupRef" />
 
 <div class="shopping-list-container">
-    <PageTitle>Shopping Items</PageTitle>
+   
 
     <div class="card mb-4">
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
             @if (_showallitems == false)
             {
-                <h3 class="mb-0">All Items</h3>
+                <h3 @onclick="@(() => GetShoppingItems(@_showallitems))" class="mb-0">All Items</h3>
             }
             else
             {
-                <h3 class="mb-0">Non-List Items</h3>
+                    <h3 @onclick="@(() => GetShoppingItems(@_showallitems))" class="mb-0">Non-List Items</h3>
             }
-            <div class="d-flex align-items-center">
-                <div class="dropdown">
-                    <button class="btn btn-light dropdown-toggle" type="button" id="viewOptions" data-bs-toggle="dropdown" aria-expanded="false">
-                        View Options
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="viewOptions">
-                        @if (_showallitems == false)
-                        {
-                            <li><button class="dropdown-item" @onclick="@(() => GetShoppingItems(@_showallitems))">Show Not on the List</button></li>
-                        }
-                        else
-                        {
-                            <li><button class="dropdown-item" @onclick="@(() => GetShoppingItems(@_showallitems))">Show All</button></li>
-                        }
-                        <li><button class="dropdown-item" @onclick="@(() => NeedList())">Need List</button></li>
-                    </ul>
-                </div>
-            </div>
+  
         </div>
 
         <div class="card-body">
@@ -193,9 +178,10 @@
             </div>
         </div>
     </div>
+    
 </div>
 
-<PriceHistoryOverview @ref="popupRef" />
+
 
 <!-- Add these styles to your component or stylesheet -->
 <style>
@@ -219,6 +205,7 @@
             padding: 0.25rem 0.5rem;
         }
     }
+
 </style>
 
 <!-- Add Bootstrap Icons -->
@@ -237,11 +224,25 @@
     [Parameter]
     public bool showallitems { get; set; } = false;
 
-    private void ShowHistory(int id)
+    // Fix 1: Change the method call to handle errors and be asynchronous
+    private async Task ShowHistory(int id)
     {
-        List<PriceHistory> ItemPriceHistory = ShoppingServices.GetPriceHisotry(id).Result;
-
-        popupRef.Show(ItemPriceHistory);
+        try
+        {
+            List<PriceHistory> itemPriceHistory = await ShoppingServices.GetPriceHisotry(id);
+            if (itemPriceHistory != null && popupRef != null)
+            {
+                popupRef.Show(itemPriceHistory);
+            }
+            else
+            {
+                Console.WriteLine("Either price history or popup reference is null");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error showing history: {ex.Message}");
+        }
     }
 
 
@@ -285,52 +286,13 @@
     {
         await ShoppingServices.AddItemToList((int)id);
         AllShoppingItems.Remove(AllShoppingItems.First(m => m.ShoppingItemID == id));
-        //await JsRuntime.InvokeVoidAsync("alert", "Item Added");
-
+       
     }
 
     async Task DeleteItem(int id)
     {
-
         await ShoppingServices.RemoveShoppingItem((int)id);
         AllShoppingItems = await ShoppingServices.GetShoppingItemsAsync();
     }
 }
 
-
-@* <style>
-
-    .strike {
-        text-decoration: line-through;
-        color: red;
-    }
-
-    .floating-menu {
-        font-family: sans-serif;
-        background-color: white;
-        padding: 5px;
-        ;
-        /*width: 130px;*/
-        z-index: 100;
-        position: fixed;
-    }
-
-        .floating-menu a,
-        .floating-menu h3 {
-            /* font-size: 0.9em;
-        display: block;
-        margin: 0 0.5em;
-        color: white;*/
-        }
-
-</style>
- *@
-<script>
-    //Not working with sort.. it goes back to only show non-list items.
-    // $(document).ready(function () {
-    //     $('#shoppingitems').DataTable();
-    // });
-
-    
-
-</script>
