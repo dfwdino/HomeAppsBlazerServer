@@ -9,104 +9,171 @@
 <input type="checkbox" title="Navigation menu" class="navbar-toggler" />
 
 
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+<!-- Improved Navigation Menu with better organization and visual hierarchy -->
+<div class="nav-container">
+    <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+        <nav class="flex-column">
+            <!-- Home Section -->
+            <div class="nav-section">
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                        <span class="bi bi-house-door-fill" aria-hidden="true"></span> Home
+                    </NavLink>
+                </div>
+            </div>
 
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
+            <!-- Chore List Section -->
+            <div class="nav-section">
+                <div class="nav-section-header">
+                    <span class="bi bi-list-check" aria-hidden="true"></span> Chore Lists
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="List-ChoreItems">
+                        <span class="bi bi-card-list" aria-hidden="true"></span> View All Chores
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="Add-Update-ChoreList">
+                        <span class="bi bi-plus-circle" aria-hidden="true"></span> Add Chore List Item
+                    </NavLink>
+                </div>
+            </div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="Add-Update-ChoreList">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span>Add Chore LIst Item
-            </NavLink>
-        </div>
+            <!-- Kids & Amounts Section -->
+            <div class="nav-section">
+                <div class="nav-section-header">
+                    <span class="bi bi-people" aria-hidden="true"></span> Kids & Amounts
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="List-Kids">
+                        <span class="bi bi-person-lines-fill" aria-hidden="true"></span> View Kids
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="Kid-Add-Update">
+                        <span class="bi bi-person-plus" aria-hidden="true"></span> Add/Edit Kids
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="List-Amount">
+                        <span class="bi bi-cash-stack" aria-hidden="true"></span> View Amounts
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="Add-Update-Amount">
+                        <span class="bi bi-currency-dollar" aria-hidden="true"></span> Add/Edit Amount
+                    </NavLink>
+                </div>
+            </div>
 
+            <!-- Chores Section -->
+            <div class="nav-section">
+                <div class="nav-section-header">
+                    <span class="bi bi-check2-square" aria-hidden="true"></span> Chores
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="List-Chore">
+                        <span class="bi bi-clipboard-check" aria-hidden="true"></span> View Chores
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="Add-Update-Chore">
+                        <span class="bi bi-plus-square" aria-hidden="true"></span> Add Chore Items
+                    </NavLink>
+                </div>
+            </div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="List-ChoreItems">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span>List All Chores
-            </NavLink>
-        </div>
-
-
-        
-        
-        
-        <hr />
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="Add-Update-Amount">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span>Amount
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="List-Amount">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span>Amount List
-            </NavLink>
-        </div>
-
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="List-Kids">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span>List Kids
-            </NavLink>
-        </div>
-
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="Kid-Add-Update">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span>Add Kids
-            </NavLink>
-        </div>
-
-        <hr />
-       
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="List-Chore">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span>List Chore
-            </NavLink>
-        </div>
-
-        
-
-        <hr />
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="Add-Update-Chore">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span>Add Chore Items
-            </NavLink>
-        </div>
-
-        @* <div class="nav-item px-3">
-            <NavLink class="nav-link" href="List-Chore-Items">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span>List Chore Items
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="Add-Update-Chore-List-Item">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span>Add Kids Chore
-            </NavLink>
-        </div> *@
-
-      <hr/>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="location-Add-Update">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span>Add Location
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="List-Location">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span>List Location
-            </NavLink>
-        </div>
-
-    </nav>
+            <!-- Locations Section -->
+            <div class="nav-section">
+                <div class="nav-section-header">
+                    <span class="bi bi-geo-alt" aria-hidden="true"></span> Locations
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="List-Location">
+                        <span class="bi bi-pin-map" aria-hidden="true"></span> View Locations
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="location-Add-Update">
+                        <span class="bi bi-plus-circle" aria-hidden="true"></span> Add/Edit Location
+                    </NavLink>
+                </div>
+            </div>
+        </nav>
+    </div>
 </div>
 
+<style>
+    .nav-container {
+        background-color: darkblue;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin: 10px 0;
+        overflow: hidden;
+    }
+
+    .nav-scrollable {
+        max-height: calc(100vh - 100px);
+        overflow-y: auto;
+    }
+
+    .nav-section {
+        margin-bottom: 10px;
+        border-bottom: 1px solid #e9ecef;
+        padding-bottom: 5px;
+    }
+
+        .nav-section:last-child {
+            border-bottom: none;
+        }
+
+    .nav-section-header {
+        padding: 10px 16px;
+        font-weight: 600;
+        color: lightblue;
+        background-color: #4a6da7;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        border-radius: 4px;
+    }
+
+        .nav-section-header .bi {
+            margin-right: 8px;
+        }
+
+    .nav-item {
+        transition: background-color 0.2s;
+    }
+
+        .nav-item:hover {
+            background-color: #e9ecef;
+        }
+
+    .nav-link {
+        color: #495057;
+        display: flex;
+        align-items: center;
+        padding: 8px 10px;
+        text-decoration: none;
+        font-size: 0.9rem;
+        border-radius: 4px;
+        margin: 2px 0;
+    }
+
+        .nav-link:hover {
+            color: #212529;
+        }
+
+        .nav-link.active {
+            background-color: #0d6efd;
+            color: white;
+        }
+
+        .nav-link .bi {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+</style>
