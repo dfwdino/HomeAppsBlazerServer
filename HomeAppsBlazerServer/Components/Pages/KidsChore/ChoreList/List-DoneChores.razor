@@ -80,7 +80,7 @@ else
     protected override async Task OnParametersSetAsync()
     {
 
-        Chores = choresChoresServices.GetWeeklyChoreReport(DateTime.Now.AddDays(-14), DateTime.Now.AddDays(14));
+        Chores = choresChoresServices.GetWeeklyChoreReport(DateTime.Now.AddDays(-8), DateTime.Now.AddDays(8));
 
     }
 

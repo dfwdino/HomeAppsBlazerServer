@@ -49,7 +49,7 @@ namespace HomeAppsBlazerServer.Servcies.Chore
             // Define the date range for the week
 
             var weekStart = startDate.Date;
-            var weekEnd = endDate.Date.AddDays(1).AddSeconds(-1); // End of the specified end date
+            var weekEnd = endDate.Date;//.AddDays(1).AddSeconds(-1); // End of the specified end date
 
             // Join the tables to get all chore details
             var choreDetails = (from choreList in myDbContext.ChoreListItem
