@@ -1,5 +1,6 @@
 using HomeAppsBlazerServer.Components;
 using HomeAppsBlazerServer.Data;
+using HomeAppsBlazerServer.Servcies.Auto;
 using HomeAppsBlazerServer.Servcies.Chore;
 using HomeAppsBlazerServer.Servcies.Shopping;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,8 @@ builder.Services.AddScoped<IChoresChoresServices, ChoresChoresServices>();
 builder.Services.AddScoped<ILocationChoresServices, LocationChoresServices>();
 
 builder.Services.AddScoped<ChoresListItemChoresServices, ChoresListItemChoresServices>();
+
+builder.Services.AddScoped<CarService, CarService>();
 
 builder.Services.AddServerSideBlazor().AddCircuitOptions(options =>
 {

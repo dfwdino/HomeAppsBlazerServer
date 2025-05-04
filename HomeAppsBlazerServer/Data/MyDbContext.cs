@@ -1,4 +1,5 @@
 ﻿using HomeAppsBlazerServer.Models;
+using HomeAppsBlazerServer.Models.Auto;
 using HomeAppsBlazerServer.Models.Chore;
 using HomeAppsBlazerServer.Models.Shopping;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +33,14 @@ namespace HomeAppsBlazerServer.Data
 
         public DbSet<ChoreAmountModel> ChoreAmount { get; set; }
 
+        #endregion
+
+        #region Cars
+
+        public DbSet<Car> Cars { get; set; }
+        public DbSet<GasType> GasTypes { get; set; }
+        public DbSet<GasStation> GasStations { get; set; }
+        public DbSet<MileageEntry> MileageEntries { get; set; }
         #endregion
 
 
