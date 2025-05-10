@@ -28,6 +28,8 @@ builder.Services.AddScoped<ChoresListItemChoresServices, ChoresListItemChoresSer
 
 builder.Services.AddScoped<CarService, CarService>();
 
+builder.Services.AddScoped<IGasStationService, GasStationService>();
+
 builder.Services.AddServerSideBlazor().AddCircuitOptions(options =>
 {
     options.DetailedErrors = true;

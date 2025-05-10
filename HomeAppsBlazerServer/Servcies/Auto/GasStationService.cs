@@ -1,29 +1,63 @@
 ﻿using HomeAppsBlazerServer.Data;
 using HomeAppsBlazerServer.Models.Auto;
-using HomeAppsBlazerServer.Servcies.Chore;
 using Microsoft.EntityFrameworkCore;
 
 namespace HomeAppsBlazerServer.Servcies.Auto
 {
-    public class GasStationService
+
+    public interface IGasStationService
     {
+        Task<GasStation?> GetByIdAsync(int id);
+        Task<IEnumerable<GasStation>> GetAllAsync();
+        Task CreateAsync(GasStation station);
+        Task UpdateAsync(GasStation station);
+        Task DeleteAsync(int id);
+    }
 
-        private readonly MyDbContext myDbContext;
-        private readonly ILogger<IChoresChoresServices> _logger;
 
-        public GasStationService(MyDbContext myDbContext, ILogger<IChoresChoresServices> logger)
+    public class GasStationService : IGasStationService
+    {
+        private readonly MyDbContext _context;
+        private readonly ILogger<CarService> _logger;
+
+
+        public GasStationService(MyDbContext context)
         {
-            this.myDbContext = myDbContext;
-            _logger = logger;
+            _context = context;
         }
-        public List<GasStation> GetAllAsync()
+
+        public async Task<GasStation?> GetByIdAsync(int id)
         {
-            return myDbContext.GasStations
-                 .Include(c => c.MileageEntries)
-                 .ThenInclude(me => me.GasType)
-                 .Include(c => c.MileageEntries)
-                 .ThenInclude(me => me.GasStation)
-                 .ToList();
+            return await _context.GasStations.FindAsync(id);
+        }
+
+        public async Task<IEnumerable<GasStation>> GetAllAsync()
+        {
+            return await _context.GasStations
+                .OrderBy(s => s.Name)
+                .ToListAsync();
+        }
+
+        public async Task CreateAsync(GasStation station)
+        {
+            _context.GasStations.Add(station);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(GasStation station)
+        {
+            _context.GasStations.Update(station);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var station = await _context.GasStations.FindAsync(id);
+            if (station != null)
+            {
+                _context.GasStations.Remove(station);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }
