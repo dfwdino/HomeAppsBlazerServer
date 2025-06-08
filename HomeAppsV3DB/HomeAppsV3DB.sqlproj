@@ -9,8 +9,7 @@
     <ProjectGuid>{d5c247ad-68bd-4812-bd8e-32088db105b6}</ProjectGuid>
     <DSP>Microsoft.Data.Tools.Schema.Sql.Sql160DatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
-    <RootPath>
-    </RootPath>
+    <RootPath />
     <RootNamespace>HomeAppsV3DB</RootNamespace>
     <AssemblyName>HomeAppsV3DB</AssemblyName>
     <ModelCollation>1033, CI</ModelCollation>
@@ -48,7 +47,6 @@
   </PropertyGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
-    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
     <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
     <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
   </PropertyGroup>
@@ -65,9 +63,10 @@
     <Folder Include="HomeAppSettings\" />
     <Folder Include="HomeAppSettings\Tables\" />
     <Folder Include="Security\" />
+    <Folder Include="Auto\" />
+    <Folder Include="Auto\Tables\" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="dbo\Tables\__EFMigrationsHistory.sql" />
     <Build Include="Shopping\Tables\ShoppingItemList.sql" />
     <Build Include="Shopping\Tables\ShoppingItems.sql" />
     <Build Include="Shopping\Tables\ShoppingStores.sql" />
@@ -83,8 +82,14 @@
     <Build Include="KidsArea\Tables\Location.sql" />
     <Build Include="KidsArea\Tables\ChoreList.sql" />
     <Build Include="KidsArea\Tables\ChoreAmount.sql" />
+    <Build Include="Shopping\Tables\Size.sql" />
+    <Build Include="Auto\Tables\MileageEntries.sql" />
+    <Build Include="Auto\Tables\GasTypes.sql" />
+    <Build Include="Auto\Tables\GasStations.sql" />
+    <Build Include="Auto\Tables\Cars.sql" />
+    <Build Include="Security\Auto.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="CantLinuxToProject.scmp" />
+    <None Include="LocalToProject.scmp" />
   </ItemGroup>
 </Project>

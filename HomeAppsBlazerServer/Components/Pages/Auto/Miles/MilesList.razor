@@ -1,0 +1,72 @@
+﻿@page "/auto/miles/list"
+@inject HomeAppsBlazerServer.Servcies.Auto.MileageEntryService MileageEntryService
+@using HomeAppsBlazerServer.Models.Auto
+
+<h3>Miles List</h3>
+
+@if (loading)
+{
+    <div>Loading...</div>
+}
+else if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+else if (miles.Count == 0)
+{
+    <div>No miles entries found.</div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Car</th>
+                <th>Date</th>
+                <th>Odometer</th>
+                <th>Gallons</th>
+                <th>Price/Gal</th>
+                <th>Gas Type</th>
+                <th>Station</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var entry in miles)
+            {
+                <tr>
+                    <td>@entry.Car?.Name</td>
+                    <td>@entry.EntryDate.ToString("yyyy-MM-dd")</td>
+                    <td>@entry.Odometer</td>
+                    <td>@entry.Gallons</td>
+                    <td>@entry.PricePerGallon</td>
+                    <td>@entry.GasType?.Name</td>
+                    <td>@entry.GasStation?.Name</td>
+                    <td>@entry.Notes</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<MileageEntry> miles = new();
+    private bool loading = true;
+    private string? errorMessage;
+
+    protected override void OnInitialized()
+    {
+        try
+        {
+            miles = MileageEntryService.GetAllAsync();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error loading miles: {ex.Message}";
+        }
+        finally
+        {
+            loading = false;
+        }
+    }
+}

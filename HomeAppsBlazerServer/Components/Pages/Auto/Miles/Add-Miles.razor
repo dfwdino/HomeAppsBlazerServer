@@ -1,0 +1,109 @@
+﻿@page "/auto/miles/add"
+@page "/auto/miles/edit/{EntryID:int}"
+
+@inject HomeAppsBlazerServer.Servcies.Auto.CarService CarService
+@inject HomeAppsBlazerServer.Servcies.Auto.GasTypeService GasTypeService
+@inject HomeAppsBlazerServer.Servcies.Auto.IGasStationService GasStationService
+@inject HomeAppsBlazerServer.Servcies.Auto.MileageEntryService MileageEntryService
+@inject NavigationManager NavigationManager
+@using HomeAppsBlazerServer.Models.Auto
+
+<h3>@(IsEdit ? "Edit Miles" : "Add Miles")</h3>
+
+<EditForm Model="entry" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div>
+        <label>Car:</label>
+        <InputSelect @bind-Value="entry.CarID">
+            <option value="">Select Car</option>
+            @foreach (var car in Cars)
+            {
+                <option value="@car.CarID">@car.Name</option>
+            }
+        </InputSelect>
+    </div>
+    <div>
+        <label>Gas Type:</label>
+        <InputSelect @bind-Value="entry.GasTypeID">
+            <option value="">Select Gas Type</option>
+            @foreach (var gas in GasTypes)
+            {
+                <option value="@gas.GasTypeID">@gas.Name</option>
+            }
+        </InputSelect>
+    </div>
+    <div>
+        <label>Gas Station:</label>
+        <InputSelect @bind-Value="entry.StationID">
+            <option value="">Select Station</option>
+            @foreach (var station in GasStations)
+            {
+                <option value="@station.StationID">@station.Name</option>
+            }
+        </InputSelect>
+    </div>
+    <div>
+        <label>Entry Date:</label>
+        <InputDate @bind-Value="entry.EntryDate" />
+    </div>
+    <div>
+        <label>Odometer:</label>
+        <InputNumber @bind-Value="entry.Odometer" />
+    </div>
+    <div>
+        <label>Gallons:</label>
+        <InputNumber @bind-Value="entry.Gallons" />
+    </div>
+    <div>
+        <label>Price Per Gallon:</label>
+        <InputNumber @bind-Value="entry.PricePerGallon" />
+    </div>
+    <div>
+        <label>Notes:</label>
+        <InputTextArea @bind-Value="entry.Notes" />
+    </div>
+    <button type="submit">Save</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int? EntryID { get; set; }
+
+    private MileageEntry entry = new();
+    private List<Car> Cars = new();
+    private List<GasType> GasTypes = new();
+    private List<GasStation> GasStations = new();
+    private bool IsEdit => EntryID.HasValue;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Cars = await CarService.GetAllAsync();
+        GasTypes = GasTypeService.GetAllAsync();
+        GasStations = (await GasStationService.GetAllAsync()).ToList();
+
+        if (IsEdit)
+        {
+            var allEntries = MileageEntryService.GetAllAsync();
+            entry = allEntries.FirstOrDefault(e => e.EntryID == EntryID) ?? new MileageEntry();
+        }
+        else
+        {
+            entry.EntryDate = DateTime.Now;
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        if (IsEdit)
+        {
+            await MileageEntryService.UpdateAsync(entry);
+        }
+        else
+        {
+            await MileageEntryService.AddAsync(entry);
+        }
+        NavigationManager.NavigateTo("/auto/miles/list");
+    }
+
+}

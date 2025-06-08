@@ -18,9 +18,31 @@ namespace HomeAppsBlazerServer.Servcies.Auto
         public List<MileageEntry> GetAllAsync()
         {
             return myDbContext.MileageEntries
-                 .Include(c => c.GasType)
-                 .Include(c => c.GasStation)
+                 //.Include(c => c.GasType)
+                 //.Include(c => c.GasStation)
                  .ToList();
+        }
+
+        public async Task AddAsync(MileageEntry entry)
+        {
+            myDbContext.MileageEntries.Add(entry);
+            await myDbContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(MileageEntry entry)
+        {
+            myDbContext.MileageEntries.Update(entry);
+            await myDbContext.SaveChangesAsync();
+        }
+
+        public List<MileageEntry> GetLast30DaysForCar(int carId)
+        {
+            var fromDate = DateTime.Now.AddDays(-30);
+            return myDbContext.MileageEntries
+                .Include(c => c.GasType)
+                .Include(c => c.GasStation)
+                .Where(e => e.CarID == carId && e.EntryDate >= fromDate)
+                .ToList();
         }
     }
 }

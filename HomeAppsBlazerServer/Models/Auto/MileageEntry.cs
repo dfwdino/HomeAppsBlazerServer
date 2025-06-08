@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HomeAppsBlazerServer.Models.Auto
 {
+    [Table("MileageEntries", Schema = "Auto")]
     public class MileageEntry : BaseEntity
     {
         [Key]

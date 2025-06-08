@@ -9,6 +9,7 @@ namespace HomeAppsBlazerServer.Models.Auto
         [Key]
         public int StationID { get; set; }
         public string Name { get; set; } = string.Empty;
+        public bool IsDeleted { get; set; }
 
         // Navigation property
         public virtual ICollection<MileageEntry>? MileageEntries { get; set; }
