@@ -1,6 +1,5 @@
 ﻿using HomeAppsBlazerServer.Data;
 using HomeAppsBlazerServer.Models.Auto;
-using Microsoft.EntityFrameworkCore;
 
 namespace HomeAppsBlazerServer.Servcies.Auto
 {
@@ -17,10 +16,12 @@ namespace HomeAppsBlazerServer.Servcies.Auto
         }
         public List<MileageEntry> GetAllAsync()
         {
-            return myDbContext.MileageEntries
+            var asdf = myDbContext.MileageEntries
                  //.Include(c => c.GasType)
                  //.Include(c => c.GasStation)
                  .ToList();
+
+            return null;
         }
 
         public async Task AddAsync(MileageEntry entry)
@@ -39,8 +40,8 @@ namespace HomeAppsBlazerServer.Servcies.Auto
         {
             var fromDate = DateTime.Now.AddDays(-30);
             return myDbContext.MileageEntries
-                .Include(c => c.GasType)
-                .Include(c => c.GasStation)
+                //.Include(c => c.GasType)
+                //.Include(c => c.GasStation)
                 .Where(e => e.CarID == carId && e.EntryDate >= fromDate)
                 .ToList();
         }

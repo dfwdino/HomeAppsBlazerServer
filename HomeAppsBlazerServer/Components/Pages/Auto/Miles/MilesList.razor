@@ -35,13 +35,13 @@ else
             @foreach (var entry in miles)
             {
                 <tr>
-                    <td>@entry.Car?.Name</td>
+                    @* <td>@entry.Car?.Name</td> *@
                     <td>@entry.EntryDate.ToString("yyyy-MM-dd")</td>
                     <td>@entry.Odometer</td>
                     <td>@entry.Gallons</td>
                     <td>@entry.PricePerGallon</td>
-                    <td>@entry.GasType?.Name</td>
-                    <td>@entry.GasStation?.Name</td>
+                    @* <td>@entry.GasType?.Name</td> *@
+               @*      <td>@entry.GasStation?.Name</td> *@
                     <td>@entry.Notes</td>
                 </tr>
             }
