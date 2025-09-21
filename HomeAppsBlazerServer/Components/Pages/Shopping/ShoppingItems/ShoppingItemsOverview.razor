@@ -66,6 +66,9 @@
                 <button class="btn btn-outline-primary" @onclick="@(() => AddListItem())">
                     <i class="bi bi-list-check"></i> Add Item To List
                 </button>
+                <button class="btn btn-outline-primary" @onclick="@(() => NeedList())">
+                    <i class="bi bi-list-check"></i> Need Items
+                </button>
             </div>
 
             @if (AllShoppingItems is null)
