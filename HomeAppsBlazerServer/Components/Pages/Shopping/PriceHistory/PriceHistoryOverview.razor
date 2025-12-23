@@ -25,11 +25,11 @@
 
 else if (priceHistory.Count().Equals(0))
 {
-    <div class="toast-container p-3 @showClass" data-bs-autohide="true" data-bs-delay="5000">
+    <div class="toast-container position-fixed start-0 p-3 mt-5 @showClass" style="top: 100px;" data-bs-autohide="true" data-bs-delay="5000">
 
         <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header">
-                <strong class="me-auto">No past prices</strong>
+                <strong class="me-auto">@ItemName - No past prices</strong>
                 <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
             </div>
 
@@ -46,11 +46,11 @@ else if (priceHistory.Count().Equals(0))
 else if(priceHistory is not null)
 {
 
-<div class="toast-container p-3 @showClass" data-bs-autohide="true" data-bs-delay="5000">
-      
+    <div class="toast-container position-fixed start-0 p-3 mt-5 @showClass" style="top: 100px;" data-bs-autohide="true" data-bs-delay="5000">
+        
     <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-header">
-            <strong class="me-auto">@priceHistory.FirstOrDefault().ItemID</strong>
+            <strong class="me-auto">@ItemName - @priceHistory.FirstOrDefault().ItemID</strong>
             <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
         </div>
 
@@ -88,11 +88,14 @@ else if(priceHistory is not null)
     [Parameter]
     public string? BodyText { get; set; }
 
-    public void Show(List<PriceHistory> priceHistories)
+    private string ItemName = string.Empty;
+
+    public void Show(List<PriceHistory> priceHistories, string itemname)
     {
         // HeaderText = headerText;
         // BodyText = bodyText;
-         IsVisible = true;
+        IsVisible = true;
+        ItemName = itemname;
 
         priceHistory = priceHistories;
 
