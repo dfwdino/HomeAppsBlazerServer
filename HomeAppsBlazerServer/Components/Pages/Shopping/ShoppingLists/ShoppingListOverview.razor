@@ -46,6 +46,7 @@
 </div>
 
 <!-- Shopping List Content -->
+
 <div class="shopping-list-container">
     @if (CurrentShoppingList is null)
     {
@@ -67,11 +68,12 @@
     }
     else
     {
+
         <div class="card shadow-sm">
             <div class="card-header bg-light">
                 <div class="d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Shopping List</h5>
-                    <span class="badge bg-primary">@CurrentShoppingList.Count items</span>
+                    <span class="badge bg-primary">@CurrentShoppingList.Count items - @TotalPrice.ToString("C")</span>
                 </div>
             </div>
             <div class="card-body p-0">
@@ -179,6 +181,9 @@
     private PriceHistoryOverview popupRef;
     private string ItemName = string.Empty;
 
+    private decimal TotalPrice { get; set; } = 0;
+
+  
     private void ShowHistory(int id)
     {
 
@@ -194,6 +199,11 @@
     {
         CurrentShoppingList = await GetShoppingItems();
 
+       
+        TotalPrice = CurrentShoppingList
+                    .Where(m => m.Price.HasValue)
+                    .Sum(m => m.Price.Value * (m.NumberOfItems ?? 1));
+       
     }
 
 
