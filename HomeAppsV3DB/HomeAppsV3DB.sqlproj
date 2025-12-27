@@ -65,6 +65,12 @@
     <Folder Include="Security\" />
     <Folder Include="Auto\" />
     <Folder Include="Auto\Tables\" />
+    <Folder Include="workout\" />
+    <Folder Include="workout\Tables\" />
+    <Folder Include="Weight\" />
+    <Folder Include="Weight\Tables\" />
+    <Folder Include="Kids\" />
+    <Folder Include="Kids\Tables\" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Shopping\Tables\ShoppingItemList.sql" />
@@ -88,6 +94,24 @@
     <Build Include="Auto\Tables\GasStations.sql" />
     <Build Include="Auto\Tables\Cars.sql" />
     <Build Include="Security\Auto.sql" />
+    <Build Include="dbo\Tables\Receipts.sql" />
+    <Build Include="workout\Tables\CardioSessions.sql" />
+    <Build Include="workout\Tables\WeightTrainingSessions.sql" />
+    <Build Include="workout\Tables\Locations.sql" />
+    <Build Include="workout\Tables\CardioTypes.sql" />
+    <Build Include="workout\Tables\WorkoutTypes.sql" />
+    <Build Include="Weight\Tables\Journal.sql" />
+    <Build Include="Kids\Tables\WeeklyPaymentStatuses.sql" />
+    <Build Include="Kids\Tables\ApiKeys.sql" />
+    <Build Include="Kids\Tables\ChoreCompletions.sql" />
+    <Build Include="Kids\Tables\ChoreItems.sql" />
+    <Build Include="Kids\Tables\Locations.sql" />
+    <Build Include="Kids\Tables\Kids.sql" />
+    <Build Include="Kids\Tables\Users.sql" />
+    <Build Include="Security\IIS APPPOOL_No Managed Code.sql" />
+    <Build Include="Security\workout.sql" />
+    <Build Include="Security\Weight.sql" />
+    <Build Include="Security\Kids.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="LocalToProject.scmp" />

@@ -1,0 +1,3 @@
+﻿CREATE SCHEMA [Kids]
+    AUTHORIZATION [dbo];
+
