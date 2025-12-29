@@ -1,0 +1,136 @@
+﻿@page "/edit-brands"
+@page "/edit-brands/{Id:int}"
+
+@using System.ComponentModel.DataAnnotations
+@using HomeAppsBlazerServer.Models
+@using HomeAppsBlazerServer.Models.Shopping
+@using HomeAppsBlazerServer.Servcies
+@using HomeAppsBlazerServer.Servcies.Shopping
+@using Microsoft.AspNetCore.Mvc
+
+@inject IShoppingServices ShoppingServices
+@inject NavigationManager NavigationManger
+
+
+
+@rendermode InteractiveServer
+
+@layout HomeAppsBlazerServer.Components.Layout.Shopping.ShoppingLayout
+
+@if (Id is null)
+{
+    <h3>Add New ItemBrands</h3>
+}
+else
+{
+    <h3>Update @_ItemBrand.BrandName</h3>
+}
+
+
+<EditForm Model="_ItemBrand" OnValidSubmit="HandleSubmit">
+    <DataAnnotationsValidator />
+   
+    <div class="container">
+
+        <div class="row">
+
+            <div class="col-lg-2">
+                <label for="itemsname">Store Name:</label>
+            </div>
+            <div class="col-lg-2">
+                <InputText id="storename" @bind-Value="@_ItemBrand.BrandName" />
+                <div class="text-danger">
+                    <ValidationMessage For="@(() => _ItemBrand.BrandName)" />
+                </div>
+            </div>
+        </div>
+
+
+
+        <div style="padding-bottom:20px" />
+
+        <div class="row">
+            <div class="col-md-2" style="padding-bottom:20px">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+            <div class="col-md-2" style="padding-bottom:20px">
+                <button type="button" class="btn btn-primary" @onclick="@(() => Cancel())">Cancel</button>
+            </div>
+        </div>
+
+        @if (Id is not null)
+        {
+            <button class="btn btn-primary" @onclick="@(() => DeleteStore())">Delete</button>
+        }
+
+    </div>
+
+</EditForm>
+
+
+
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+
+    public ItemBrand _ItemBrand  { get; set; } = new() { BrandName = string.Empty };
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id is not null)
+        {
+            var shoppingstore = await ShoppingServices.GetItemBrandseByIDAsync((int)(Id));
+
+            if (shoppingstore is not null)
+            {
+                _ItemBrand = shoppingstore;
+            }
+        }
+
+    }
+
+    [HttpPost]
+    //not working
+    async Task DeleteStore()
+    {
+        //delete
+        await ShoppingServices.RemoveShoppingStore((int)Id);
+
+        NavigationManger.NavigateTo($"/ItemBrand/");
+    }
+
+    async Task HandleSubmit()
+    {
+        if (string.IsNullOrEmpty(_ItemBrand.BrandName))
+            return;
+
+        if (Id is not null)
+        {
+            //update
+            await ShoppingServices.UpdateItemBrand(_ItemBrand, (int)Id);
+            NavigationManger.NavigateTo($"/ItemBrand/");
+        }
+        else 
+        {
+            //add
+            await ShoppingServices.AddItemBrandAsyn(_ItemBrand);
+            NavigationManger.NavigateTo($"/ItemBrand/");
+        }
+
+    }
+
+    async Task Cancel()
+    {
+        NavigationManger.NavigateTo($"ItemBrand/");
+    }
+
+
+}
+
+
+<style>
+    .row {
+        padding-bottom: 5px;
+    }
+</style>

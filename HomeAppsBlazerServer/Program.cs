@@ -1,5 +1,6 @@
 using HomeAppsBlazerServer.Components;
 using HomeAppsBlazerServer.Data;
+using HomeAppsBlazerServer.Models.Shopping;
 using HomeAppsBlazerServer.Servcies.Auto;
 using HomeAppsBlazerServer.Servcies.Chore;
 using HomeAppsBlazerServer.Servcies.Shopping;
@@ -24,6 +25,7 @@ builder.Services.AddScoped<CarService, CarService>();
 builder.Services.AddScoped<IGasStationService, GasStationService>();
 builder.Services.AddScoped<GasTypeService, GasTypeService>();
 builder.Services.AddScoped<MileageEntryService, MileageEntryService>();
+builder.Services.AddScoped<ItemBrand, ItemBrand>();
 
 
 builder.Services.AddServerSideBlazor().AddCircuitOptions(options =>

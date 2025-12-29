@@ -13,6 +13,8 @@
         public decimal? LastPrice { get; set; }  // Nullable in case no price is found
 
         public DateTime? GotItemDate { get; set; }
+
+        public string ItemBrandName { get; set; }
     }
 
 }

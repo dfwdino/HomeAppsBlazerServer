@@ -15,6 +15,13 @@ namespace HomeAppsBlazerServer.Models.Shopping
         public bool ElliottDontLike { get; set; }
 
         public int? StoreID { get; set; }
+        public int? ItemBrandsID { get; set; }
+
+        public ItemBrand? ItemBrand { get; set; }
+
+        public ShoppingStore? Store { get; set; }
+
+
 
     }
 }

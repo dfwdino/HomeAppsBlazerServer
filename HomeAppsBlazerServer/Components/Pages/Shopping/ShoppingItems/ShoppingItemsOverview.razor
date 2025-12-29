@@ -106,7 +106,7 @@
                                     <td>
                                         <div class="d-flex flex-wrap align-items-center">
                                             <span class="fw-bold link-primary me-2" style="cursor: pointer" @onclick="@(() => AddItemToList(item.ShoppingItemID))">
-                                                @item.ItemName
+                                                @(string.IsNullOrWhiteSpace(item.ItemBrandName) ? item.ItemName : $"{item.ItemBrandName} - {item.ItemName}")
                                             </span>
 
                                             @if (item.StoreName is not null)

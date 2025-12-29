@@ -56,6 +56,21 @@
                     </div>
                 </div>
 
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <label for="brainName" class="form-label">Brand:</label>
+                    </div>
+                    <div class="col-md-9">
+                        <BlazorBootstrap.AutoComplete @bind-Value="BrandName"
+                                                      TItem="ItemBrand"
+                                                      DataProvider="CustomersDataProvider"
+                                                      PropertyName="BrandName"
+                                                      Placeholder="Search for a brand..."
+                                                      OnChanged="(ItemBrand brand) => OnAutoCompleteChanged(brand)"
+                                                      class="form-control" />
+                    </div>
+                </div>
+
                 <div class="row mb-3 align-items-center">
                     <div class="col-md-3">
                         <label for="storeName" class="form-label mb-0">Store:</label>
@@ -70,6 +85,8 @@
                                                       class="form-control" />
                     </div>
                 </div>
+
+
 
                 <hr class="my-4">
 
@@ -165,10 +182,9 @@
 
     public string StoreName { get; set; } = string.Empty;
     public string ItemName { get; set; } = string.Empty;
+    public string BrandName { get; set; } = string.Empty;
 
     public ShoppingItem CurrentShoppingitems { get; set; } = new() { ItemName = string.Empty };
-
-
 
 
     private async Task<AutoCompleteDataProviderResult<ShoppingStore>> CustomersDataProvider(BlazorBootstrap.AutoCompleteDataProviderRequest<ShoppingStore> request)
@@ -185,6 +201,27 @@
         return await Task.FromResult(new AutoCompleteDataProviderResult<ShoppingItem> { Data = customers, TotalCount = customers.Count() });
     }
 
+    private async Task<AutoCompleteDataProviderResult<ItemBrand>> CustomersDataProvider(BlazorBootstrap.AutoCompleteDataProviderRequest<ItemBrand> request)
+    {
+        var customers = await ShoppingServices.GetItemBrandsAsync(request.Filter.Value); // API call
+
+        return await Task.FromResult(new AutoCompleteDataProviderResult<ItemBrand> { Data = customers, TotalCount = customers.Count() });
+
+    }
+
+
+
+    private void OnAutoCompleteChanged(ItemBrand customer)
+    {
+        if (customer != null)
+        {
+            CurrentShoppingitems.ItemBrandsID = customer.ItemBrandsId;
+            Console.WriteLine($"'{customer?.BrandName}' selected.");
+
+        }
+
+    }
+
     private void OnAutoCompleteChanged(ShoppingItem item)
     {
         if (item != null)
@@ -193,19 +230,14 @@
             CurrentShoppingitems.ItemName = item.ItemName;
         }
 
-        //StateHasChanged();
     }
-
-
 
     private void OnAutoCompleteChanged(ShoppingStore customer)
     {
         if (customer != null)
             CurrentShoppingitems.StoreID = customer.ShoppingStoreID;
-       
-        //StateHasChanged();
-    }
 
+    }
 
     protected override async Task OnParametersSetAsync()
     {
@@ -216,8 +248,9 @@
             if (shoppingitems is not null)
             {
                 CurrentShoppingitems = shoppingitems;
-                //StoreName = CurrentShoppingitems.StoreName;
-                
+                StoreName = CurrentShoppingitems.Store?.StoreName;
+                BrandName = CurrentShoppingitems.ItemBrand?.BrandName;
+
             }
             ///Need to fix when null
         }

@@ -83,6 +83,8 @@
                     </div>
                 </div>
 
+               
+
                 <div class="row mb-3">
                     <div class="col-md-3">
                         <label for="needDate" class="form-label">Need Date:</label>
@@ -190,6 +192,7 @@
                                     { Data = customers, TotalCount = customers.Count() });
 
     }
+     
 
     private async Task<AutoCompleteDataProviderResult<ShoppingItem>> 
                 CustomersDataProvider(BlazorBootstrap.AutoCompleteDataProviderRequest<ShoppingItem> request)
@@ -200,6 +203,8 @@
             { Data = customers, TotalCount = customers.Count() });
 
     }
+
+   
 
     private void OnAutoCompleteChanged(ShoppingItem customer)
     {
@@ -222,6 +227,8 @@
     }
 
 
+
+
     protected override async Task OnParametersSetAsync()
     {
         if (Id.HasValue)
@@ -232,10 +239,10 @@
             {
                 CurrentShoppingitems = shoppingitems;
                 StoreName = CurrentShoppingitems.StoreName;
-                ItemName = CurrentShoppingitems.ItemName;
+                ItemName =  $"{CurrentShoppingitems.BrandName} {CurrentShoppingitems.ItemName}";
                 CurrentShoppingitems.ShoppingItemList = shoppingitems.ShoppingItemList;
                 CurrentShoppingitems.ShoppingItemList.NeedDate = shoppingitems.ShoppingItemList.NeedDate;
-
+               
             }
 
         }
@@ -300,6 +307,7 @@
         else
         {
             //add
+            
             ShoppingServices.CreateListItem(CurrentShoppingitems.ShoppingItemList);
             NavigationManager.NavigateTo($"ShoppingList/");
         }

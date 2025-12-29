@@ -92,7 +92,7 @@
                                     <td>
                                         <div class="d-flex flex-column flex-md-row align-items-md-center">
                                             <span class="fw-bold me-md-2" style="cursor: pointer" @onclick="@(() => GotItem(item.ShoppingItemListID))">
-                                                @item.ItemName
+                                                @(string.IsNullOrWhiteSpace(item.BrandName) ? item.ItemName : $"{item.BrandName} - {item.ItemName}")
                                             </span>
 
                                             <div class="item-details d-flex flex-wrap align-items-center mt-1 mt-md-0">

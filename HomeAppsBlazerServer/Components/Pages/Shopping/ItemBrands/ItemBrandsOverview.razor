@@ -1,0 +1,91 @@
+﻿@page "/ItemBrand"
+
+@using HomeAppsBlazerServer.Models
+@using HomeAppsBlazerServer.Models.Shopping
+@using HomeAppsBlazerServer.Servcies
+@using HomeAppsBlazerServer.Servcies.Shopping
+
+@*Endalbes it*@
+@* @rendermode InteractiveServer *@
+
+@* jackes up the view of the table *@
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+
+@* Loads as it as it download it. *@
+@* @attribute [StreamRendering] *@
+
+@inject IShoppingServices ShoppingServices
+@inject NavigationManager NavigationManger
+
+@layout HomeAppsBlazerServer.Components.Layout.Shopping.ShoppingLayout
+
+<PageTitle>Shopping Stores</PageTitle>
+<h3>Shopping Stores</h3>
+
+@if (AllItemBrands is null)
+{    
+    <p><em>Loading stores....</em></p>
+}
+else if (AllItemBrands.Count.Equals(0))
+{
+    <p><em>No stores found....</em></p>
+}
+else
+{
+    <div class="container">
+        <!-- Headers Row -->
+        <div class="row border-bottom py-2 fw-bold">
+            <div class="col-md-4">Store Name</div>
+            <div class="col-md-2">Status</div>
+        </div>
+
+        <!-- Data Rows -->
+        @foreach (var store in AllItemBrands)
+        {
+            <div class="row border-bottom py-2">
+                <div class="col-md-4 link-primary" @onclick="@(() => EditStore(store.ItemBrandsId))">
+                    @store.BrandName
+                </div>
+                <div class="col-md-2">
+                    <span class="link-primary" @onclick="@(() => DeleteStore(store.ItemBrandsId))">
+                        @(store.IsDeleted == false ? "Active" : "Hidden")
+                    </span>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div style="padding-top:40px" />
+
+    <button class="btn btn-primary" @onclick="AddStore">Add Store</button>
+
+}
+
+
+
+
+@code {
+    List<ItemBrand> AllItemBrands;
+
+    protected override async Task OnInitializedAsync()
+    {
+        AllItemBrands = await ShoppingServices.GetItemBrandsAsync();
+    }
+
+    void EditStore(int id)
+    {
+        NavigationManger.NavigateTo($"/edit-brands/{id}");
+    }
+    void AddStore()
+    {
+        NavigationManger.NavigateTo($"/edit-brands/");
+    }
+
+    async Task DeleteStore(int id)
+    {
+        //delete
+        await ShoppingServices.RemoveItemBrands((int)id);
+        AllItemBrands = await ShoppingServices.GetItemBrandsAsync();
+    }
+}

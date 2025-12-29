@@ -60,7 +60,10 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
 
         public async Task<ShoppingItem> GetShoppingItemByIDAsync(int id)
         {
-            var shoppingitem = await myDbContext.ShoppingItems.FirstOrDefaultAsync(mm => mm.ShoppingItemID.Equals(id));
+            var shoppingitem = await myDbContext.ShoppingItems
+                 .Include(i => i.ItemBrand)
+                 .Include(i => i.Store)
+                .FirstOrDefaultAsync(mm => mm.ShoppingItemID.Equals(id));
             return shoppingitem;
         }
 
@@ -134,6 +137,10 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
                             KidsDontLike = item.si.KidsDontLike,
                             FreddyDontLike = item.si.FreddyDontLike,
                             ElliottDontLike = item.si.ElliottDontLike,
+                            ItemBrandName = myDbContext.ItemBrands
+                                .Where(ib => ib.ItemBrandsId == item.si.ItemBrandsID)
+                                .Select(ib => ib.BrandName)
+                                .FirstOrDefault(),
                             StoreName = item.store != null ? item.store.StoreName : null,
                             LastPrice = myDbContext.PriceHistory
                                 .Where(ph => ph.ItemID == item.si.ShoppingItemID)
@@ -289,6 +296,94 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
         #endregion End Shopping Store
 
 
+        #region Shopping Brands
+        public async Task AddItemBrandAsyn(ItemBrand itemBrand)
+        {
+            itemBrand.BrandName = itemBrand.BrandName.ToTileCase();
+            itemBrand.IsDeleted = false;
+            myDbContext.ItemBrands.Add(itemBrand);
+            try
+            {
+                await myDbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex.Message);
+            }
+
+
+
+
+        }
+
+        public async Task<ItemBrand> GetItemBrandseByIDAsync(int id)
+        {
+            var itemBrand = await myDbContext.ItemBrands.FirstOrDefaultAsync(mm => mm.ItemBrandsId.Equals(id));
+            return itemBrand;
+        }
+
+        public async Task<List<ItemBrand>> GetItemBrandsAsync(string filter = "")
+        {
+            var storequery = myDbContext.ItemBrands.Where(mm => mm.IsDeleted == false).AsQueryable();
+
+            if (!filter.IsNullOrEmpty())
+            {
+                storequery = storequery.Where(mm => mm.BrandName.Contains(filter));
+            }
+
+            List<ItemBrand> resutls = new List<ItemBrand>();
+
+            try
+            {
+                resutls = await storequery.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex.Message);
+            }
+
+            return resutls;
+        }
+
+        public async Task RemoveItemBrands(int id)
+        {
+            var itembrand = await myDbContext.ItemBrands.FirstOrDefaultAsync(mm => mm.ItemBrandsId.Equals(id));
+
+            if (itembrand != null)
+            {
+                //myDbContext.ShoppingStores.Remove(shoppingstore);
+                itembrand.IsDeleted = true;
+
+                try
+                {
+                    await myDbContext.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    var asdfa = ex.Message;
+                }
+
+            }
+        }
+
+        public async Task UpdateItemBrand(ItemBrand updateshoppingStore, int id)
+        {
+            var currentbrand = await myDbContext.ItemBrands.FirstOrDefaultAsync(mm => mm.ItemBrandsId.Equals(id));
+
+            if (currentbrand != null)
+            {
+                currentbrand.BrandName = updateshoppingStore.BrandName;
+                await myDbContext.SaveChangesAsync();
+
+            }
+        }
+
+        #endregion End Shopping Store
+
+
+
         #region Need List
 
         public async Task AddItemToList(int id)
@@ -336,6 +431,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
             List<ShoppingStore> shoppingStores = myDbContext.ShoppingStores.Where(mm => mm.IsDeleted == false).ToList();
             List<ShoppingItemList> shoppingItemList = myDbContext.ShoppingItemList.Where(mm => mm.GotItem == false).ToList();
             List<PriceHistory> priceHistory = myDbContext.PriceHistory.ToList();
+            List<ItemBrand> itemBrands = myDbContext.ItemBrands.Where(mm => mm.IsDeleted == false).ToList();
 
             try
             {
@@ -348,7 +444,8 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
                         storename = shoppingStores.Where(mm => mm.ShoppingStoreID == item.ShoppingStoreID).FirstOrDefault()?.StoreName,
                         Price = priceHistory.Where(mm => mm.ItemID == item.ShoppingItemID).OrderByDescending(mm => mm.PriceDate).Select(mm => mm.Amount).FirstOrDefault(),
                         NumberOfItems = item.NumberOfItems,
-                        ShoppingItemListID = item.ShoppingItemListID
+                        ShoppingItemListID = item.ShoppingItemListID,
+                        BrandName = itemBrands.Where(mm => mm.ItemBrandsId == shoppingItems.Where(mm => mm.ShoppingItemID == item.ShoppingItemID).FirstOrDefault().ItemBrandsID).FirstOrDefault()?.BrandName
                     });
                 }
             }
@@ -374,6 +471,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
                 {
                     results.StoreName = myDbContext.ShoppingStores.Where(mm => mm.ShoppingStoreID.Equals(results.ShoppingItemList.ShoppingStoreID)).FirstOrDefault()?.StoreName;
                     results.ItemName = myDbContext.ShoppingItems.Where(mm => mm.ShoppingItemID.Equals(results.ShoppingItemList.ShoppingItemID)).FirstOrDefault().ItemName;
+                    results.BrandName = myDbContext.ItemBrands.Where(mm => mm.ItemBrandsId.Equals(myDbContext.ShoppingItems.Where(ss => ss.ShoppingItemID.Equals(results.ShoppingItemList.ShoppingItemID)).FirstOrDefault().ItemBrandsID)).FirstOrDefault()?.BrandName;
                     var price = myDbContext.PriceHistory.Where(mm => mm.ItemID.Equals(results.ShoppingItemList.ShoppingItemID)).OrderByDescending(mm => mm.PriceHistoryID).FirstOrDefault()?.Amount;
 
                     if (string.IsNullOrEmpty(price.ToString()) && price > 0)
@@ -398,6 +496,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
 
         public async void CreateListItem(ShoppingItemList shoppingItemList)
         {
+            //Need to fix the BrandID;
             myDbContext.ShoppingItemList.Add(shoppingItemList);
             myDbContext.SaveChanges();
         }

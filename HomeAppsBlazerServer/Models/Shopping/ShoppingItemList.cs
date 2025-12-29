@@ -21,6 +21,7 @@ namespace HomeAppsBlazerServer.Models.Shopping
 
         public int? NumberOfItems { get; set; }
 
+        
     }
 
 
