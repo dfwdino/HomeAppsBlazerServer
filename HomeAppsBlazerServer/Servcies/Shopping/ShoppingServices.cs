@@ -2,6 +2,7 @@
 using HomeAppsBlazerServer.Data;
 using HomeAppsBlazerServer.Models;
 using HomeAppsBlazerServer.Models.Shopping;
+using HomeAppsBlazerServer.Models.Shopping.Interface;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualBasic;
@@ -123,7 +124,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
         public async Task<List<ShoppingDetailItem>> GetShoppingItemsAsync(bool showallitems = false, string filter = "")
         {
 
-            var query = myDbContext.ShoppingItems.AsQueryable();
+            IQueryable<ShoppingItem> query = myDbContext.ShoppingItems.AsQueryable();
 
             if (!showallitems)
             {
