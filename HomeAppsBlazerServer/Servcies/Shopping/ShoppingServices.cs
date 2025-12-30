@@ -89,18 +89,33 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
         {
 
             var query = myDbContext.ShoppingItems
-                        .Where(mm1 => !myDbContext.ShoppingItemList
-                            .Where(mm => mm.GotItem == false)
-                            .Select(mm => mm.ShoppingItemID)
-                            .Contains(mm1.ShoppingItemID))
-                        .AsQueryable();
+                         .Include(mm => mm.ItemBrand)
+                         .Include(mm => mm.Store)
+                         .Where(mm => mm.IsDeleted == false)
+                         .Where(mm1 => !myDbContext.ShoppingItemList
+                             .Where(mm => mm.GotItem == false)
+                             .Select(mm => mm.ShoppingItemID)
+                             .Contains(mm1.ShoppingItemID))
+                         .Select(mm => new ShoppingItem
+                         {
+                             ShoppingItemID = mm.ShoppingItemID,
+                             ItemName = (mm.ItemBrand != null ? string.Concat( mm.ItemBrand.BrandName, " - ") : "") + mm.ItemName,
+                             IsGlutenFree = mm.IsGlutenFree,
+                             KidsDontLike = mm.KidsDontLike,
+                             FreddyDontLike = mm.FreddyDontLike,
+                             ElliottDontLike = mm.ElliottDontLike,
+                             StoreID = mm.StoreID,
+                             ItemBrandsID = mm.ItemBrandsID,
+                             ItemBrand = mm.ItemBrand,
+                             Store = mm.Store
+                         })
+                         .AsQueryable();
 
             if (filter.Length > 0)
             {
                 query = query.Where(mm => mm.ItemName.Contains(filter));
             }
 
-            // If filter is empty, return all items
             return query.ToList();
         }
 
