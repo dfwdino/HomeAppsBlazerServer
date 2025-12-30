@@ -5,6 +5,7 @@ using HomeAppsBlazerServer.Models.Shopping;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualBasic;
+using System.Linq;
 
 namespace HomeAppsBlazerServer.Servcies.Shopping
 {
@@ -88,7 +89,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
         public async Task<List<ShoppingItem>> GetShoppingItemsFilterAsync(string filter = "")
         {
 
-            var query = myDbContext.ShoppingItems
+            IQueryable<ShoppingItem> queryShoppingItem = myDbContext.ShoppingItems
                          .Include(mm => mm.ItemBrand)
                          .Include(mm => mm.Store)
                          .Where(mm => mm.IsDeleted == false)
@@ -113,10 +114,10 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
 
             if (filter.Length > 0)
             {
-                query = query.Where(mm => mm.ItemName.Contains(filter));
+                queryShoppingItem = queryShoppingItem.Where(mm => mm.ItemName.Contains(filter));
             }
 
-            return query.ToList();
+            return queryShoppingItem.ToList();
         }
 
         public async Task<List<ShoppingDetailItem>> GetShoppingItemsAsync(bool showallitems = false, string filter = "")
