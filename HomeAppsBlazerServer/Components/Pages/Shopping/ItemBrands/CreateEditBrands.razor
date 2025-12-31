@@ -19,12 +19,14 @@
 
 @if (Id is null)
 {
-    <h3>Add New ItemBrands</h3>
+    <h3>Add New Item Brand</h3>
 }
 else
 {
     <h3>Update @_ItemBrand.BrandName</h3>
 }
+
+<br/>
 
 
 <EditForm Model="_ItemBrand" OnValidSubmit="HandleSubmit">
@@ -35,7 +37,7 @@ else
         <div class="row">
 
             <div class="col-lg-2">
-                <label for="itemsname">Store Name:</label>
+                <label for="itemsname">Brand Name:</label>
             </div>
             <div class="col-lg-2">
                 <InputText id="storename" @bind-Value="@_ItemBrand.BrandName" />
@@ -45,23 +47,24 @@ else
             </div>
         </div>
 
-
-
         <div style="padding-bottom:20px" />
 
         <div class="row">
-            <div class="col-md-2" style="padding-bottom:20px">
-                <button type="submit" class="btn btn-primary">Submit</button>
+            <div class="col-md-3" style="padding-bottom:20px">
+                <button type="submit" class="btn btn-primary" style="margin-right:20px;">Submit</button> 
+
+                <button type="button" class="btn btn-primary" style="margin-right:20px;" @onclick ="@(() => Cancel())">Cancel</button>
+
+                @if (Id is not null)
+                {
+                    <button class="btn btn-primary" @onclick="@(() => Delete())">Delete</button>
+                }
+
             </div>
-            <div class="col-md-2" style="padding-bottom:20px">
-                <button type="button" class="btn btn-primary" @onclick="@(() => Cancel())">Cancel</button>
-            </div>
+        
         </div>
 
-        @if (Id is not null)
-        {
-            <button class="btn btn-primary" @onclick="@(() => DeleteStore())">Delete</button>
-        }
+       
 
     </div>
 
@@ -92,12 +95,12 @@ else
 
     [HttpPost]
     //not working
-    async Task DeleteStore()
+    async Task Delete()
     {
         //delete
         await ShoppingServices.RemoveShoppingStore((int)Id);
 
-        NavigationManger.NavigateTo($"/ItemBrand/");
+        NavigationManger.NavigateTo($"ItemBrand/");
     }
 
     async Task HandleSubmit()
@@ -109,13 +112,13 @@ else
         {
             //update
             await ShoppingServices.UpdateItemBrand(_ItemBrand, (int)Id);
-            NavigationManger.NavigateTo($"/ItemBrand/");
+            NavigationManger.NavigateTo($"ItemBrand/");
         }
         else 
         {
             //add
             await ShoppingServices.AddItemBrandAsyn(_ItemBrand);
-            NavigationManger.NavigateTo($"/ItemBrand/");
+            NavigationManger.NavigateTo($"ItemBrand/");
         }
 
     }

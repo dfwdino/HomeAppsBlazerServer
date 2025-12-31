@@ -112,6 +112,10 @@
     <Build Include="Security\workout.sql" />
     <Build Include="Security\Weight.sql" />
     <Build Include="Security\Kids.sql" />
+    <Build Include="Shopping\Tables\ItemBrands.sql" />
+    <Build Include="Security\NT AUTHORITY_NETWORK SERVICE.sql" />
+    <Build Include="Security\NT AUTHORITY_Local account.sql" />
+    <Build Include="Security\RoleMemberships.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="LocalToProject.scmp" />

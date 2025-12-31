@@ -21,7 +21,11 @@ namespace HomeAppsBlazerServer.Models.Shopping
 
         public int? NumberOfItems { get; set; }
 
-        
+        public int? SizeID { get; set; }
+        public string? Notes { get; set; }
+        public int? SizeAmount { get; set; }
+
+
     }
 
 
