@@ -98,7 +98,7 @@ else
     async Task Delete()
     {
         //delete
-        await ShoppingServices.RemoveShoppingStore((int)Id);
+        await ShoppingServices.RemoveItemBrands((int)Id);
 
         NavigationManger.NavigateTo($"ItemBrand/");
     }

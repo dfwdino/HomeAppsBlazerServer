@@ -70,7 +70,7 @@ else
 
         @if (Id is not null)
         {
-            <button class="btn btn-primary" @onclick="@(() => DeleteStore())">Delete</button>
+            <button type="button" class="btn btn-primary" @onclick="@(() => DeleteStore(CurrentShoppingStore))">Delete</button>
         }
 
     </div>
@@ -100,12 +100,13 @@ else
 
     }
 
-    [HttpPost]
+
     //not working
-    async Task DeleteStore()
+    async Task DeleteStore(ShoppingStore store)
     {
         //delete
-        await ShoppingServices.RemoveShoppingStore((int)Id);
+        store.IsDeleted = true;
+        await ShoppingServices.RemoveShoppingStore(store);
 
         NavigationManger.NavigateTo($"/ShoppingStores/");
     }
@@ -118,7 +119,7 @@ else
         if (Id is not null)
         {
             //update
-            await ShoppingServices.UpdateShoppingStore(CurrentShoppingStore, (int)Id);
+            await ShoppingServices.UpdateShoppingStore(CurrentShoppingStore);
             NavigationManger.NavigateTo($"/ShoppingStores/");
         }
         else 

@@ -91,7 +91,7 @@
                                 <tr id="@item.ShoppingItemListID">
                                     <td>
                                         <div class="d-flex flex-column flex-md-row align-items-md-center">
-                                            <span class="fw-bold me-md-2" style="cursor: pointer" @onclick="@(() => GotItem(item.ShoppingItemListID))">
+                                            <span class="fw-bold me-md-2" style="cursor: pointer" @onclick="@(() => GotItem(item))">
                                                 @(string.IsNullOrWhiteSpace(item.BrandName) ? item.ItemName : $"{item.BrandName} - {item.ItemName}")
                                             </span>
 
@@ -217,11 +217,14 @@
         NavigationManger.NavigateTo($"CreateEditListItem/{id}");
     }
 
-    async Task GotItem(int id)
+    async Task GotItem(ShoppingItemResult itemgot)
     {
-        await ShoppingServices.GotItem((int)id);
-        CurrentShoppingList.Remove(CurrentShoppingList.First(m => m.ShoppingItemListID == id));
-        //await JsRuntime.InvokeVoidAsync("alert", "Item Added");
+        bool success = await ShoppingServices.GotItem(itemgot.ShoppingItemListID);
+
+        if (success)
+            CurrentShoppingList.Remove(itemgot);
+        
+            //await JsRuntime.InvokeVoidAsync("alert", "Item Added");
 
     }
 

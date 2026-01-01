@@ -48,7 +48,7 @@ else
                     @store.StoreName @(@store.Address != null ? " - " + store.Address : "")
                 </div>
                 <div class="col-md-2">
-                    <span class="link-primary" @onclick="@(() => DeleteStore(store.ShoppingStoreID))">
+                    <span class="link-primary" @onclick="@(() => DeleteStore(store))">
                         @(store.IsDeleted == false ? "Active" : "Hidden")
                     </span>
                 </div>
@@ -82,10 +82,11 @@ else
         NavigationManger.NavigateTo($"/edit-store/");
     }
 
-    async Task DeleteStore(int id)
+    async Task DeleteStore(ShoppingStore store)
     {
         //delete
-        await ShoppingServices.RemoveShoppingStore((int)id);
-        AllShoppingStores = await ShoppingServices.GetShoppingStoresAsync();
+        store.IsDeleted = true;
+        await ShoppingServices.RemoveShoppingStore(store);
+        AllShoppingStores.Remove(store);
     }
 }

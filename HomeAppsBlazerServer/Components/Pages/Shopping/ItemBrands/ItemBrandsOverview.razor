@@ -21,15 +21,15 @@
 @layout HomeAppsBlazerServer.Components.Layout.Shopping.ShoppingLayout
 
 <PageTitle>Shopping Brandss</PageTitle>
-<h3>Shopping Brandss</h3>
+<h3>Shopping Brands</h3>
 
 @if (AllItemBrands is null)
 {    
-    <p><em>Loading Brandss....</em></p>
+    <p><em>Loading Brands....</em></p>
 }
 else if (AllItemBrands.Count.Equals(0))
 {
-    <p><em>No Brandss found....</em></p>
+    <p><em>No Brands found....</em></p>
 }
 else
 {
@@ -39,31 +39,29 @@ else
             <div class="col-md-2">Brands Name</div>
 
         </div>
-
-        <!-- Data Rows -->
+ 
         @foreach (var Brands in AllItemBrands)
         {
             <div class="row border-bottom py-1">
-                <div class="col-md-4 link-primary" @onclick="@(() => EditBrands(Brands.ItemBrandsId))">
-                    @Brands.BrandName
-
-                    <span class="link-primary" @onclick="@(() => DeleteBrands(Brands.ItemBrandsId))">
-                        - @(Brands.IsDeleted == false ? "Active" : "Hidden")
+                <div>
+                    <span class="col-md-4 link-primary" @onclick="@(() => EditBrands(Brands.ItemBrandsId))">
+                        @Brands.BrandName
                     </span>
-                  
+
+                    <span class="link-primary" @onclick="@(() => DeleteBrands(Brands))">
+                        - @(Brands.IsDeleted == false ? "Disable" : "Enable")
+                    </span>
                 </div>
-               
+
             </div>
         }
     </div>
 
     <div style="padding-top:40px" />
 
-    <button class="btn btn-primary" @onclick="AddBrands">Add Brands</button>
+    <button class="btn btn-primary" @onclick="AddBrands">Add Brand</button>
 
 }
-
-
 
 
 @code {
@@ -83,10 +81,11 @@ else
         NavigationManger.NavigateTo($"edit-brands/");
     }
 
-    async Task DeleteBrands(int id)
+    async Task DeleteBrands(ItemBrand brand)
     {
-        //delete
-        await ShoppingServices.RemoveItemBrands((int)id);
-        AllItemBrands = await ShoppingServices.GetItemBrandsAsync();
+        await ShoppingServices.RemoveItemBrands(brand.ItemBrandsId);
+
+        AllItemBrands.Remove(brand);
+
     }
 }

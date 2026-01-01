@@ -277,17 +277,14 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
             return resutls;
         }
 
-        public async Task RemoveShoppingStore(int id)
+        public async Task RemoveShoppingStore(ShoppingStore store)
         {
-            var shoppingstore = await myDbContext.ShoppingStores.FirstOrDefaultAsync(mm => mm.ShoppingStoreID.Equals(id));
-
-            if (shoppingstore != null)
-            {
-                //myDbContext.ShoppingStores.Remove(shoppingstore);
-                shoppingstore.IsDeleted = true;
-
+           
+            if (store != null)
+            {   
                 try
                 {
+                    myDbContext.ShoppingStores.Update(store);
                     await myDbContext.SaveChangesAsync();
                 }
                 catch (Exception ex)
@@ -298,17 +295,11 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
             }
         }
 
-        public async Task UpdateShoppingStore(ShoppingStore updateshoppingStore, int id)
+        public async Task UpdateShoppingStore(ShoppingStore updateshoppingStore)
         {
-            var currentshoppingstore = await myDbContext.ShoppingStores.FirstOrDefaultAsync(mm => mm.ShoppingStoreID.Equals(id));
-
-            if (currentshoppingstore != null)
-            {
-                currentshoppingstore.StoreName = updateshoppingStore.StoreName;
-                currentshoppingstore.Address = updateshoppingStore.Address;
+            
+                myDbContext.Update(updateshoppingStore);
                 await myDbContext.SaveChangesAsync();
-
-            }
         }
 
         #endregion End Shopping Store
@@ -526,7 +517,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
         }
 
 
-        public async Task GotItem(int id)
+        public async Task<bool> GotItem(int id)
         {
 
             ShoppingItemList currentitem = myDbContext.ShoppingItemList.FirstOrDefault(mm => mm.ShoppingItemListID.Equals(id));
@@ -535,6 +526,8 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
             currentitem.GotItemDate = DateTime.Now;
 
             await myDbContext.SaveChangesAsync();
+
+            return true;
 
 
         }
