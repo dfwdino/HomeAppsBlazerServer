@@ -215,7 +215,7 @@
     {
         if (customer != null)
         {
-            CurrentShoppingitems.ItemBrandsID = customer.ItemBrandsId;
+            CurrentShoppingitems?.ItemBrand?.ItemBrandsId = customer.ItemBrandsId;
             Console.WriteLine($"'{customer?.BrandName}' selected.");
 
         }

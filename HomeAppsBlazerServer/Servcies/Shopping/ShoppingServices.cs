@@ -32,6 +32,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
 
             shoppingItem.ItemName = shoppingItem.ItemName.ToTileCase();
 
+
             myDbContext.ShoppingItems.Add(shoppingItem);
 
             try
@@ -107,7 +108,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
                              FreddyDontLike = mm.FreddyDontLike,
                              ElliottDontLike = mm.ElliottDontLike,
                              StoreID = mm.StoreID,
-                             ItemBrandsID = mm.ItemBrandsID,
+                             //ItemBrandsID = mm.ItemBrandsID,
                              ItemBrand = mm.ItemBrand,
                              Store = mm.Store
                          })
@@ -155,7 +156,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
                             FreddyDontLike = item.si.FreddyDontLike,
                             ElliottDontLike = item.si.ElliottDontLike,
                             ItemBrandName = myDbContext.ItemBrands
-                                .Where(ib => ib.ItemBrandsId == item.si.ItemBrandsID)
+                                .Where(ib => ib.ItemBrandsId == item.si.ItemBrand.ItemBrandsId)
                                 .Select(ib => ib.BrandName)
                                 .FirstOrDefault(),
                             StoreName = item.store != null ? item.store.StoreName : null,
@@ -462,7 +463,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
                         Price = priceHistory.Where(mm => mm.ItemID == item.ShoppingItemID).OrderByDescending(mm => mm.PriceDate).Select(mm => mm.Amount).FirstOrDefault(),
                         NumberOfItems = item.NumberOfItems,
                         ShoppingItemListID = item.ShoppingItemListID,
-                        BrandName = itemBrands.Where(mm => mm.ItemBrandsId == shoppingItems.Where(mm => mm.ShoppingItemID == item.ShoppingItemID).FirstOrDefault().ItemBrandsID).FirstOrDefault()?.BrandName
+                        BrandName = itemBrands.Where(mm => mm.ItemBrandsId == shoppingItems.Where(mm => mm.ShoppingItemID == item.ShoppingItemID).FirstOrDefault()?.ItemBrand?.ItemBrandsId).FirstOrDefault()?.BrandName
                     });
                 }
             }
@@ -488,7 +489,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
                 {
                     results.StoreName = myDbContext.ShoppingStores.Where(mm => mm.ShoppingStoreID.Equals(results.ShoppingItemList.ShoppingStoreID)).FirstOrDefault()?.StoreName;
                     results.ItemName = myDbContext.ShoppingItems.Where(mm => mm.ShoppingItemID.Equals(results.ShoppingItemList.ShoppingItemID)).FirstOrDefault().ItemName;
-                    results.BrandName = myDbContext.ItemBrands.Where(mm => mm.ItemBrandsId.Equals(myDbContext.ShoppingItems.Where(ss => ss.ShoppingItemID.Equals(results.ShoppingItemList.ShoppingItemID)).FirstOrDefault().ItemBrandsID)).FirstOrDefault()?.BrandName;
+                    results.BrandName = myDbContext.ItemBrands.Where(mm => mm.ItemBrandsId.Equals(myDbContext.ShoppingItems.Where(ss => ss.ShoppingItemID.Equals(results.ShoppingItemList.ShoppingItemID)).FirstOrDefault().ItemBrand.ItemBrandsId)).FirstOrDefault()?.BrandName;
                     var price = myDbContext.PriceHistory.Where(mm => mm.ItemID.Equals(results.ShoppingItemList.ShoppingItemID)).OrderByDescending(mm => mm.PriceHistoryID).FirstOrDefault()?.Amount;
 
                     if (string.IsNullOrEmpty(price.ToString()) && price > 0)

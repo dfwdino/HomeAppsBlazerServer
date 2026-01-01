@@ -110,7 +110,27 @@
                     <div class="col-md-9">
                         <div class="input-group">
                             <span class="input-group-text">$</span>
-                            <InputText id="price" @bind-Value="CurrentShoppingitems.Price" type="number" step="0.01" class="form-control" placeholder="0.00" />
+                            <InputText id="price" @bind-Value="CurrentShoppingitems.Price" type="number" step="0.01" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <label for="numberOfItems" class="form-label">Size Amount:</label>
+                    </div>
+                    <div class="col-md-9">
+                        <InputNumber id="numberOfItems" @bind-Value="CurrentShoppingitems.ShoppingItemList.SizeAmount" class="form-control" />
+                    </div>
+                </div>
+  
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <label for="price" class="form-label">Notes:</label>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="input-group">
+                            <InputText id="price" @bind-Value="CurrentShoppingitems.ShoppingItemList.Notes" type="number" class="form-control"/>
                         </div>
                     </div>
                 </div>
@@ -192,7 +212,7 @@
                                     { Data = customers, TotalCount = customers.Count() });
 
     }
-     
+
 
     private async Task<AutoCompleteDataProviderResult<ShoppingItem>> 
                 CustomersDataProvider(BlazorBootstrap.AutoCompleteDataProviderRequest<ShoppingItem> request)
@@ -204,7 +224,7 @@
 
     }
 
-   
+
 
     private void OnAutoCompleteChanged(ShoppingItem customer)
     {
@@ -242,7 +262,9 @@
                 ItemName =  $"{CurrentShoppingitems.BrandName} {CurrentShoppingitems.ItemName}";
                 CurrentShoppingitems.ShoppingItemList = shoppingitems.ShoppingItemList;
                 CurrentShoppingitems.ShoppingItemList.NeedDate = shoppingitems.ShoppingItemList.NeedDate;
-               
+                CurrentShoppingitems.ShoppingItemList.SizeAmount = shoppingitems.ShoppingItemList.SizeAmount;
+                CurrentShoppingitems.ShoppingItemList.Notes = shoppingitems.ShoppingItemList.Notes;
+
             }
 
         }
