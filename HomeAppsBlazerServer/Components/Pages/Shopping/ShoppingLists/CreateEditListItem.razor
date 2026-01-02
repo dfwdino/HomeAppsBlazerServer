@@ -39,11 +39,11 @@
     <div class="container">
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-primary text-white">
-                
+
                 @if (Id is null)
                 {
                     <h4 class="mb-0">Add Shopping Item</h4>
-                    
+
                 }
                 else
                 {
@@ -83,17 +83,6 @@
                     </div>
                 </div>
 
-               
-
-                <div class="row mb-3">
-                    <div class="col-md-3">
-                        <label for="needDate" class="form-label">Need Date:</label>
-                    </div>
-                    <div class="col-md-9">
-                        <InputDate id="needDate" @bind-Value="CurrentShoppingitems.ShoppingItemList.NeedDate" class="form-control" />
-                    </div>
-                </div>
-
                 <div class="row mb-3">
                     <div class="col-md-3">
                         <label for="numberOfItems" class="form-label">Number of Items:</label>
@@ -115,27 +104,49 @@
                     </div>
                 </div>
 
-                <div class="row mb-3">
-                    <div class="col-md-3">
-                        <label for="numberOfItems" class="form-label">Size Amount:</label>
-                    </div>
-                    <div class="col-md-9">
-                        <InputNumber id="numberOfItems" @bind-Value="CurrentShoppingitems.ShoppingItemList.SizeAmount" class="form-control" />
-                    </div>
-                </div>
-  
-                <div class="row mb-3">
-                    <div class="col-md-3">
-                        <label for="price" class="form-label">Notes:</label>
-                    </div>
-                    <div class="col-md-9">
-                        <div class="input-group">
-                            <InputText id="price" @bind-Value="CurrentShoppingitems.ShoppingItemList.Notes" type="number" class="form-control"/>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                <div id="ExtraFields" style="cursor: pointer; text-decoration: underline; padding-bottom:20px"
+                      @onclick="ToggleDiv">
 
+                    @ShowFieldsText
+
+                </div>
+
+                    @if (ShowExtraFields)
+                    {
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <label for="needDate" class="form-label">Need Date:</label>
+                            </div>
+                            <div class="col-md-9">
+                                <InputDate id="needDate" @bind-Value="CurrentShoppingitems.ShoppingItemList.NeedDate" class="form-control" />
+                            </div>
+                        </div>
+
+
+
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <label for="numberOfItems" class="form-label">Size Amount:</label>
+                            </div>
+                            <div class="col-md-9">
+                                <InputNumber id="numberOfItems" @bind-Value="CurrentShoppingitems.ShoppingItemList.SizeAmount" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <label for="price" class="form-label">Notes:</label>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    <InputText id="price" @bind-Value="CurrentShoppingitems.ShoppingItemList.Notes" type="number" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                    }
+             
+
+            </div>
             <div class="card-footer bg-light">
                 <div class="row">
                     <div class="col-12 d-flex justify-content-end gap-2">
@@ -152,10 +163,8 @@
     </div>
 </EditForm>
 
-<!-- Add this to your _Imports.razor or component -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
 
-<!-- Add this to your site.css or component style section -->
 <style>
     .shopping-form .form-label {
         font-weight: 500;
@@ -175,23 +184,38 @@
     }
 
     @@media (max-width: 768px) {
-        .shopping-form .col-md-3
-
-    {
-        margin-bottom: 0.5rem;
-    }
-
+        .shopping-form .col-md-3 {
+            margin-bottom: 0.5rem;
+        }
     }
 </style>
 
 @code {
     [Parameter]
     public int? Id { get; set; }
+    public bool ShowExtraFields { get; set; } = false;
+    public string ShowFieldsText { get; set; } = "Show Fields";
 
     public string StoreName, ItemName, pressedKey = string.Empty;
 
 
     public ListItemModel CurrentShoppingitems { get; set; } = new();
+
+
+    private void ToggleDiv()
+    {
+        ShowExtraFields = !ShowExtraFields;
+
+        if (ShowExtraFields)
+        {
+            ShowFieldsText = "Hide Fields";
+        }
+        else
+        {
+            ShowFieldsText = "Show Fields";
+        }
+
+    }
 
     private void HandleKeyDown(KeyboardEventArgs e)
     {
@@ -203,24 +227,24 @@
         CurrentShoppingitems = currentShoppingitems;
     }
 
-    private async Task<AutoCompleteDataProviderResult<ShoppingStore>> 
+    private async Task<AutoCompleteDataProviderResult<ShoppingStore>>
                 CustomersDataProvider(BlazorBootstrap.AutoCompleteDataProviderRequest<ShoppingStore> request)
     {
         var customers = await ShoppingServices.GetShoppingStoresAsync(request.Filter.Value); // API call
 
-        return await Task.FromResult(new AutoCompleteDataProviderResult<ShoppingStore> 
-                                    { Data = customers, TotalCount = customers.Count() });
+        return await Task.FromResult(new AutoCompleteDataProviderResult<ShoppingStore>
+        { Data = customers, TotalCount = customers.Count() });
 
     }
 
 
-    private async Task<AutoCompleteDataProviderResult<ShoppingItem>> 
+    private async Task<AutoCompleteDataProviderResult<ShoppingItem>>
                 CustomersDataProvider(BlazorBootstrap.AutoCompleteDataProviderRequest<ShoppingItem> request)
     {
         var customers = await ShoppingServices.GetShoppingItemsFilterAsync(request.Filter.Value); // API call
 
-        return await Task.FromResult(new AutoCompleteDataProviderResult<ShoppingItem> 
-            { Data = customers, TotalCount = customers.Count() });
+        return await Task.FromResult(new AutoCompleteDataProviderResult<ShoppingItem>
+        { Data = customers, TotalCount = customers.Count() });
 
     }
 
@@ -234,11 +258,11 @@
 
     private void OnAutoCompleteChanged(ShoppingStore customer)
     {
-        if(customer is null)
+        if (customer is null)
         {
             CurrentShoppingitems.ShoppingItemList.ShoppingStoreID = null;
             CurrentShoppingitems.StoreName = string.Empty;
-            return; 
+            return;
 
         }
 
@@ -259,7 +283,7 @@
             {
                 CurrentShoppingitems = shoppingitems;
                 StoreName = CurrentShoppingitems.StoreName;
-                ItemName =  $"{CurrentShoppingitems.BrandName} {CurrentShoppingitems.ItemName}";
+                ItemName = $"{CurrentShoppingitems.BrandName} {CurrentShoppingitems.ItemName}";
                 CurrentShoppingitems.ShoppingItemList = shoppingitems.ShoppingItemList;
                 CurrentShoppingitems.ShoppingItemList.NeedDate = shoppingitems.ShoppingItemList.NeedDate;
                 CurrentShoppingitems.ShoppingItemList.SizeAmount = shoppingitems.ShoppingItemList.SizeAmount;
@@ -269,16 +293,6 @@
 
         }
 
-    }
-
-    [HttpPost]
-    //not working
-    async Task Deleteitems()
-    {
-        //delete
-        await ShoppingServices.RemoveShoppingItem((int)Id);
-
-        NavigationManager.NavigateTo($"ShoppingItems/");
     }
 
     [HttpPost]
@@ -301,10 +315,10 @@
         if (Id is not null)
         {
 
-            if(!string.IsNullOrEmpty(CurrentShoppingitems.Price))
+            if (!string.IsNullOrEmpty(CurrentShoppingitems.Price))
             {
-                await ShoppingServices.AddPriceToHistry(CurrentShoppingitems.ShoppingItemList.ShoppingItemID, 
-                            Convert.ToDecimal(CurrentShoppingitems.Price), 
+                await ShoppingServices.AddPriceToHistry(CurrentShoppingitems.ShoppingItemList.ShoppingItemID,
+                            Convert.ToDecimal(CurrentShoppingitems.Price),
                             CurrentShoppingitems.ShoppingItemList.ShoppingStoreID);
             }
             //update
@@ -315,7 +329,7 @@
         else if (String.IsNullOrEmpty(ItemName))
         {
             ShoppingItem newshoppingitem = new ShoppingItem() { ItemName = ItemName };
-         
+
             newshoppingitem = await ShoppingServices.AddShoppingItemAsyn(newshoppingitem);
 
             ShoppingServices.CreateListItem(CurrentShoppingitems.ShoppingItemList);
@@ -329,7 +343,7 @@
         else
         {
             //add
-            
+
             ShoppingServices.CreateListItem(CurrentShoppingitems.ShoppingItemList);
             NavigationManager.NavigateTo($"ShoppingList/");
         }
@@ -339,21 +353,3 @@
     }
 
 }
-
-@* <style>
-    .valid.modified:not([type=checkbox]) {
-        outline: 1px solid #26b050;
-    }
-
-    .invalid {
-        outline: 1px solid red;
-    }
-
-    .validation-message {
-        color: red;
-    }
-
-    .row {
-        padding-bottom: 5px;
-    }
-</style> *@
