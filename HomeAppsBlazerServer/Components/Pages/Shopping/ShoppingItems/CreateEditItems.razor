@@ -87,6 +87,18 @@
                 </div>
 
 
+                <div class="row mb-3 align-items-center">
+                    <div class="col-md-3">
+                        <label for="KidsDontLike" class="form-label mb-0">One Time Item:</label>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <InputCheckbox id="KidsDontLike" @bind-Value="@CurrentShoppingitems.IsOneTimeOnly" class="form-check-input" />
+                            <label class="form-check-label" for="KidsDontLike">Yes</label>
+                        </div>
+                    </div>
+                </div>
+
 
                 <hr class="my-4">
 
@@ -106,6 +118,7 @@
                                 </div>
                             </div>
                         </div>
+
 
                         <div class="row mb-3 align-items-center">
                             <div class="col-md-3">

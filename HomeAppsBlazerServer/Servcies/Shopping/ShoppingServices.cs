@@ -522,6 +522,17 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
 
             ShoppingItemList currentitem = myDbContext.ShoppingItemList.FirstOrDefault(mm => mm.ShoppingItemListID.Equals(id));
 
+            ///TODO: Move this to a Funtion call.
+            ShoppingItem shoppingItem = myDbContext.ShoppingItems.FirstOrDefault(mm => mm.ShoppingItemID.Equals(currentitem.ShoppingItemID));
+
+            if(shoppingItem.IsOneTimeOnly)
+            {
+                shoppingItem.IsDeleted = true;
+                myDbContext.ShoppingItems.Update(shoppingItem);
+                
+            }
+
+
             currentitem.GotItem = true;
             currentitem.GotItemDate = DateTime.Now;
 
