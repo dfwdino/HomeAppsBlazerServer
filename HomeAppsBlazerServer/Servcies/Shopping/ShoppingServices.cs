@@ -207,10 +207,6 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
         {
             var currentshoppingItem = await myDbContext.ShoppingItems.FirstOrDefaultAsync(mm => mm.ShoppingItemID.Equals(id));
 
-            //var asdfasd = myDbContext.ShoppingItems.Where(m => m.ShoppingItemID == id).Select(m => m.StoreID).ToList();
-
-            //int? storeid = await myDbContext.ShoppingItems.Where(m => m.ShoppingItemID == id).Select(m => m.StoreID).FirstOrDefaultAsync();
-
             if (currentshoppingItem != null)
             {
                 currentshoppingItem.ItemName = shoppingItem.ItemName;
@@ -527,11 +523,9 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
 
             if(shoppingItem.IsOneTimeOnly)
             {
-                shoppingItem.IsDeleted = true;
-                myDbContext.ShoppingItems.Update(shoppingItem);
+                RemoveShoppingItem(shoppingItem.ShoppingItemID);
                 
             }
-
 
             currentitem.GotItem = true;
             currentitem.GotItemDate = DateTime.Now;
