@@ -16,5 +16,6 @@ namespace HomeAppsBlazerServer.Models.Shopping
         public string? storename { get; set; }
 
         public string? BrandName { get; set; }
+        public DateTime? NeedDate { get; set; }
     }
 }

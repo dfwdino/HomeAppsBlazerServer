@@ -450,6 +450,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
                         Price = priceHistory.Where(mm => mm.ItemID == item.ShoppingItemID).OrderByDescending(mm => mm.PriceDate).Select(mm => mm.Amount).FirstOrDefault(),
                         NumberOfItems = item.NumberOfItems,
                         ShoppingItemListID = item.ShoppingItemListID,
+                        NeedDate = item.NeedDate,
                         BrandName = itemBrands.Where(mm => mm.ItemBrandsId == shoppingItems.Where(mm => mm.ShoppingItemID == item.ShoppingItemID).FirstOrDefault()?.ItemBrand?.ItemBrandsId).FirstOrDefault()?.BrandName
                     });
                 }
