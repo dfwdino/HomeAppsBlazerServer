@@ -409,7 +409,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
 
             //I think this will error out b/c the object is not coreated yet. 
             shoppingItemList.ShoppingItemID = id;
-            shoppingItemList.NeedDate = DateTime.Now;
+            //shoppingItemList.NeedDate = DateTime.Now;
             shoppingItemList.ShoppingStoreID = shoppingItem.StoreID;
 
 

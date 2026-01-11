@@ -68,8 +68,7 @@
     }
     else
     {
-        <ShoppingListNeedDate 
-                Items="@CurrentShoppingList.Where(mm => mm.NeedDate < DateTime.Now.AddDays(-5) || mm.NeedDate is null)"
+        <ShoppingListNeedDate Items="@CurrentShoppingList.Where(mm => (mm.NeedDate >= DateTime.Now.AddDays(-5) && mm.NeedDate<= DateTime.Now.AddDays(5)) || mm.NeedDate is null)"
                 FilterDate="@DateTime.Now.AddDays(-5)"
                 OnItemClick="@GotItem"
                 OnShowHistory="@ShowHistory"
@@ -80,7 +79,7 @@
                 <br />
 
         <ShoppingListNeedDate
-                Items="@CurrentShoppingList.Where(mm => mm.NeedDate > DateTime.Now.AddDays(5))"
+                Items="@CurrentShoppingList.Where(mm => mm.NeedDate >= DateTime.Now.AddDays(5))"
                 FilterDate="@DateTime.Now.AddDays(5)"
                 OnItemClick="@GotItem"
                 OnShowHistory="@ShowHistory"
@@ -155,9 +154,9 @@
         CurrentShoppingList = await GetShoppingItems();
 
        
-        TotalPrice = CurrentShoppingList
-                    .Where(m => m.Price.HasValue)
-                    .Sum(m => m.Price.Value * (m.NumberOfItems ?? 1));
+        // TotalPrice = CurrentShoppingList
+        //             .Where(m => m.Price.HasValue)
+        //             .Sum(m => m.Price.Value * (m.NumberOfItems ?? 1));
        
     }
 
