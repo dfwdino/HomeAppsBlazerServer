@@ -134,7 +134,6 @@
     private PriceHistoryOverview popupRef;
     private string ItemName = string.Empty;
 
-    private decimal TotalPrice { get; set; } = 0;
     private int daysAhead = 2;
 
   
@@ -152,12 +151,6 @@
     protected override async Task OnInitializedAsync()
     {
         CurrentShoppingList = await GetShoppingItems();
-
-       
-        // TotalPrice = CurrentShoppingList
-        //             .Where(m => m.Price.HasValue)
-        //             .Sum(m => m.Price.Value * (m.NumberOfItems ?? 1));
-       
     }
 
 

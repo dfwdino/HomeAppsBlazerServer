@@ -579,14 +579,16 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
 
             List<PriceHistory> itemPrice = myDbContext.PriceHistory
                      .Where(mm => mm.ItemID == itemid)
+                     .Include(i => i.Store)
                      .OrderByDescending(mm => mm.PriceDate)
                      .Join(myDbContext.ShoppingItems, mm => mm.ItemID, si => si.ShoppingItemID, (mm, si) => new PriceHistory
                      {
                          Amount = mm.Amount,
-                         //ItemName = si.ItemName,
                          PriceHistoryID = mm.PriceHistoryID,
                          PriceDate = mm.PriceDate,
-                         ItemID = mm.ItemID
+                         ItemID = mm.ItemID,
+                         StoreID = mm.StoreID,
+                         Store = mm.Store
 
 
                      })

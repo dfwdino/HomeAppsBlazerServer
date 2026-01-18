@@ -1,4 +1,5 @@
-﻿using HomeAppsBlazerServer.Models.Shopping.Interface;
+﻿using HomeAppsBlazerServer.Models.Shopping;
+using HomeAppsBlazerServer.Models.Shopping.Interface;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -13,6 +14,8 @@ namespace HomeAppsBlazerServer.Models
         public DateTime PriceDate { get; set; }
         public int ItemID { get; set; }
         public int? StoreID { get; set; }
+
+        public ShoppingStore? Store { get; set; }
 
 
     }
