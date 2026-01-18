@@ -68,8 +68,8 @@
     }
     else
     {
-        <ShoppingListNeedDate Items="@CurrentShoppingList.Where(mm => (mm.NeedDate >= DateTime.Now.AddDays(-5) && mm.NeedDate<= DateTime.Now.AddDays(5)) || mm.NeedDate is null)"
-                FilterDate="@DateTime.Now.AddDays(-5)"
+        <ShoppingListNeedDate Items="@CurrentShoppingList.Where(mm => (mm.NeedDate >= DateTime.Now.AddDays(-daysAhead) && mm.NeedDate <= DateTime.Now.AddDays(daysAhead)) || mm.NeedDate is null)"
+                              FilterDate="@DateTime.Now.AddDays(-daysAhead)"
                 OnItemClick="@GotItem"
                 OnShowHistory="@ShowHistory"
                 OnEditItem="@EditItem" />
@@ -78,9 +78,8 @@
                 <hr >
                 <br />
 
-        <ShoppingListNeedDate
-                Items="@CurrentShoppingList.Where(mm => mm.NeedDate >= DateTime.Now.AddDays(5))"
-                FilterDate="@DateTime.Now.AddDays(5)"
+        <ShoppingListNeedDate Items="@CurrentShoppingList.Where(mm => mm.NeedDate >= DateTime.Now.AddDays(daysAhead))"
+                              FilterDate="@DateTime.Now.AddDays(daysAhead)"
                 OnItemClick="@GotItem"
                 OnShowHistory="@ShowHistory"
                 OnEditItem="@EditItem" />
@@ -136,6 +135,7 @@
     private string ItemName = string.Empty;
 
     private decimal TotalPrice { get; set; } = 0;
+    private int daysAhead = 2;
 
   
     private void ShowHistory(int id)

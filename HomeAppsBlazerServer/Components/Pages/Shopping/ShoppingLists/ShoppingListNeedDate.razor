@@ -3,7 +3,7 @@
    <div class="card shadow-sm">
             <div class="card-header bg-light">
                 <div class="d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Items needed @(FilterDate > DateTime.Now ? "AFTER" : "BEFORE") @FilterDate.ToShortDateString()</h5>
+            <h5 class="mb-0">Items needed @(FilterDate > DateTime.Now ? "SOON" : "NOW")</h5>
             <span class="badge bg-primary">@Items.Count() items - @Items.Sum(mm => mm.Price.GetValueOrDefault()).ToString("C")</span>
                 </div>
             </div>
@@ -12,8 +12,7 @@
                     <table class="table table-hover mb-0">
 
 <tbody class="table table-hover mb-0">
-                 
-    @foreach (var item in Items)
+                    @foreach (var item in Items.OrderBy(mm => mm?.NeedDate).ThenBy(mm => mm.ItemName))
     {
         <tr id="@item.ShoppingItemListID">
             <td>
