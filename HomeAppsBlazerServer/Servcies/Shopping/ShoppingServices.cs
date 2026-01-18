@@ -26,7 +26,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
         {
 
 
-            bool FoundItem = myDbContext.ShoppingItems.Any(x => x.ItemName == shoppingItem.ItemName);
+            bool FoundItem = myDbContext.ShoppingItems.Any(x => x.ItemName == shoppingItem.ItemName && x.ItemBrand.ItemBrandsId == shoppingItem.ItemBrandID);
 
             if (FoundItem) { return null; }
 

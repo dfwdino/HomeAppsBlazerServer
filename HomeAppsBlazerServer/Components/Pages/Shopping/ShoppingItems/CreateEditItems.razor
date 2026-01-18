@@ -224,12 +224,12 @@
 
 
 
-    private void OnAutoCompleteChanged(ItemBrand customer)
+    private void OnAutoCompleteChanged(ItemBrand brand)
     {
-        if (customer != null)
+        if (brand != null)
         {
-            CurrentShoppingitems?.ItemBrand?.ItemBrandsId = customer.ItemBrandsId;
-            Console.WriteLine($"'{customer?.BrandName}' selected.");
+            CurrentShoppingitems?.ItemBrandID = brand.ItemBrandsId;
+            Console.WriteLine($"'{brand?.BrandName}' selected.");
 
         }
 
@@ -245,10 +245,10 @@
 
     }
 
-    private void OnAutoCompleteChanged(ShoppingStore customer)
+    private void OnAutoCompleteChanged(ShoppingStore store)
     {
-        if (customer != null)
-            CurrentShoppingitems.StoreID = customer.ShoppingStoreID;
+        if (store != null)
+            CurrentShoppingitems.StoreID = store.ShoppingStoreID;
 
     }
 
@@ -290,27 +290,32 @@
 
     async Task HandleSubmit()
     {
-        if (CurrentShoppingitems.ItemName.Length.Equals(0))
+    
+
+        if (string.IsNullOrEmpty(CurrentShoppingitems.ItemName))
         {
             return;
         }
-        else if (Id is not null) //update
+
+        await (Id switch
         {
-            
-            await ShoppingServices.UpdateShoppingItem(CurrentShoppingitems, (int)Id);
-            NavigationManager.NavigateTo($"Shoppingitems/");
-        }
-        else //add
-        {   
-            await ShoppingServices.AddShoppingItemAsyn(CurrentShoppingitems);
-            
-            CurrentShoppingitems = new();
+            not null => HandleUpdate(),
+            null => HandleAdd(),
+        });
 
-            //NavigationManager.NavigateTo($"ShoppingItems/");
-        }
+    }
 
+    private async Task HandleUpdate()
+    {
+        await ShoppingServices.UpdateShoppingItem(CurrentShoppingitems, (int)Id);
+        NavigationManager.NavigateTo("Shoppingitems/");
+    }
 
-
+    private async Task HandleAdd()
+    {
+        await ShoppingServices.AddShoppingItemAsyn(CurrentShoppingitems);
+        CurrentShoppingitems = new();
+        BrandName = string.Empty;
     }
 
 }
