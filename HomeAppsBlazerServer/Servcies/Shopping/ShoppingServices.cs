@@ -22,11 +22,12 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
         }
 
         #region Items
-        public async Task<ShoppingItem> AddShoppingItemAsyn(ShoppingItem shoppingItem)
+        public async Task<ShoppingItem?> AddShoppingItemAsyn(ShoppingItem shoppingItem,CancellationToken cancellationToken)
         {
 
 
-            bool FoundItem = myDbContext.ShoppingItems.Any(x => x.ItemName == shoppingItem.ItemName && x.ItemBrand.ItemBrandsId == shoppingItem.ItemBrandID);
+            bool FoundItem = await myDbContext.ShoppingItems.AnyAsync(x => x.ItemName == shoppingItem.ItemName 
+                                                            && x.ItemBrand.ItemBrandsId == shoppingItem.ItemBrandID, cancellationToken);
 
             if (FoundItem) { return null; }
 
@@ -54,7 +55,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
                 shoppingListItem.ShoppingStoreID = shoppingItem.StoreID;
             }
 
-            myDbContext.ShoppingItemList.Add(shoppingListItem);
+            await myDbContext.ShoppingItemList.AddAsync(shoppingListItem, cancellationToken);
 
             myDbContext.SaveChanges();
 

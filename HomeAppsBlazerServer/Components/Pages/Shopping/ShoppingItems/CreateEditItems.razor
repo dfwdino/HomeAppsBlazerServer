@@ -313,7 +313,10 @@
 
     private async Task HandleAdd()
     {
-        await ShoppingServices.AddShoppingItemAsyn(CurrentShoppingitems);
+        var cts = new CancellationTokenSource();
+        cts.CancelAfter(TimeSpan.FromSeconds(15));
+
+        await ShoppingServices.AddShoppingItemAsyn(CurrentShoppingitems, cts.Token);
         CurrentShoppingitems = new();
         BrandName = string.Empty;
     }

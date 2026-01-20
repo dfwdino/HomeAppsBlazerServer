@@ -329,8 +329,12 @@
         else if (String.IsNullOrEmpty(ItemName))
         {
             ShoppingItem newshoppingitem = new ShoppingItem() { ItemName = ItemName };
+            var cts = new CancellationTokenSource();
+            cts.CancelAfter(TimeSpan.FromSeconds(15));
+           
 
-            newshoppingitem = await ShoppingServices.AddShoppingItemAsyn(newshoppingitem);
+
+            newshoppingitem = await ShoppingServices.AddShoppingItemAsyn(newshoppingitem, cts.Token);
 
             ShoppingServices.CreateListItem(CurrentShoppingitems.ShoppingItemList);
 
