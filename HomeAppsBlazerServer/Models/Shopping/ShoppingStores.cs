@@ -7,7 +7,6 @@ namespace HomeAppsBlazerServer.Models.Shopping
     [Table("ShoppingStores", Schema = "Shopping")]
     public class ShoppingStore : IShoppingStore
     {
-
         public int ShoppingStoreID { get; set; }
 
         [Required(ErrorMessage = "Store Name is required")]

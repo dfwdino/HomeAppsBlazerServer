@@ -6,5 +6,7 @@
         int ShoppingItemListID { get; set; }
         int? NumberOfItems { get; set; }
         decimal? Price { get; set; }
+
+        string? Notes { get; set; }
     }
 }

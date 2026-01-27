@@ -14,7 +14,10 @@ builder.Services.AddRazorComponents()
 builder.Services.AddBlazorBootstrap();
 
 builder.Services.AddDbContext<MyDbContext>(options =>
-        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+        .LogTo(Console.WriteLine, LogLevel.Information)  // See all queries  Just TESTING
+        .EnableSensitiveDataLogging() // See the actual values being used in the queries  Just TESTING
+    );
 
 builder.Services.AddScoped<IShoppingServices, ShoppingServices>();
 builder.Services.AddScoped<IKidsChorseKidsServices, KidsChorseKidsServices>();

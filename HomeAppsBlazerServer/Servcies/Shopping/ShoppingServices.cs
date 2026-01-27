@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualBasic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace HomeAppsBlazerServer.Servcies.Shopping
 {
@@ -22,11 +23,11 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
         }
 
         #region Items
-        public async Task<ShoppingItem?> AddShoppingItemAsyn(ShoppingItem shoppingItem,CancellationToken cancellationToken)
+        public async Task<ShoppingItem?> AddShoppingItemAsyn(ShoppingItem shoppingItem, CancellationToken cancellationToken)
         {
 
 
-            bool FoundItem = await myDbContext.ShoppingItems.AnyAsync(x => x.ItemName == shoppingItem.ItemName 
+            bool FoundItem = await myDbContext.ShoppingItems.AnyAsync(x => x.ItemName == shoppingItem.ItemName
                                                             && x.ItemBrand.ItemBrandsId == shoppingItem.ItemBrandID, cancellationToken);
 
             if (FoundItem) { return null; }
@@ -67,7 +68,8 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
             var shoppingitem = await myDbContext.ShoppingItems
                  .Include(i => i.ItemBrand)
                  .Include(i => i.Store)
-                .FirstOrDefaultAsync(mm => mm.ShoppingItemID.Equals(id));
+                 .TagWithDebugInfo()
+                 .FirstOrDefaultAsync(mm => mm.ShoppingItemID.Equals(id));
             return shoppingitem;
         }
 
@@ -103,7 +105,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
                          .Select(mm => new ShoppingItem
                          {
                              ShoppingItemID = mm.ShoppingItemID,
-                             ItemName = (mm.ItemBrand != null ? string.Concat( mm.ItemBrand.BrandName, " - ") : "") + mm.ItemName,
+                             ItemName = (mm.ItemBrand != null ? string.Concat(mm.ItemBrand.BrandName, " - ") : "") + mm.ItemName,
                              IsGlutenFree = mm.IsGlutenFree,
                              KidsDontLike = mm.KidsDontLike,
                              FreddyDontLike = mm.FreddyDontLike,
@@ -276,9 +278,9 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
 
         public async Task RemoveShoppingStore(ShoppingStore store)
         {
-           
+
             if (store != null)
-            {   
+            {
                 try
                 {
                     myDbContext.ShoppingStores.Update(store);
@@ -294,9 +296,9 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
 
         public async Task UpdateShoppingStore(ShoppingStore updateshoppingStore)
         {
-            
-                myDbContext.Update(updateshoppingStore);
-                await myDbContext.SaveChangesAsync();
+
+            myDbContext.Update(updateshoppingStore);
+            await myDbContext.SaveChangesAsync();
         }
 
         #endregion End Shopping Store
@@ -452,6 +454,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
                         NumberOfItems = item.NumberOfItems,
                         ShoppingItemListID = item.ShoppingItemListID,
                         NeedDate = item.NeedDate,
+                        Notes = item.Notes,
                         BrandName = itemBrands.Where(mm => mm.ItemBrandsId == shoppingItems.Where(mm => mm.ShoppingItemID == item.ShoppingItemID).FirstOrDefault()?.ItemBrand?.ItemBrandsId).FirstOrDefault()?.BrandName
                     });
                 }
@@ -523,10 +526,10 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
             ///TODO: Move this to a Funtion call.
             ShoppingItem shoppingItem = myDbContext.ShoppingItems.FirstOrDefault(mm => mm.ShoppingItemID.Equals(currentitem.ShoppingItemID));
 
-            if(shoppingItem.IsOneTimeOnly)
+            if (shoppingItem.IsOneTimeOnly)
             {
                 RemoveShoppingItem(shoppingItem.ShoppingItemID);
-                
+
             }
 
             currentitem.GotItem = true;
@@ -607,4 +610,34 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
 
 
     }
+
+
+    //TEST PLAY
+    public static class QueryableExtensions
+    {
+
+        public static IQueryable<T> TagWithDebugInfo<T>(
+                            this IQueryable<T> query,
+                            [CallerMemberName] string memberName ="",
+                            [CallerFilePath] string filePath = "",
+                            [CallerLineNumber] int lineNumber = 0)
+        {
+
+#if !DEBUG
+            return query;
+#endif
+
+            var debugInfo = $"Caller: {memberName}, File: {filePath}, Line: {lineNumber}";
+
+            //can also add other info you wish such as userId etc.
+
+            return query.TagWith(debugInfo); //delegate to built in TagWith
+
+          
+        }
+
+
+
+    }
 }
+

@@ -1,4 +1,5 @@
-﻿@using HomeAppsBlazerServer.Models.Shopping
+﻿@using Microsoft.AspNetCore.Components
+@using HomeAppsBlazerServer.Models.Shopping
 
    <div class="card shadow-sm">
             <div class="card-header bg-light">
@@ -20,6 +21,7 @@
                     <span class="fw-bold me-md-2" style="cursor: pointer" @onclick="@(() => OnItemClick.InvokeAsync(item))">
                         @(string.IsNullOrWhiteSpace(item.BrandName) ? item.ItemName : $"{item.BrandName} - {item.ItemName}")
                                         @(item.NeedDate == null ? "" : " - " + item.NeedDate?.ToShortDateString())
+                                        <span id="notes" style="font-style:italic;color:gray">@((MarkupString)(item.Notes == null ? "" : "<br/> " + item.Notes))</span>
                     </span>
                     <div class="item-details d-flex flex-wrap align-items-center mt-1 mt-md-0">
                         @if (item.NumberOfItems.HasValue)
