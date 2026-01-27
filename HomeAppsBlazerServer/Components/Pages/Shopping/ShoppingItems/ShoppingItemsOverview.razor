@@ -95,7 +95,7 @@
                     <table id="shoppingitems" class="table table-hover table-striped">
                         <thead class="table-light">
                             <tr>
-                                <th>Item Details</th>
+                                <th @onclick="@(() => SortList())">Item Details</th>
                                 <th class="text-end">Actions</th>
                             </tr>
                         </thead>
@@ -148,7 +148,7 @@
 
                                             @if (item.GotItemDate.HasValue)
                                             {
-                                                <span class="badge bg-info text-dark ms-auto">
+                                                <span class="badge bg-info text-dark ms-auto" @onclick="@(() => DateSortList())">
                                                     <i class="bi bi-calendar-check me-1"></i>@item.GotItemDate.Value.ToShortDateString()
                                                 </span>
                                             }
@@ -223,11 +223,45 @@
     List<ShoppingDetailItem> AllShoppingItems;
 
     private bool _showallitems = false;
+    string _Order = "";
+    string _DateOrder = "";
 
    
 
     [Parameter]
     public bool showallitems { get; set; } = false;
+
+    
+    ///TODO Fix this mess, by passing field to short. 
+    private void DateSortList()
+    {
+        if (_DateOrder == "asc")
+        {
+            AllShoppingItems = AllShoppingItems.OrderByDescending(m => m.GotItemDate).ToList();
+            _DateOrder = "desc";
+        }
+        else
+        {
+            AllShoppingItems = AllShoppingItems.OrderBy(m => m.GotItemDate).ToList();
+            _DateOrder = "asc";
+        }
+    }
+
+
+    private void SortList()
+    {
+        if (_Order == "asc")
+        {
+            AllShoppingItems = AllShoppingItems.OrderByDescending(m => m.ItemName).ToList();
+            _Order = "desc";
+        }
+        else
+        {
+            AllShoppingItems = AllShoppingItems.OrderBy(m => m.ItemName).ToList();
+            _Order = "asc";
+        }
+    }
+
 
     // Fix 1: Change the method call to handle errors and be asynchronous
     private async Task ShowHistory(int id)
