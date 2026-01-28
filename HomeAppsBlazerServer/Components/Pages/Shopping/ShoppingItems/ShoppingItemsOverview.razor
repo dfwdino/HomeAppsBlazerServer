@@ -105,9 +105,13 @@
                             { *@
                                 <tr @key="item.ShoppingItemID" id="@item.ShoppingItemID">
                                     <td>
-                                        <div class="d-flex flex-wrap align-items-center">
+                                        <div class="d-flex flex-wrap align-items-center" >
                                             <span class="fw-bold link-primary me-2" style="cursor: pointer" @onclick="@(() => AddItemToList(item.ShoppingItemID))">
                                                 @(string.IsNullOrWhiteSpace(item.ItemBrandName) ? item.ItemName : $"{item.ItemBrandName} - {item.ItemName}")
+                                            </span>
+
+                                            <span class="badge bg-light text-dark" style="margin-right:15px;cursor: pointer" @onclick="@(() => AddItemToList(item.ShoppingItemID, _FutureDate))">
+                                                <i class="bi bi-calendar-check me-1"></i>@GetNexSat().ToShortDateString()
                                             </span>
 
                                             @if (item.StoreName is not null)
@@ -149,14 +153,12 @@
 
                                             @if (item.GotItemDate.HasValue)
                                             {
-                                                <span class="badge bg-info text-dark ms-auto" style="margin-right:15px" @onclick="@(() => DateSortList())">
+                                                <span class="badge bg-info text-dark ms-auto" @onclick="@(() => DateSortList())">
                                                     <i class="bi bi-calendar-check me-1"></i>@item.GotItemDate.Value.ToShortDateString()
                                                 </span>
                                             }
 
-                                            <span class="badge bg-light text-dark" @onclick="@(() => AddItemToList(item.ShoppingItemID, _FutureDate))">
-                                                <i class="bi bi-calendar-check me-1"></i>@GetNexSat().ToShortDateString()
-                                            </span>
+                                           
 
 
                                         </div>
