@@ -100,9 +100,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in AllShoppingItems)
-                            {
-                                <tr id="@item.ShoppingItemID">
+                            <Virtualize Items="@AllShoppingItems" Context="item">
+    @*                         @foreach (var item in AllShoppingItems)
+                            { *@
+                                <tr @key="item.ShoppingItemID" id="@item.ShoppingItemID">
                                     <td>
                                         <div class="d-flex flex-wrap align-items-center">
                                             <span class="fw-bold link-primary me-2" style="cursor: pointer" @onclick="@(() => AddItemToList(item.ShoppingItemID))">
@@ -148,10 +149,16 @@
 
                                             @if (item.GotItemDate.HasValue)
                                             {
-                                                <span class="badge bg-info text-dark ms-auto" @onclick="@(() => DateSortList())">
+                                                <span class="badge bg-info text-dark ms-auto" style="margin-right:15px" @onclick="@(() => DateSortList())">
                                                     <i class="bi bi-calendar-check me-1"></i>@item.GotItemDate.Value.ToShortDateString()
                                                 </span>
                                             }
+
+                                            <span class="badge bg-light text-dark" @onclick="@(() => AddItemToList(item.ShoppingItemID, _FutureDate))">
+                                                <i class="bi bi-calendar-check me-1"></i>@GetNexSat().ToShortDateString()
+                                            </span>
+
+
                                         </div>
                                     </td>
                                     <td class="text-end">
@@ -165,7 +172,8 @@
                                         </div>
                                     </td>
                                 </tr>
-                            }
+                   @*          } *@
+                   </Virtualize>
                         </tbody>
                     </table>
                 </div>
@@ -209,6 +217,11 @@
         }
     }
 
+    .table-responsive {
+        max-height: calc(100vh - 350px);
+        overflow-y: auto;
+    }
+
 </style>
 
 <!-- Add Bootstrap Icons -->
@@ -225,13 +238,14 @@
     private bool _showallitems = false;
     string _Order = "";
     string _DateOrder = "";
+    string _FutureDate = string.Empty;
 
-   
+
 
     [Parameter]
     public bool showallitems { get; set; } = false;
 
-    
+
     ///TODO Fix this mess, by passing field to short. 
     private void DateSortList()
     {
@@ -289,6 +303,7 @@
     {
 
         await GetShoppingItems(_showallitems);
+        _FutureDate = GetNexSat().ToString();
 
     }
 
@@ -321,17 +336,26 @@
         NavigationManger.NavigateTo($"CreateEditListItem/");
     }
 
-    async Task AddItemToList(int id)
+    async Task AddItemToList(int id,string futuredate = "")
     {
-        await ShoppingServices.AddItemToList((int)id);
+        await ShoppingServices.AddItemToList((int)id, futuredate);
         AllShoppingItems.Remove(AllShoppingItems.First(m => m.ShoppingItemID == id));
-       
+
     }
 
     async Task DeleteItem(int id)
     {
         await ShoppingServices.RemoveShoppingItem((int)id);
         AllShoppingItems = await ShoppingServices.GetShoppingItemsAsync();
+    }
+
+    private DateTime GetNexSat()
+    {
+        DateTime today = DateTime.Today;
+        int daysUntilSaturday = ((int)DayOfWeek.Saturday - (int)today.DayOfWeek + 7) % 7;
+        DateTime nextSaturday = today.AddDays(daysUntilSaturday);
+
+        return nextSaturday;
     }
 }
 

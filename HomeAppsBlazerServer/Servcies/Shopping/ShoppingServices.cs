@@ -394,7 +394,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
 
         #region Need List
 
-        public async Task AddItemToList(int id)
+        public async Task AddItemToList(int id,string FutureDate = "")
         {
 
             bool NotOnList = myDbContext.ShoppingItemList.Any(mm => mm.GotItem.Equals(false) && mm.ShoppingItemID == id);
@@ -414,6 +414,8 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
             shoppingItemList.ShoppingItemID = id;
             //shoppingItemList.NeedDate = DateTime.Now;
             shoppingItemList.ShoppingStoreID = shoppingItem.StoreID;
+
+            shoppingItemList.NeedDate = String.IsNullOrEmpty(FutureDate) ? null : DateTime.Parse(FutureDate);
 
 
             myDbContext.ShoppingItemList.Add(shoppingItemList);

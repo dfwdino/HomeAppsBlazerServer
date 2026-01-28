@@ -13,8 +13,9 @@
                     <table class="table table-hover mb-0">
 
 <tbody class="table table-hover mb-0">
-    @foreach (var item in Items.OrderBy(mm => mm.ItemName))
-    {
+@*     @foreach (var item in Items.OrderBy(mm => mm.ItemName))
+    { *@
+        <Virtualize Items="@Items" Context="item">
         <tr id="@item.ShoppingItemListID">
             <td>
                 <div class="d-flex flex-column flex-md-row align-items-md-center">
@@ -51,7 +52,8 @@
                 </button>
             </td>
         </tr>
-    }
+                    </Virtualize>
+                        @*}*@
 </tbody>
 
             </table>
@@ -63,7 +65,7 @@
 
 @code {
     [Parameter, EditorRequired]
-    public IEnumerable<ShoppingItemResult> Items { get; set; } = Enumerable.Empty<ShoppingItemResult>();
+    public List<ShoppingItemResult> Items { get; set; } = new();
 
     [Parameter, EditorRequired]
     public DateTime FilterDate { get; set; }

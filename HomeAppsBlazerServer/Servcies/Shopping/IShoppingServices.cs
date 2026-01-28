@@ -38,7 +38,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
 
 
         #region Need List
-        Task AddItemToList(int id);
+        Task AddItemToList(int id, string futureDate);
 
         Task<bool> GotItem(int id);
 

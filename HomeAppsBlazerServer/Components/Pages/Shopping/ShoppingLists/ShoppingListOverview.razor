@@ -68,7 +68,7 @@
     }
     else
     {
-        <ShoppingListNeedDate Items="@CurrentShoppingList.Where(mm => (mm.NeedDate >= DateTime.Now.AddDays(-daysAhead) && mm.NeedDate <= DateTime.Now.AddDays(daysAhead)) || mm.NeedDate is null)"
+        <ShoppingListNeedDate Items="@CurrentShoppingList.Where(mm => (mm.NeedDate >= DateTime.Now.AddDays(-daysAhead) && mm.NeedDate <= DateTime.Now.AddDays(daysAhead)) || mm.NeedDate is null).OrderBy(mm => mm.ItemName).ToList()"
                               FilterDate="@DateTime.Now.AddDays(-daysAhead)"
                 OnItemClick="@GotItem"
                 OnShowHistory="@ShowHistory"
@@ -78,7 +78,7 @@
                 <hr >
                 <br />
 
-        <ShoppingListNeedDate Items="@CurrentShoppingList.Where(mm => mm.NeedDate >= DateTime.Now.AddDays(daysAhead))"
+        <ShoppingListNeedDate Items="@CurrentShoppingList.Where(mm => mm.NeedDate >= DateTime.Now.AddDays(daysAhead)).ToList()"
                               FilterDate="@DateTime.Now.AddDays(daysAhead)"
                 OnItemClick="@GotItem"
                 OnShowHistory="@ShowHistory"
@@ -91,6 +91,7 @@
 
 <!-- Add these styles to your component or stylesheet -->
 <style>
+
 
 
     .shopping-nav .nav-link {
