@@ -353,11 +353,10 @@
 
     private DateTime GetNexSat()
     {
-        int currentDay = (int)DateTime.Today.DayOfWeek;
-        int daysToAdd = currentDay <= 6 ? 6 - currentDay : 0;
-        if (daysToAdd == 0) daysToAdd = 7;
-
-        DateTime nextSaturday = DateTime.Today.AddDays(daysToAdd);
+        DateTime today = DateTime.Today;
+        int daysUntilSaturday = ((int)DayOfWeek.Saturday - (int)today.DayOfWeek + 7) % 7;
+        daysUntilSaturday = daysUntilSaturday == 0 ? 7 : daysUntilSaturday; // If today is Saturday, get next Saturday
+        DateTime nextSaturday = today.AddDays(daysUntilSaturday);
 
         return nextSaturday;
     }
