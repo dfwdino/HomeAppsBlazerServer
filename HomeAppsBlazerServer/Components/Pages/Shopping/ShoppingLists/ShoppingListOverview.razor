@@ -31,7 +31,7 @@
 <!-- Main Navigation -->
 <div class="shopping-nav card mb-4">
     <div class="card-body p-3">
-        <nav class="nav nav-pills">
+        <nav class="nav nav-pills" style="display: @(isNavVisible ? "block" : "none")">
             <NavLink class="nav-link" href="ShoppingItems" Match="NavLinkMatch.All">
                 <i class="bi bi-grid me-1"></i> All Items
             </NavLink>
@@ -131,12 +131,18 @@
 
 @code {
     List<ShoppingItemResult> CurrentShoppingList;
+    private bool isNavVisible = true;
 
     private PriceHistoryOverview popupRef;
     private string ItemName = string.Empty;
 
     private int daysAhead = 2;
 
+
+    private void OnItemClick()
+    {
+        isNavVisible = isNavVisible ? false : true;
+    }
   
     private void ShowHistory(int id)
     {

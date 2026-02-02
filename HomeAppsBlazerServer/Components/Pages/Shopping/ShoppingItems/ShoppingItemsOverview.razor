@@ -50,17 +50,17 @@
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
             @if (_showallitems == false)
             {
-                <h3 @onclick="@(() => GetShoppingItems(@_showallitems))" class="mb-0">All Items</h3>
+                <h3 @onclick="@(() => GetShoppingItems(@_showallitems))" class="mb-0">All Items</h3> <span onclick="@OnHideShowMenu">@HideMenuText</span>
             }
             else
             {
-                    <h3 @onclick="@(() => GetShoppingItems(@_showallitems))" class="mb-0">Non-List Items</h3>
+                    <h3 @onclick="@(() => GetShoppingItems(@_showallitems))" class="mb-0">Non-List Items</h3> <span onclick="@OnHideShowMenu">@HideMenuText</span>
             }
   
         </div>
 
         <div class="card-body">
-            <div class="d-flex flex-wrap gap-2 mb-4">
+            <div class="@(isNavVisible ? "d-flex flex-wrap gap-2 mb-4" : "d-none flex-wrap gap-2 mb-4")">
                 <button class="btn btn-primary" @onclick="@(() => AddItem())">
                     <i class="bi bi-plus-circle"></i> Add New Item
                 </button>
@@ -235,6 +235,8 @@
 @code {
 
     private PriceHistoryOverview popupRef;
+    private bool isNavVisible = true;
+    private string HideMenuText = "Hide Menu";
 
     List<ShoppingDetailItem> AllShoppingItems;
 
@@ -247,6 +249,13 @@
 
     [Parameter]
     public bool showallitems { get; set; } = false;
+
+
+    private void OnHideShowMenu()
+    {
+        isNavVisible = isNavVisible ? false : true;
+        HideMenuText = isNavVisible ? "Hide Menu" : "Show Menu";
+    }
 
 
     ///TODO Fix this mess, by passing field to short. 
@@ -307,6 +316,7 @@
 
         await GetShoppingItems(_showallitems);
         _FutureDate = GetNexSat().ToString();
+        OnHideShowMenu();
 
     }
 
