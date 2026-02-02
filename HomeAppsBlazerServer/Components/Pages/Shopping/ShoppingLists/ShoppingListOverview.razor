@@ -166,6 +166,7 @@
 
     async Task<List<ShoppingItemResult>> GetShoppingItems()
     {
+        //TODO: should be cached
         return await ShoppingServices.GetAllNeedItemsAsync();
     }
 
