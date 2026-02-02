@@ -144,7 +144,7 @@
 
     private void OnHideShowMenu()
     {
-        isNavVisible = isNavVisible ? false : true;
+        isNavVisible = !isNavVisible;
         HideMenuText = isNavVisible ? "Hide Menu" : "Show Menu";
     }
     private void ShowHistory(int id)
