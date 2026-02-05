@@ -4,9 +4,12 @@ using HomeAppsBlazerServer.Models;
 using HomeAppsBlazerServer.Models.Shopping;
 using HomeAppsBlazerServer.Models.Shopping.Interface;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualBasic;
+using System.Collections;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 
 namespace HomeAppsBlazerServer.Servcies.Shopping
@@ -15,11 +18,15 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
     {
         private readonly MyDbContext myDbContext;
         private readonly ILogger<ShoppingServices> _logger;
+        private readonly IMemoryCache _cache;
 
-        public ShoppingServices(MyDbContext context, ILogger<ShoppingServices> logger)
+        private const string ShoppingItemsCacheKey = "ShoppingItemsCache";
+
+        public ShoppingServices(MyDbContext context, ILogger<ShoppingServices> logger, IMemoryCache cache)
         {
             myDbContext = context;
             _logger = logger;
+            _cache = cache;
         }
 
         #region Items
@@ -60,17 +67,31 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
 
             myDbContext.SaveChanges();
 
+            // Clear the cache so next fetch gets fresh data
+            ClearShoppingItemsCache();
+
             return shoppingItem;
         }
 
         public async Task<ShoppingItem> GetShoppingItemByIDAsync(int id)
-        {
+        {    
             var shoppingitem = await myDbContext.ShoppingItems
                  .Include(i => i.ItemBrand)
                  .Include(i => i.Store)
                  .TagWithDebugInfo()
                  .FirstOrDefaultAsync(mm => mm.ShoppingItemID.Equals(id));
+
+  
+
             return shoppingitem;
+        }
+
+        private void ClearShoppingItemsCache()
+        {  
+            ///TODO: Improve this to only remove relevant cache entries based on filters used.
+            _cache.Remove($"{ShoppingItemsCacheKey}_false_");
+            _cache.Remove($"{ShoppingItemsCacheKey}_true_");
+           
         }
 
         public async Task AddToList(int id)
@@ -128,6 +149,15 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
         public async Task<List<ShoppingDetailItem>> GetShoppingItemsAsync(bool showallitems = false, string filter = "")
         {
 
+            string cacheKey = $"{ShoppingItemsCacheKey}_{showallitems}";
+
+            // Try to get from cache first
+            if (_cache.TryGetValue(cacheKey, out List<ShoppingDetailItem> cachedItems))
+            {
+                return cachedItems;
+            }
+
+
             IQueryable<ShoppingItem> query = myDbContext.ShoppingItems.AsQueryable();
 
             if (!showallitems)
@@ -179,6 +209,12 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
                         .ToList();
 
 
+
+            // Store in cache for 5 minutes
+            var cacheOptions = new MemoryCacheEntryOptions()
+                .SetAbsoluteExpiration(TimeSpan.FromMinutes(15));
+
+            _cache.Set(cacheKey, result, cacheOptions);
 
             return result;
         }

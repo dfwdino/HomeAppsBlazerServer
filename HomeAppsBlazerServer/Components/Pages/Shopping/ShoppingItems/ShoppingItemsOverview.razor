@@ -101,9 +101,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <Virtualize Items="@AllShoppingItems" Context="item">
-    @*                         @foreach (var item in AllShoppingItems)
-                            { *@
+                           @*  <Virtualize Items="@AllShoppingItems" Context="item" ItemSize="40"> *@
+                           @foreach (var item in AllShoppingItems)
+                            { 
                                 <tr @key="item.ShoppingItemID" id="@item.ShoppingItemID">
                                     <td>
                                         <div class="d-flex flex-wrap align-items-center" >
@@ -175,8 +175,8 @@
                                         </div>
                                     </td>
                                 </tr>
-                   @*          } *@
-                   </Virtualize>
+                             } 
+                  @* </Virtualize>*@
                         </tbody>
                     </table>
                 </div>

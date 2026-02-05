@@ -30,6 +30,8 @@ builder.Services.AddScoped<GasTypeService, GasTypeService>();
 builder.Services.AddScoped<MileageEntryService, MileageEntryService>();
 builder.Services.AddScoped<ItemBrand, ItemBrand>();
 
+builder.Services.AddMemoryCache();
+
 
 builder.Services.AddServerSideBlazor().AddCircuitOptions(options =>
 {
