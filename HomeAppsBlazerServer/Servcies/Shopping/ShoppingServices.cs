@@ -210,7 +210,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
 
 
 
-            // Store in cache for 5 minutes
+            // Store in cache for 15 minutes
             var cacheOptions = new MemoryCacheEntryOptions()
                 .SetAbsoluteExpiration(TimeSpan.FromMinutes(15));
 
@@ -223,8 +223,6 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
         {
             var shoppingItem = await myDbContext.ShoppingItems.FirstOrDefaultAsync(mm => mm.ShoppingItemID.Equals(id));
 
-
-
             if (shoppingItem != null)
             {
                 shoppingItem.IsDeleted = true;
@@ -233,13 +231,16 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
                 try
                 {
                     await myDbContext.SaveChangesAsync();
+                    ClearShoppingItemsCache();
                 }
                 catch (Exception ex)
                 {
-                    var asdfa = ex.Message;
+                    var errormessage = ex.Message;
                 }
 
             }
+
+
         }
 
         public async Task UpdateShoppingItem(ShoppingItem shoppingItem, int id)
@@ -562,7 +563,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
             ShoppingItemList currentitem = myDbContext.ShoppingItemList.FirstOrDefault(mm => mm.ShoppingItemListID.Equals(id));
 
             ///TODO: Move this to a Funtion call.
-            ShoppingItem shoppingItem = myDbContext.ShoppingItems.FirstOrDefault(mm => mm.ShoppingItemID.Equals(currentitem.ShoppingItemID));
+            ShoppingItem shoppingItem = myDbContext.ShoppingItems.AsNoTracking().FirstOrDefault(mm => mm.ShoppingItemID.Equals(currentitem.ShoppingItemID));
 
             if (shoppingItem.IsOneTimeOnly)
             {
