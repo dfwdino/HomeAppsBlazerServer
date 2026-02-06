@@ -3,7 +3,8 @@
     "allow": [
       "Bash(dotnet add reference:*)",
       "Bash(del \"C:\\\\Users\\\\Shane\\\\source\\\\repos\\\\HomeAppsBlazerServer\\\\HomeAppsBlazerServer.Tests\\\\UnitTest1.cs\")",
-      "Bash(dotnet test:*)"
+      "Bash(dotnet test:*)",
+      "Bash(dotnet build:*)"
     ]
   }
 }
