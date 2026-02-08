@@ -21,7 +21,7 @@
                 <div class="d-flex flex-column flex-md-row align-items-md-center">
                     <span class="fw-bold me-md-2" style="cursor: pointer" @onclick="@(() => OnItemClick.InvokeAsync(item))">
                         @(string.IsNullOrWhiteSpace(item.BrandName) ? item.ItemName : $"{item.BrandName} - {item.ItemName}")
-                                        @(item.NeedDate == null ? "" : " - " + item.NeedDate?.ToShortDateString())
+                                        
                                         <span id="notes" style="font-style:italic;color:gray">@((MarkupString)(item.Notes == null ? "" : "<br/> " + item.Notes))</span>
                     </span>
                     <div class="item-details d-flex flex-wrap align-items-center mt-1 mt-md-0">
@@ -47,6 +47,9 @@
                 </div>
             </td>
             <td class="text-end">
+                <button class="btn btn-sm btn-outline-primary" @onclick="@(() => ItemOut.InvokeAsync(item.ShoppingItemListID))">
+                    <i class="bi bi-slash-circle me-1"></i>
+                </button>
                 <button class="btn btn-sm btn-outline-primary" @onclick="@(() => OnEditItem.InvokeAsync(item.ShoppingItemListID))">
                     <i class="bi bi-pencil"></i>
                 </button>
@@ -78,4 +81,9 @@
 
     [Parameter]
     public EventCallback<int> OnEditItem { get; set; }
+
+
+    [Parameter]
+    public EventCallback<int> ItemOut { get; set; }
+    
 }

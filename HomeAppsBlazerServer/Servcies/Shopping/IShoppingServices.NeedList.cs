@@ -16,5 +16,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
         void CreateListItem(ShoppingItemList shoppingItemList);
 
         void UpdateListItem(ShoppingItemList shoppingItemList, int id);
+
+        Task UpdateNeedList(ShoppingItemResult shoppingItemResul);
     }
 }

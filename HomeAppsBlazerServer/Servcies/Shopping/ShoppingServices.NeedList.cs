@@ -131,6 +131,19 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
             myDbContext.SaveChanges();
         }
 
+        public async Task UpdateNeedList(ShoppingItemResult needitem) { 
+            
+            ShoppingItemList shoppingItemList = myDbContext.ShoppingItemList.Where(mm => mm.ShoppingItemListID == needitem.ShoppingItemListID).FirstOrDefault();
+            shoppingItemList.Notes = needitem.Notes;
+            shoppingItemList.NeedDate = needitem.NeedDate;
+            shoppingItemList.NumberOfItems = needitem.NumberOfItems;
+            
+            
+            myDbContext.ShoppingItemList.Update(shoppingItemList);
+            myDbContext.SaveChanges();
+
+        }
+
 
         public async Task<bool> GotItem(int id)
         {
