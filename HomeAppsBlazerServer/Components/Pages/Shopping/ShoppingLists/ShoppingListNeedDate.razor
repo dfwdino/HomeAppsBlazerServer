@@ -1,70 +1,77 @@
 ﻿@using Microsoft.AspNetCore.Components
 @using HomeAppsBlazerServer.Models.Shopping
 
-   <div class="card shadow-sm">
-            <div class="card-header bg-light">
-                <div class="d-flex justify-content-between align-items-center">
+<div class="card shadow-sm">
+    <div class="card-header bg-light">
+        <div class="d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Items needed @(FilterDate > DateTime.Now ? "SOON" : "NOW")</h5>
             <span class="badge bg-primary">@Items.Count() items - @Items.Sum(mm => mm.Price.GetValueOrDefault()).ToString("C")</span>
-                </div>
-            </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover mb-0">
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
 
-<tbody class="table table-hover mb-0">
-@*     @foreach (var item in Items.OrderBy(mm => mm.ItemName))
+                <tbody class="table table-hover mb-0">
+                    @*     @foreach (var item in Items.OrderBy(mm => mm.ItemName))
     { *@
-        <Virtualize Items="@Items" Context="item">
-        <tr id="@item.ShoppingItemListID">
-            <td>
-                <div class="d-flex flex-column flex-md-row align-items-md-center">
-                    <span class="fw-bold me-md-2" style="cursor: pointer" @onclick="@(() => OnItemClick.InvokeAsync(item))">
-                        @(string.IsNullOrWhiteSpace(item.BrandName) ? item.ItemName : $"{item.BrandName} - {item.ItemName}")
-                                        
+                    <Virtualize Items="@Items" Context="item">
+                        <tr id="@item.ShoppingItemListID">
+                            <td>
+                                <div class="d-flex flex-column flex-md-row align-items-md-center">
+                                    <span class="fw-bold me-md-2" style="cursor: pointer" @onclick="@(() => OnItemClick.InvokeAsync(item))">
+                                        @(string.IsNullOrWhiteSpace(item.BrandName) ? item.ItemName : $"{item.BrandName} - {item.ItemName}")
+
                                         <span id="notes" style="font-style:italic;color:gray">@((MarkupString)(item.Notes == null ? "" : "<br/> " + item.Notes))</span>
-                    </span>
-                    <div class="item-details d-flex flex-wrap align-items-center mt-1 mt-md-0">
-                        @if (item.NumberOfItems.HasValue)
-                        {
-                            <span class="badge bg-secondary me-2">
-                                <i class="bi bi-123 me-1"></i>@item.NumberOfItems
-                            </span>
-                        }
-                        @if (item.Price.HasValue && item.Price.Value > 0)
-                        {
-                            <span class="badge bg-success me-2" style="cursor: pointer" @onclick="@(() => OnShowHistory.InvokeAsync(item.ItemID))">
-                                <i class="bi bi-currency-dollar me-1"></i>@item.Price
-                            </span>
-                        }
-                        @if (item.storename != null)
-                        {
-                            <span class="badge bg-info text-dark me-2">
-                                <i class="bi bi-shop me-1"></i>@item.storename
-                            </span>
-                        }
-                    </div>
-                </div>
-            </td>
-            <td class="text-end">
-                <button class="btn btn-sm btn-outline-primary" @onclick="@(() => ItemOut.InvokeAsync(item.ShoppingItemListID))">
-                    <i class="bi bi-slash-circle me-1"></i>
-                </button>
-                <button class="btn btn-sm btn-outline-primary" @onclick="@(() => OnEditItem.InvokeAsync(item.ShoppingItemListID))">
-                    <i class="bi bi-pencil"></i>
-                </button>
-            </td>
-        </tr>
+                                    </span>
+                                    <div class="item-details d-flex flex-wrap align-items-center mt-1 mt-md-0">
+                                        @if (item.NumberOfItems.HasValue)
+                                        {
+                                            <span class="badge bg-secondary me-2">
+                                                <i class="bi bi-123 me-1"></i>@item.NumberOfItems
+                                            </span>
+                                        }
+                                        @if (item.Price.HasValue && item.Price.Value > 0)
+                                        {
+                                            <span class="badge bg-success me-2" style="cursor: pointer" @onclick="@(() => OnShowHistory.InvokeAsync(item.ItemID))">
+                                                <i class="bi bi-currency-dollar me-1"></i>@item.Price
+                                            </span>
+                                        }
+                                        @if (item.storename != null)
+                                        {
+                                            <span class="badge bg-info text-dark me-2">
+                                                <i class="bi bi-shop me-1"></i>@item.storename
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-end">
+                                @if (item is { NeedDate: var date } && date >= DateTime.Now.AddDays(2)) //really should use a bool on need now or future.
+                                {
+                                    <span class="badge bg-light text-dark">@Convert.ToDateTime(item.NeedDate).ToShortDateString()</span>
+                                }
+                                else{
+                               
+                                    <button class="btn btn-sm btn-outline-primary" @onclick="@(() => ItemOut.InvokeAsync(item))">
+                                        <i class="bi bi-slash-circle me-1"></i>
+                                    </button>
+                                }
+                                <button class="btn btn-sm btn-outline-primary" @onclick="@(() => OnEditItem.InvokeAsync(item.ShoppingItemListID))">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                            </td>
+                        </tr>
                     </Virtualize>
-                        @*}*@
-</tbody>
+                    @*}*@
+                </tbody>
 
             </table>
 
-            
-                </div>
-            </div>
+
         </div>
+    </div>
+</div>
 
 @code {
     [Parameter, EditorRequired]
@@ -74,7 +81,7 @@
     public DateTime FilterDate { get; set; }
 
     [Parameter]
-    public EventCallback<ShoppingItemResult > OnItemClick { get; set; }
+    public EventCallback<ShoppingItemResult> OnItemClick { get; set; }
 
     [Parameter]
     public EventCallback<int> OnShowHistory { get; set; }
@@ -84,6 +91,6 @@
 
 
     [Parameter]
-    public EventCallback<int> ItemOut { get; set; }
-    
+    public EventCallback<ShoppingItemResult> ItemOut { get; set; }
+
 }
