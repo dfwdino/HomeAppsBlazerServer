@@ -61,15 +61,15 @@
 
         <div class="card-body">
             <div class="@(isNavVisible ? "d-flex flex-wrap gap-2 mb-4" : "d-none flex-wrap gap-2 mb-4")">
-                <button class="btn btn-primary" @onclick="@(() => AddItem())">
-                    <i class="bi bi-plus-circle"></i> Add New Item
-                </button>
-                <button class="btn btn-outline-primary" @onclick="@(() => AddListItem())">
-                    <i class="bi bi-list-check"></i> Add Item To List
-                </button>
-                <button class="btn btn-outline-primary" @onclick="@(() => NeedList())">
-                    <i class="bi bi-list-check"></i> Goto Need List
-                </button>
+<a class="btn btn-primary" href="javascript:void(0)" @onclick="@(() => AddItem())">
+    Add New Item
+</a>
+<a class="btn btn-outline-primary" href="javascript:void(0)" @onclick="@(() => AddListItem())">
+    Add Item To List
+</a>
+<a class="btn btn-outline-primary" href="javascript:void(0)" @onclick="@(() => NeedList())">
+    Goto Need List
+</a>
             </div>
 
             @if (AllShoppingItems is null)
