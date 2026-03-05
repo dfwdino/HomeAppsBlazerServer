@@ -1,5 +1,4 @@
 ﻿using HomeAppsBlazerServer.Models;
-using HomeAppsBlazerServer.Models.Shopping;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 

@@ -1,0 +1,111 @@
+﻿@page "/ShoppingListMonthlyReport"
+@using HomeAppsBlazerServer.Models
+@using HomeAppsBlazerServer.Models.Shopping
+@using HomeAppsBlazerServer.Servcies.Shopping
+@using System.Globalization
+@inject IShoppingServices ShoppingServices
+@layout HomeAppsBlazerServer.Components.Layout.Shopping.ShoppingLayout
+
+<h3>Monthly Report</h3>
+
+@foreach (var report in MonthlyReportItems)
+{
+    <div class="month-card">
+        <div class="month-header">
+            <span class="month-title">
+                @report.Month @report.Year
+            </span>
+            <span class="month-stats">
+                <strong>Spent:</strong> @report.TotalAmount.ToString("C") &nbsp;|&nbsp;
+                <strong>Total Items:</strong> @report.TotalItems
+            </span>
+        </div>
+
+        <div class="item-grid">
+         
+            @foreach (var entry in report.Items.Split(',')) 
+            {
+                var parts = entry.Trim().Split(new string[] { " | " }, StringSplitOptions.None);
+                if (parts.Length == 2)
+                {
+                    <div class="item-card">
+                        <span class="item-name">@parts[0].Trim()</span>
+                        <span class="item-count">@parts[1].Trim()</span>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+}
+
+<style>
+    .month-card {
+        background: #ffffff;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 16px 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+
+    .month-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .month-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #2c3e50;
+    }
+
+    .month-stats {
+        font-size: 0.95rem;
+        color: #555;
+    }
+
+    .item-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 8px;
+        margin-top: 8px;
+    }
+
+    .item-card {
+        background: #f7f9fc;
+        border: 1px solid #dce3ed;
+        border-radius: 6px;
+        padding: 6px 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .item-name {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: #333;
+    }
+
+    .item-count {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #3498db;
+        background: #eaf4fd;
+        border-radius: 12px;
+        padding: 2px 8px;
+    }
+</style>
+
+@code {
+    List<MonthlyShoppingReport> MonthlyReportItems = new List<MonthlyShoppingReport>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        MonthlyReportItems = await ShoppingServices.GetMonthlyShoppingReportAsync();
+    }
+}

@@ -19,6 +19,8 @@ namespace HomeAppsBlazerServer.Data
 
         public DbSet<ShoppingStore> ShoppingStores { get; set; }
         public DbSet<ShoppingItem> ShoppingItems { get; set; }
+
+
         public DbSet<ShoppingItemList> ShoppingItemList { get; set; }
 
         public DbSet<PriceHistory> PriceHistory { get; set; }
@@ -46,5 +48,17 @@ namespace HomeAppsBlazerServer.Data
         #endregion
 
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+    
+            modelBuilder.Entity<ShoppingItem>()
+                .HasMany(x => x.PriceHistory)
+                .WithOne()
+                .HasForeignKey(x => x.ItemID);
+        }
+
     }
+
+
+
 }

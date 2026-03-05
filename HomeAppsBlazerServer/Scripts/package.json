@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
+  "devDependencies": {
+    "eslint": "^10.0.2",
+    "typescript": "^5.4.0"
+  }
+}

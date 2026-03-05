@@ -25,6 +25,9 @@ namespace HomeAppsBlazerServer.Models.Shopping
 
         public ShoppingStore? Store { get; set; }
 
-       
+        public ICollection<PriceHistory> PriceHistory { get; set; } = new List<PriceHistory>();
+
+
+
     }
 }

@@ -8,6 +8,9 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
 {
     public partial class ShoppingServices
     {
+        private const int CacheDurationMinutes = 15;
+
+
         public async Task<ShoppingItem?> AddShoppingItemAsyn(ShoppingItem shoppingItem, CancellationToken cancellationToken)
         {
 
@@ -182,7 +185,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
 
             // Store in cache for 15 minutes
             var cacheOptions = new MemoryCacheEntryOptions()
-                .SetAbsoluteExpiration(TimeSpan.FromMinutes(15));
+                .SetAbsoluteExpiration(TimeSpan.FromMinutes(CacheDurationMinutes));
 
             _cache.Set(cacheKey, result, cacheOptions);
 
