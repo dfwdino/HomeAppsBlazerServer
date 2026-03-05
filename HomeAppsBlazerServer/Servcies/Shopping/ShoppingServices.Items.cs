@@ -15,12 +15,12 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
         {
 
 
+            shoppingItem.ItemName = shoppingItem.ItemName.ToTileCase();
+
             bool FoundItem = await myDbContext.ShoppingItems.AnyAsync(x => x.ItemName == shoppingItem.ItemName
-                                                            && x.ItemBrand.ItemBrandsId == shoppingItem.ItemBrandID, cancellationToken);
+                                                            && x.ItemBrandID == shoppingItem.ItemBrandID, cancellationToken);
 
             if (FoundItem) { return null; }
-
-            shoppingItem.ItemName = shoppingItem.ItemName.ToTileCase();
 
 
             myDbContext.ShoppingItems.Add(shoppingItem);
