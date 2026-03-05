@@ -185,6 +185,24 @@ public class ShoppingServicesTests : IDisposable
         Assert.False(notDeleted!.IsDeleted);
     }
 
+    // ========== Negative Tests — graceful handling of bad input ==========
+
+    [Fact]
+    public async Task GotItem_NonExistentListId_ReturnsFalse()
+    {
+        // GotItem now returns false instead of crashing when the list ID doesn't exist.
+        var result = await _svc.GotItem(9999);
+        Assert.False(result);
+    }
+
+    [Fact]
+    public async Task AddItemToList_NonExistentItemId_DoesNotThrow()
+    {
+        // AddItemToList now exits gracefully instead of crashing when the item doesn't exist.
+        var ex = await Record.ExceptionAsync(() => _svc.AddItemToList(9999));
+        Assert.Null(ex);
+    }
+
     // ========== GetLastestPrice ==========
 
     [Fact]
