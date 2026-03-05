@@ -11,13 +11,8 @@ namespace HomeAppsBlazerServer.Models
 
         public ShoppingItemList? ShoppingItemList { get; set; }
 
-        public string StoreName { get; set; } = string.Empty;
-
-        public string ItemName { get; set; } = string.Empty;
-
         public string Price { get; set; } = string.Empty;
 
-        public string? BrandName { get; set; } = string.Empty;
 
     }
 }

@@ -48,7 +48,7 @@
                 else
                 {
                     <h3></h3>
-                    <h4 class="mb-0">Update @CurrentShoppingitems.ItemName</h4>
+                    <h4 class="mb-0">Update @CurrentShoppingitems.ShoppingItemList.ShoppingItem.ItemName</h4>
                 }
 
             </div>
@@ -58,7 +58,7 @@
                         <label for="itemName" class="form-label">Item Name:</label>
                     </div>
                     <div class="col-md-9">
-                        <BlazorBootstrap.AutoComplete @bind-Value="ItemName"
+                        <BlazorBootstrap.AutoComplete @bind-Value="_ItemName"
                                                       TItem="ShoppingItem"
                                                       DataProvider="CustomersDataProvider"
                                                       PropertyName="ItemName"
@@ -73,7 +73,7 @@
                         <label for="storeName" class="form-label">Store:</label>
                     </div>
                     <div class="col-md-9">
-                        <BlazorBootstrap.AutoComplete @bind-Value="StoreName"
+                        <BlazorBootstrap.AutoComplete @bind-Value="_StoreName"
                                                       TItem="ShoppingStore"
                                                       DataProvider="CustomersDataProvider"
                                                       PropertyName="StoreName"
@@ -196,7 +196,7 @@
     public bool ShowExtraFields { get; set; } = false;
     public string ShowFieldsText { get; set; } = "Show Fields";
 
-    public string StoreName, ItemName, pressedKey = string.Empty;
+    private string _StoreName, _ItemName, _pressedKey = string.Empty;
 
 
     public ListItemModel CurrentShoppingitems { get; set; } = new();
@@ -219,7 +219,7 @@
 
     private void HandleKeyDown(KeyboardEventArgs e)
     {
-        pressedKey = e.Key;
+        _pressedKey = e.Key;
     }
 
     public void ShoppingLIstItem(ListItemModel currentShoppingitems)
@@ -261,7 +261,7 @@
         if (customer is null)
         {
             CurrentShoppingitems.ShoppingItemList.ShoppingStoreID = null;
-            CurrentShoppingitems.StoreName = string.Empty;
+            CurrentShoppingitems.ShoppingItemList.ShoppingStore.StoreName = string.Empty;
             return;
 
         }
@@ -282,8 +282,8 @@
             if (shoppingitems != null)
             {
                 CurrentShoppingitems = shoppingitems;
-                StoreName = CurrentShoppingitems.StoreName;
-                ItemName = $"{CurrentShoppingitems.BrandName} {CurrentShoppingitems.ItemName}";
+                _StoreName = CurrentShoppingitems.ShoppingItemList.ShoppingStore?.StoreName;
+                _ItemName = $"{CurrentShoppingitems.ShoppingItemList.ShoppingItem.ItemBrand?.BrandName} {CurrentShoppingitems.ShoppingItemList.ShoppingItem.ItemName}";  //Need to set branc and item is differet texboxes
                 CurrentShoppingitems.ShoppingItemList = shoppingitems.ShoppingItemList;
                 CurrentShoppingitems.ShoppingItemList.NeedDate = shoppingitems.ShoppingItemList.NeedDate;
                 CurrentShoppingitems.ShoppingItemList.SizeAmount = shoppingitems.ShoppingItemList.SizeAmount;
@@ -306,9 +306,9 @@
     async Task HandleSubmit()
     {
         //Want to pass if they hit enter to select a itme or store.
-        if (pressedKey.Equals("enter", StringComparison.OrdinalIgnoreCase))
+        if (_pressedKey.Equals("enter", StringComparison.OrdinalIgnoreCase))
         {
-            pressedKey = string.Empty;
+            _pressedKey = string.Empty;
             return;
         }
 
@@ -326,9 +326,9 @@
             NavigationManager.NavigateTo($"ShoppingList/");
 
         }
-        else if (String.IsNullOrEmpty(ItemName))
+        else if (String.IsNullOrEmpty(_ItemName))
         {
-            ShoppingItem newshoppingitem = new ShoppingItem() { ItemName = ItemName };
+            ShoppingItem newshoppingitem = new ShoppingItem() { ItemName = _ItemName };
             var cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromSeconds(15));
            

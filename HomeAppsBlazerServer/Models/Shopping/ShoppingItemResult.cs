@@ -7,6 +7,8 @@ namespace HomeAppsBlazerServer.Models.Shopping
         public int ShoppingItemListID { get; set; }
         public string ItemName { get; set; }
 
+        public int ShoppingItemID { get; set; }
+
         public int? NumberOfItems { get; set; }
         public decimal? Price { get; set; }
         public int ShoppingListID { get; set; }
@@ -19,5 +21,13 @@ namespace HomeAppsBlazerServer.Models.Shopping
 
         public string? BrandName { get; set; }
         public DateTime? NeedDate { get; set; }
+
+        public ShoppingStore? Store { get; set; }
+
+        public ItemBrand? ItemBrand { get; set; }
+
+        public ShoppingItem ShoppingItem { get; set; } = null!;
+
+
     }
 }

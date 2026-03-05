@@ -27,6 +27,9 @@ namespace HomeAppsBlazerServer.Models.Shopping
 
         public ShoppingItem ShoppingItem { get; set; } = null!;
 
+        public ShoppingStore ShoppingStore { get; set; } = null!;
+
+
 
 
 

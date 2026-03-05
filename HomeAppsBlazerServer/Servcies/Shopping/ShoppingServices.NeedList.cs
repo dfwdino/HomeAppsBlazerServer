@@ -1,12 +1,17 @@
 ﻿using HomeAppsBlazerServer.Models;
 using HomeAppsBlazerServer.Models.Shopping;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata.Ecma335;
+
 
 namespace HomeAppsBlazerServer.Servcies.Shopping
 {
     public partial class ShoppingServices
     {
-        public async Task AddItemToList(int id,string FutureDate = "")
+
+
+
+        public async Task AddItemToList(int id, string FutureDate = "")
         {
 
             bool NotOnList = myDbContext.ShoppingItemList.Any(mm => mm.GotItem.Equals(false) && mm.ShoppingItemID == id);
@@ -53,11 +58,11 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
         {
             List<ShoppingItemResult> results = new();
 
-            List<ShoppingItem> shoppingItems = myDbContext.ShoppingItems.Where(mm => mm.IsDeleted == false).ToList();
-            List<ShoppingStore> shoppingStores = myDbContext.ShoppingStores.Where(mm => mm.IsDeleted == false).ToList();
-            List<ShoppingItemList> shoppingItemList = myDbContext.ShoppingItemList.Where(mm => mm.GotItem == false).ToList();
-            List<PriceHistory> priceHistory = myDbContext.PriceHistory.ToList();
-            List<ItemBrand> itemBrands = myDbContext.ItemBrands.Where(mm => mm.IsDeleted == false).ToList();
+            IQueryable<ShoppingItemList> shoppingItemList = myDbContext.ShoppingItemList.Include(mm => mm.ShoppingItem)
+                                                            .ThenInclude(m => m.PriceHistory)
+                                                        .Include(mm => mm.ShoppingItem)
+                                                            .ThenInclude(m => m.ItemBrand)
+                                                        .Include(mm => mm.ShoppingStore).Where(mm => mm.GotItem == false);
 
             try
             {
@@ -66,14 +71,14 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
                     results.Add(new ShoppingItemResult
                     {
                         ItemID = item.ShoppingItemID,
-                        ItemName = shoppingItems.Where(mm => mm.ShoppingItemID == item.ShoppingItemID).Select(mm => mm.ItemName).FirstOrDefault(),
-                        storename = shoppingStores.Where(mm => mm.ShoppingStoreID == item.ShoppingStoreID).FirstOrDefault()?.StoreName,
-                        Price = priceHistory.Where(mm => mm.ItemID == item.ShoppingItemID).OrderByDescending(mm => mm.PriceDate).Select(mm => mm.Amount).FirstOrDefault(),
+                        ItemName = item.ShoppingItem.ItemName, 
+                        storename = item.ShoppingStore?.StoreName,
+                        Price = item.ShoppingItem.PriceHistory.Where(mm => mm.ItemID == item.ShoppingItemID).OrderByDescending(mm => mm.PriceDate).Select(mm => mm.Amount).FirstOrDefault(),
                         NumberOfItems = item.NumberOfItems,
                         ShoppingItemListID = item.ShoppingItemListID,
                         NeedDate = item.NeedDate,
                         Notes = item.Notes,
-                        BrandName = itemBrands.Where(mm => mm.ItemBrandsId == shoppingItems.Where(mm => mm.ShoppingItemID == item.ShoppingItemID).FirstOrDefault()?.ItemBrand?.ItemBrandsId).FirstOrDefault()?.BrandName
+                        BrandName = item.ShoppingItem.ItemBrand?.BrandName
                     });
                 }
             }
@@ -93,13 +98,10 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
             try
             {
 
-                results.ShoppingItemList = myDbContext.ShoppingItemList.Where(mm => mm.ShoppingItemListID == id).FirstOrDefault();
+                results.ShoppingItemList = myDbContext.ShoppingItemList.Include(m => m.ShoppingStore).Include(m => m.ShoppingItem).Where(mm => mm.ShoppingItemListID == id).FirstOrDefault();
 
                 if (results.ShoppingItemList != null)
                 {
-                    results.StoreName = myDbContext.ShoppingStores.Where(mm => mm.ShoppingStoreID.Equals(results.ShoppingItemList.ShoppingStoreID)).FirstOrDefault()?.StoreName;
-                    results.ItemName = myDbContext.ShoppingItems.Where(mm => mm.ShoppingItemID.Equals(results.ShoppingItemList.ShoppingItemID)).FirstOrDefault().ItemName;
-                    results.BrandName = myDbContext.ItemBrands.Where(mm => mm.ItemBrandsId.Equals(myDbContext.ShoppingItems.Where(ss => ss.ShoppingItemID.Equals(results.ShoppingItemList.ShoppingItemID)).FirstOrDefault().ItemBrand.ItemBrandsId)).FirstOrDefault()?.BrandName;
                     var price = myDbContext.PriceHistory.Where(mm => mm.ItemID.Equals(results.ShoppingItemList.ShoppingItemID)).OrderByDescending(mm => mm.PriceHistoryID).FirstOrDefault()?.Amount;
 
                     if (string.IsNullOrEmpty(price.ToString()) && price > 0)
@@ -135,14 +137,15 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
             myDbContext.SaveChanges();
         }
 
-        public async Task UpdateNeedList(ShoppingItemResult needitem) { 
-            
+        public async Task UpdateNeedList(ShoppingItemResult needitem)
+        {
+
             ShoppingItemList shoppingItemList = myDbContext.ShoppingItemList.Where(mm => mm.ShoppingItemListID == needitem.ShoppingItemListID).FirstOrDefault();
             shoppingItemList.Notes = needitem.Notes;
             shoppingItemList.NeedDate = needitem.NeedDate;
             shoppingItemList.NumberOfItems = needitem.NumberOfItems;
-            
-            
+
+
             myDbContext.ShoppingItemList.Update(shoppingItemList);
             myDbContext.SaveChanges();
 
@@ -151,29 +154,28 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
 
         public async Task<bool> GotItem(int id)
         {
+            ShoppingItemList? currentitem = await GetShoppingListItem(id);
 
-            ShoppingItemList currentitem = myDbContext.ShoppingItemList.FirstOrDefault(mm => mm.ShoppingItemListID.Equals(id));
 
             if (currentitem == null)
             {
                 return false;
             }
 
-            ///TODO: Move this to a Funtion call.
-            ShoppingItem shoppingItem = myDbContext.ShoppingItems.AsNoTracking().FirstOrDefault(mm => mm.ShoppingItemID.Equals(currentitem.ShoppingItemID));
-
-            if (shoppingItem.IsOneTimeOnly)
-            {
-                RemoveShoppingItem(shoppingItem.ShoppingItemID);
-
-            }
-
             currentitem.GotItem = true;
             currentitem.GotItemDate = DateTime.Now;
+            currentitem.ShoppingItem.IsDeleted = currentitem.ShoppingItem.IsOneTimeOnly ? true : false;
 
             await myDbContext.SaveChangesAsync();
 
             return true;
+
+
+        }
+
+        private async Task<ShoppingItemList?> GetShoppingListItem(int id)
+        {
+            return await myDbContext.ShoppingItemList.FirstOrDefaultAsync(mm => mm.ShoppingItemListID.Equals(id));
 
 
         }

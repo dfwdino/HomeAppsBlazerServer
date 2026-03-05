@@ -7,9 +7,9 @@ namespace HomeAppsBlazerServer.Models.Shopping
     public class ItemBrand
     {
         [Key]
-        [Column("ItemBrandsID")]
+        [Column("ItemBrandID")] 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ItemBrandsId { get; set; }
+        public int ItemBrandID { get; set; }
 
         [Required]
         [Column("BrandName")]

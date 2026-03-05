@@ -55,7 +55,7 @@ public class ShoppingServicesTests : IDisposable
     public async Task AddShoppingItem_NewItem_IsAddedSuccessfully()
     {
         var brand = AddBrand("Kirkland");
-        var item = new ShoppingItem { ItemName = "butter", ItemBrandID = brand.ItemBrandsId };
+        var item = new ShoppingItem { ItemName = "butter", ItemBrandID = brand.ItemBrandID };
 
         var result = await _svc.AddShoppingItemAsyn(item, CancellationToken.None);
 
@@ -67,7 +67,7 @@ public class ShoppingServicesTests : IDisposable
     public async Task AddShoppingItem_NewItem_ItemNameIsTitleCased()
     {
         var brand = AddBrand("Organic");
-        var item = new ShoppingItem { ItemName = "whole milk", ItemBrandID = brand.ItemBrandsId };
+        var item = new ShoppingItem { ItemName = "whole milk", ItemBrandID = brand.ItemBrandID };
 
         var result = await _svc.AddShoppingItemAsyn(item, CancellationToken.None);
 
@@ -78,7 +78,7 @@ public class ShoppingServicesTests : IDisposable
     public async Task AddShoppingItem_NewItem_AutoAddsToNeedList()
     {
         var brand = AddBrand("Generic");
-        var item = new ShoppingItem { ItemName = "eggs", ItemBrandID = brand.ItemBrandsId };
+        var item = new ShoppingItem { ItemName = "eggs", ItemBrandID = brand.ItemBrandID };
 
         var result = await _svc.AddShoppingItemAsyn(item, CancellationToken.None);
 
@@ -91,11 +91,11 @@ public class ShoppingServicesTests : IDisposable
         var brand = AddBrand("Dole");
 
         // Add the item once
-        var first = new ShoppingItem { ItemName = "bananas", ItemBrandID = brand.ItemBrandsId };
+        var first = new ShoppingItem { ItemName = "bananas", ItemBrandID = brand.ItemBrandID };
         await _svc.AddShoppingItemAsyn(first, CancellationToken.None);
 
         // Try to add the same item+brand again
-        var duplicate = new ShoppingItem { ItemName = "bananas", ItemBrandID = brand.ItemBrandsId };
+        var duplicate = new ShoppingItem { ItemName = "bananas", ItemBrandID = brand.ItemBrandID };
         var result = await _svc.AddShoppingItemAsyn(duplicate, CancellationToken.None);
 
         Assert.Null(result);
@@ -107,10 +107,10 @@ public class ShoppingServicesTests : IDisposable
         var brand1 = AddBrand("Store Brand");
         var brand2 = AddBrand("Name Brand");
 
-        var first = new ShoppingItem { ItemName = "orange juice", ItemBrandID = brand1.ItemBrandsId };
+        var first = new ShoppingItem { ItemName = "orange juice", ItemBrandID = brand1.ItemBrandID };
         await _svc.AddShoppingItemAsyn(first, CancellationToken.None);
 
-        var second = new ShoppingItem { ItemName = "orange juice", ItemBrandID = brand2.ItemBrandsId };
+        var second = new ShoppingItem { ItemName = "orange juice", ItemBrandID = brand2.ItemBrandID };
         var result = await _svc.AddShoppingItemAsyn(second, CancellationToken.None);
 
         Assert.NotNull(result);

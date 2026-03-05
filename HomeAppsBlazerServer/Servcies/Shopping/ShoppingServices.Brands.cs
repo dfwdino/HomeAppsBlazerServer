@@ -29,7 +29,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
 
         public async Task<ItemBrand> GetItemBrandseByIDAsync(int id)
         {
-            var itemBrand = await myDbContext.ItemBrands.FirstOrDefaultAsync(mm => mm.ItemBrandsId.Equals(id));
+            var itemBrand = await myDbContext.ItemBrands.FirstOrDefaultAsync(mm => mm.ItemBrandID.Equals(id));
             return itemBrand;
         }
 
@@ -59,7 +59,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
 
         public async Task RemoveItemBrands(int id)
         {
-            var itembrand = await myDbContext.ItemBrands.FirstOrDefaultAsync(mm => mm.ItemBrandsId.Equals(id));
+            var itembrand = await myDbContext.ItemBrands.FirstOrDefaultAsync(mm => mm.ItemBrandID.Equals(id));
 
             if (itembrand != null)
             {
@@ -80,7 +80,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
 
         public async Task UpdateItemBrand(ItemBrand updateshoppingStore, int id)
         {
-            var currentbrand = await myDbContext.ItemBrands.FirstOrDefaultAsync(mm => mm.ItemBrandsId.Equals(id));
+            var currentbrand = await myDbContext.ItemBrands.FirstOrDefaultAsync(mm => mm.ItemBrandID.Equals(id));
 
             if (currentbrand != null)
             {

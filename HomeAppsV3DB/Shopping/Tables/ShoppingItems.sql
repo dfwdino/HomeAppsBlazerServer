@@ -9,9 +9,8 @@
     [StoreID]         INT           NULL,
     [ItemBrandID]     INT           NULL,
     [IsOneTimeOnly]   BIT           CONSTRAINT [DF_ShoppingItems_IsOneTimeOnly] DEFAULT ((0)) NULL,
-    [RowVersion]      ROWVERSION    NOT NULL,
     CONSTRAINT [PK_ShoppingItems] PRIMARY KEY CLUSTERED ([ShoppingItemID] ASC),
-    CONSTRAINT [FK_ShoppingItems_ItemBrands] FOREIGN KEY ([ItemBrandID]) REFERENCES [Shopping].[ItemBrands] ([ItemBrandsID]),
+    CONSTRAINT [FK_ShoppingItems_ItemBrands] FOREIGN KEY ([ItemBrandID]) REFERENCES [Shopping].[ItemBrands] ([ItemBrandID]),
     CONSTRAINT [FK_ShoppingItems_ShoppingStores] FOREIGN KEY ([StoreID]) REFERENCES [Shopping].[ShoppingStores] ([ShoppingStoreID])
 );
 

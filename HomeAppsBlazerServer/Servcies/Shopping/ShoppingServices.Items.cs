@@ -162,7 +162,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
                             FreddyDontLike = item.si.FreddyDontLike,
                             ElliottDontLike = item.si.ElliottDontLike,
                             ItemBrandName = myDbContext.ItemBrands
-                                .Where(ib => ib.ItemBrandsId == item.si.ItemBrand.ItemBrandsId)
+                                .Where(ib => ib.ItemBrandID == item.si.ItemBrand.ItemBrandID)
                                 .Select(ib => ib.BrandName)
                                 .FirstOrDefault(),
                             StoreName = item.store != null ? item.store.StoreName : null,
@@ -200,7 +200,6 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
             {
                 shoppingItem.IsDeleted = true;
 
-                //myDbContext.ShoppingItems.Remove(shoppingItem);
                 try
                 {
                     await myDbContext.SaveChangesAsync();
