@@ -20,11 +20,15 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
 
             ShoppingItem shoppingItem = myDbContext.ShoppingItems.Where(mm => mm.ShoppingItemID.Equals(id)).FirstOrDefault();
 
+            if (shoppingItem == null)
+            {
+                await Console.Out.WriteLineAsync($"Item {id} not found. Cannot add to list.");
+                return;
+            }
+
             ShoppingItemList shoppingItemList = new ShoppingItemList();
 
-            //I think this will error out b/c the object is not coreated yet.
             shoppingItemList.ShoppingItemID = id;
-            //shoppingItemList.NeedDate = DateTime.Now;
             shoppingItemList.ShoppingStoreID = shoppingItem.StoreID;
 
             shoppingItemList.NeedDate = String.IsNullOrEmpty(FutureDate) ? null : DateTime.Parse(FutureDate);
@@ -149,6 +153,11 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
         {
 
             ShoppingItemList currentitem = myDbContext.ShoppingItemList.FirstOrDefault(mm => mm.ShoppingItemListID.Equals(id));
+
+            if (currentitem == null)
+            {
+                return false;
+            }
 
             ///TODO: Move this to a Funtion call.
             ShoppingItem shoppingItem = myDbContext.ShoppingItems.AsNoTracking().FirstOrDefault(mm => mm.ShoppingItemID.Equals(currentitem.ShoppingItemID));
