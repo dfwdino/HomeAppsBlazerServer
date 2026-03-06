@@ -1,5 +1,4 @@
 ﻿using HomeAppsBlazerServer.Models.Auto;
-using HomeAppsBlazerServer.Models.Chore;
 using HomeAppsBlazerServer.Models.Shopping;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,19 +25,7 @@ namespace HomeAppsBlazerServer.Data
 
         public DbSet<ItemBrand> ItemBrands { get; set; }
 
-        #region Chores
-
-        public DbSet<KidsNameModel> KidsName { get; set; }
-        public DbSet<ChoresModel> KidsChores { get; set; }
-        public DbSet<LocationModel> KidsLocation { get; set; }
-
-        public DbSet<ChoreListItemsModel> ChoreListItem { get; set; }
-
-        public DbSet<ChoreAmountModel> ChoreAmount { get; set; }
-
-        #endregion
-
-        #region Cars
+#region Cars
 
         public DbSet<Car> Cars { get; set; }
         public DbSet<GasType> GasTypes { get; set; }
