@@ -10,14 +10,18 @@ namespace HomeAppsBlazerServer.Models
     {
         [Key]
         public int PriceHistoryID { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
         public decimal? Amount { get; set; }
+
         public DateTime PriceDate { get; set; }
+
         public int ItemID { get; set; }
+
+        [ForeignKey(nameof(Store))]
         public int? StoreID { get; set; }
 
-        public ShoppingStore? Store { get; set; }
-
-
+        public virtual ShoppingStore? Store { get; set; }
     }
 
 }

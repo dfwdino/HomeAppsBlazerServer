@@ -12,9 +12,12 @@ namespace HomeAppsBlazerServer.Models.Shopping
         [Key]
         public int ShoppingItemListID { get; set; }
 
+        [ForeignKey(nameof(ShoppingItem))]
         public int ShoppingItemID { get; set; }
 
+        [ForeignKey(nameof(ShoppingStore))]
         public int? ShoppingStoreID { get; set; }
+
         public DateTime? GotItemDate { get; set; }
         public DateTime? NeedDate { get; set; }
         public bool GotItem { get; set; }
@@ -22,12 +25,15 @@ namespace HomeAppsBlazerServer.Models.Shopping
         public int? NumberOfItems { get; set; }
 
         public int? SizeID { get; set; }
+
+        [StringLength(500)]
         public string? Notes { get; set; }
+
         public int? SizeAmount { get; set; }
 
-        public ShoppingItem ShoppingItem { get; set; } = null!;
+        public virtual ShoppingItem ShoppingItem { get; set; } = null!;
 
-        public ShoppingStore ShoppingStore { get; set; } = null!;
+        public virtual ShoppingStore ShoppingStore { get; set; } = null!;
 
 
 
