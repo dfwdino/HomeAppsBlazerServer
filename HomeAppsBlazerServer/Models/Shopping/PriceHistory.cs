@@ -15,14 +15,15 @@ namespace HomeAppsBlazerServer.Models.Shopping
 
         public DateTime PriceDate { get; set; }
 
-        public int ItemID { get; set; }
+        [ForeignKey(nameof(Item))]
+        public int ItemShoppingItemID { get; set; }
 
         [ForeignKey(nameof(Store))]
         public int? StoreID { get; set; }
 
         public virtual ShoppingStore? Store { get; set; }
 
-        public virtual ShoppingItem? Item { get; set; }
+        public virtual ShoppingItem Item { get; set; }
     }
 
 }

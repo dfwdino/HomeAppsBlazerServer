@@ -167,7 +167,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
                                 .FirstOrDefault(),
                             StoreName = item.store != null ? item.store.StoreName : null,
                             LastPrice = myDbContext.PriceHistory
-                                .Where(ph => ph.ItemID == item.si.ShoppingItemID)
+                                .Where(ph => ph.ItemShoppingItemID == item.si.ShoppingItemID)
                                 .OrderByDescending(ph => ph.PriceDate)
                                 .Select(ph => ph.Amount)
                                 .FirstOrDefault(),

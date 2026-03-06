@@ -49,11 +49,9 @@ namespace HomeAppsBlazerServer.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-    
-            modelBuilder.Entity<ShoppingItem>()
-                .HasMany(x => x.PriceHistory)
-                .WithOne()
-                .HasForeignKey(x => x.ItemID);
+
+     
+
         }
 
     }

@@ -222,9 +222,9 @@ public class ShoppingServicesTests : IDisposable
         // So the most recently added record wins, regardless of its date.
         var item = AddItem("Coffee");
         _db.PriceHistory.AddRange(
-            new PriceHistory { ItemID = item.ShoppingItemID, Amount = 8.99m, PriceDate = new DateTime(2025, 1, 1) },
-            new PriceHistory { ItemID = item.ShoppingItemID, Amount = 10.49m, PriceDate = new DateTime(2026, 1, 1) },
-            new PriceHistory { ItemID = item.ShoppingItemID, Amount = 9.75m, PriceDate = new DateTime(2025, 6, 1) }  // last inserted
+            new PriceHistory { ItemShoppingItemID = item.ShoppingItemID, Amount = 8.99m, PriceDate = new DateTime(2025, 1, 1) },
+            new PriceHistory { ItemShoppingItemID = item.ShoppingItemID, Amount = 10.49m, PriceDate = new DateTime(2026, 1, 1) },
+            new PriceHistory { ItemShoppingItemID = item.ShoppingItemID, Amount = 9.75m, PriceDate = new DateTime(2025, 6, 1) }  // last inserted
         );
         _db.SaveChanges();
 
@@ -238,8 +238,8 @@ public class ShoppingServicesTests : IDisposable
     {
         var item = AddItem("Butter");
         _db.PriceHistory.AddRange(
-            new PriceHistory { ItemID = item.ShoppingItemID, Amount = 4.99m, StoreID = 1, PriceDate = new DateTime(2026, 1, 1), PriceHistoryID = 1 },
-            new PriceHistory { ItemID = item.ShoppingItemID, Amount = 5.49m, StoreID = 2, PriceDate = new DateTime(2026, 1, 1), PriceHistoryID = 2 }
+            new PriceHistory { ItemShoppingItemID = item.ShoppingItemID, Amount = 4.99m, StoreID = 1, PriceDate = new DateTime(2026, 1, 1), PriceHistoryID = 1 },
+            new PriceHistory { ItemShoppingItemID = item.ShoppingItemID, Amount = 5.49m, StoreID = 2, PriceDate = new DateTime(2026, 1, 1), PriceHistoryID = 2 }
         );
         _db.SaveChanges();
 

@@ -58,11 +58,11 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
         {
             List<ShoppingItemResult> results = new();
 
-            IQueryable<ShoppingItemList> shoppingItemList = myDbContext.ShoppingItemList.Include(mm => mm.ShoppingItem)
+            List<ShoppingItemList> shoppingItemList = myDbContext.ShoppingItemList.Include(mm => mm.ShoppingItem)
                                                             .ThenInclude(m => m.PriceHistory)
                                                         .Include(mm => mm.ShoppingItem)
                                                             .ThenInclude(m => m.ItemBrand)
-                                                        .Include(mm => mm.ShoppingStore).Where(mm => mm.GotItem == false);
+                                                        .Include(mm => mm.ShoppingStore).Where(mm => mm.GotItem == false).ToList();
 
             try
             {
@@ -73,7 +73,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
                         ItemID = item.ShoppingItemID,
                         ItemName = item.ShoppingItem.ItemName, 
                         storename = item.ShoppingStore?.StoreName,
-                        Price = item.ShoppingItem.PriceHistory.Where(mm => mm.ItemID == item.ShoppingItemID).OrderByDescending(mm => mm.PriceDate).Select(mm => mm.Amount).FirstOrDefault(),
+                        Price = item.ShoppingItem.PriceHistory.Where(mm => mm.ItemShoppingItemID == item.ShoppingItemID).OrderByDescending(mm => mm.PriceDate).Select(mm => mm.Amount).FirstOrDefault(),
                         NumberOfItems = item.NumberOfItems,
                         ShoppingItemListID = item.ShoppingItemListID,
                         NeedDate = item.NeedDate,
@@ -102,7 +102,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
 
                 if (results.ShoppingItemList != null)
                 {
-                    var price = myDbContext.PriceHistory.Where(mm => mm.ItemID.Equals(results.ShoppingItemList.ShoppingItemID)).OrderByDescending(mm => mm.PriceHistoryID).FirstOrDefault()?.Amount;
+                    var price = myDbContext.PriceHistory.Where(mm => mm.ItemShoppingItemID.Equals(results.ShoppingItemList.ShoppingItemID)).OrderByDescending(mm => mm.PriceHistoryID).FirstOrDefault()?.Amount;
 
                     if (string.IsNullOrEmpty(price.ToString()) && price > 0)
                     {

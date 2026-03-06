@@ -8,7 +8,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
     {
         public async Task AddPriceToHistry(int itemid, decimal price, int? storeid)
         {
-            myDbContext.PriceHistory.Add(new PriceHistory { ItemID = itemid, StoreID = storeid, Amount = price, PriceDate = DateAndTime.Now });
+            myDbContext.PriceHistory.Add(new PriceHistory { ItemShoppingItemID = itemid, StoreID = storeid, Amount = price, PriceDate = DateAndTime.Now });
 
             try
             {
@@ -25,7 +25,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
 
         public async Task<decimal> GetLastestPrice(int itemid, int? storeid)
         {
-            var LastPriceQuery = myDbContext.PriceHistory.Where(mm => mm.ItemID == itemid);
+            var LastPriceQuery = myDbContext.PriceHistory.Where(mm => mm.ItemShoppingItemID == itemid);
 
             if (storeid.HasValue)
             {
@@ -42,15 +42,15 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
 
 
             List<PriceHistory> itemPrice = myDbContext.PriceHistory
-                     .Where(mm => mm.ItemID == itemid)
+                     .Where(mm => mm.ItemShoppingItemID == itemid)
                      .Include(i => i.Store)
                      .OrderByDescending(mm => mm.PriceDate)
-                     .Join(myDbContext.ShoppingItems, mm => mm.ItemID, si => si.ShoppingItemID, (mm, si) => new PriceHistory
+                     .Join(myDbContext.ShoppingItems, mm => mm.ItemShoppingItemID, si => si.ShoppingItemID, (mm, si) => new PriceHistory
                      {
                          Amount = mm.Amount,
                          PriceHistoryID = mm.PriceHistoryID,
                          PriceDate = mm.PriceDate,
-                         ItemID = mm.ItemID,
+                         ItemShoppingItemID = mm.ItemShoppingItemID,
                          StoreID = mm.StoreID,
                          Store = mm.Store
 
