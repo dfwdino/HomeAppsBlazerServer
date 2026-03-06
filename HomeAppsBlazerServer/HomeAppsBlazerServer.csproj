@@ -20,18 +20,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Identity" Version="1.13.1" />
-    <PackageReference Include="Blazor.Bootstrap" Version="3.2.0" />
+    <PackageReference Include="Azure.Identity" Version="1.18.0" />
+    <PackageReference Include="Blazor.Bootstrap" Version="3.5.0" />
     <PackageReference Include="GitVersion.CommandLine" Version="5.12.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0">
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
+    <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="9.0.3" />
     <PackageReference Include="System.Diagnostics.Tools" Version="4.3.0" />
 	 
   </ItemGroup>

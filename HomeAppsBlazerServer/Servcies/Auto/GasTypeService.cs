@@ -1,6 +1,5 @@
 ﻿using HomeAppsBlazerServer.Data;
 using HomeAppsBlazerServer.Models.Auto;
-using HomeAppsBlazerServer.Servcies.Chore;
 
 namespace HomeAppsBlazerServer.Servcies.Auto
 {
@@ -8,9 +7,9 @@ namespace HomeAppsBlazerServer.Servcies.Auto
     {
 
         private readonly MyDbContext myDbContext;
-        private readonly ILogger<IChoresChoresServices> _logger;
+        private readonly ILogger<GasStationService> _logger;
 
-        public GasTypeService(MyDbContext context, ILogger<IChoresChoresServices> logger)
+        public GasTypeService(MyDbContext context, ILogger<GasStationService> logger)
         {
             myDbContext = context;
             _logger = logger;

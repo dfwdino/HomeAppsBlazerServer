@@ -10,7 +10,6 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
     {
         private const int CacheDurationMinutes = 15;
 
-
         public async Task<ShoppingItem?> AddShoppingItemAsyn(ShoppingItem shoppingItem, CancellationToken cancellationToken)
         {
 
@@ -121,12 +120,14 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
 
         public async Task<List<ShoppingDetailItem>> GetShoppingItemsAsync(bool showallitems = false, string filter = "")
         {
+            _logger.LogInformation("Fetching shopping items with showallitems={ShowAllItems} and filter='{Filter}'", showallitems, filter);
 
             string cacheKey = $"{ShoppingItemsCacheKey}_{showallitems}";
 
             // Try to get from cache first
             if (_cache.TryGetValue(cacheKey, out List<ShoppingDetailItem> cachedItems))
             {
+                _logger.LogInformation("Cache hit for shopping items with key '{CacheKey}'", cacheKey);
                 return cachedItems;
             }
 
@@ -135,6 +136,8 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
 
             if (!showallitems)
             {
+                _logger.LogInformation("Filtering out items that have not been gotten yet");
+
                 IList<int> ItemsNotGotten = new List<int>();
 
                 ItemsNotGotten = myDbContext.ShoppingItemList.Where(mm => mm.GotItem.Equals(false)).Select(m => m.ShoppingItemID).ToList();
@@ -188,6 +191,8 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
                 .SetAbsoluteExpiration(TimeSpan.FromMinutes(CacheDurationMinutes));
 
             _cache.Set(cacheKey, result, cacheOptions);
+
+            _logger.LogInformation("Fetched {Count} shopping items from database and stored in cache with key '{CacheKey}'", result.Count, cacheKey);
 
             return result;
         }
