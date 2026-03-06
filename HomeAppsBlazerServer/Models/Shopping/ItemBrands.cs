@@ -17,6 +17,6 @@ namespace HomeAppsBlazerServer.Models.Shopping
         public string BrandName { get; set; } = null!;
 
         [Column("IsDeleted")]
-        public bool? IsDeleted { get; set; }
+        public bool IsDeleted { get; set; } = false;
     }
 }
