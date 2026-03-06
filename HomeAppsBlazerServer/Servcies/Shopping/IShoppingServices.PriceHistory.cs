@@ -1,4 +1,4 @@
-﻿using HomeAppsBlazerServer.Models;
+﻿using HomeAppsBlazerServer.Models.Shopping;
 
 namespace HomeAppsBlazerServer.Servcies.Shopping
 {

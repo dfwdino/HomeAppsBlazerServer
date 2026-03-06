@@ -1,5 +1,4 @@
-﻿using HomeAppsBlazerServer.Models;
-using HomeAppsBlazerServer.Models.Auto;
+﻿using HomeAppsBlazerServer.Models.Auto;
 using HomeAppsBlazerServer.Models.Chore;
 using HomeAppsBlazerServer.Models.Shopping;
 using Microsoft.EntityFrameworkCore;

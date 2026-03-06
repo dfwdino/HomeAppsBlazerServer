@@ -1,9 +1,8 @@
-﻿using HomeAppsBlazerServer.Models.Shopping;
-using HomeAppsBlazerServer.Models.Shopping.Interface;
+﻿using HomeAppsBlazerServer.Models.Shopping.Interface;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace HomeAppsBlazerServer.Models
+namespace HomeAppsBlazerServer.Models.Shopping
 {
     [Table("PriceHistory", Schema = "Shopping")]
     public class PriceHistory : IPriceHistory
@@ -22,6 +21,8 @@ namespace HomeAppsBlazerServer.Models
         public int? StoreID { get; set; }
 
         public virtual ShoppingStore? Store { get; set; }
+
+        public virtual ShoppingItem? Item { get; set; }
     }
 
 }
