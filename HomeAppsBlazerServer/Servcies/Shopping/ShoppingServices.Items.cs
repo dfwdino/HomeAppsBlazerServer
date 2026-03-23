@@ -125,7 +125,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
             string cacheKey = $"{ShoppingItemsCacheKey}_{showallitems}";
 
             // Try to get from cache first
-            if (_cache.TryGetValue(cacheKey, out List<ShoppingDetailItem> cachedItems))
+            if (_cache.TryGetValue(cacheKey, out List<ShoppingDetailItem> cachedItems))  //Try using ConcurrentDictionary to be faster.
             {
                 _logger.LogInformation("Cache hit for shopping items with key '{CacheKey}'", cacheKey);
                 return cachedItems;

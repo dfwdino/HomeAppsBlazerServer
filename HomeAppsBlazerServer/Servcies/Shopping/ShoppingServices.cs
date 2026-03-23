@@ -23,8 +23,8 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
         private void ClearShoppingItemsCache()
         {
             ///TODO: Improve this to only remove relevant cache entries based on filters used.
-            _cache.Remove($"{ShoppingItemsCacheKey}_false_");
-            _cache.Remove($"{ShoppingItemsCacheKey}_true_");
+            _cache.Remove($"{ShoppingItemsCacheKey}_False");
+            _cache.Remove($"{ShoppingItemsCacheKey}_True");
 
         }
     }
