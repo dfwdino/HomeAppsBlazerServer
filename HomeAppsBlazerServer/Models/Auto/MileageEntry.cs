@@ -10,6 +10,8 @@ namespace HomeAppsBlazerServer.Models.Auto
         public int EntryID { get; set; }
         public int CarID { get; set; }
         public int GasTypeID { get; set; }
+
+        [ForeignKey("GasStation")]
         public int StationID { get; set; }
         public DateTime EntryDate { get; set; }
         public decimal Odometer { get; set; }
@@ -18,9 +20,13 @@ namespace HomeAppsBlazerServer.Models.Auto
         public decimal TotalCost => Gallons * PricePerGallon;
         public string? Notes { get; set; }
 
+        public bool? IsDeleted { get; set; }
+
         // Navigation properties
         public virtual Car? Car { get; set; }
         public virtual GasType? GasType { get; set; }
+        
+        [ForeignKey("StationID")]
         public virtual GasStation? GasStation { get; set; }
     }
 }

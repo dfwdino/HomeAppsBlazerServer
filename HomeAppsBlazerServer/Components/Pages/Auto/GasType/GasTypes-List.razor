@@ -1,0 +1,384 @@
+@page "/GasTypes-List"
+@using HomeAppsBlazerServer.Servcies.Auto
+@using HomeAppsBlazerServer.Models.Auto;
+@rendermode InteractiveServer
+@inject GasTypeService GasTypeService
+
+@layout HomeAppsBlazerServer.Components.Layout.Cars.CarLayout
+
+<PageTitle>Gas Types</PageTitle>
+
+<div class="gt-container">
+    <div class="gt-header">
+        <h2 class="gt-title">Gas Types</h2>
+        <button class="gt-btn gt-btn-add" @onclick="OpenAddModal">
+            <span class="gt-btn-icon">+</span> Add Gas Type
+        </button>
+    </div>
+
+    @if (_isLoading)
+    {
+        <div class="gt-loading">Loading...</div>
+    }
+    else if (_gasTypes is { Count: 0 })
+    {
+        <div class="gt-empty">No gas types found.</div>
+    }
+    else
+    {
+        <table class="gt-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th class="gt-col-actions">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var gasType in _gasTypes)
+                {
+                    <tr class="@(gasType.IsDeleted ? "gt-row-deleted" : "")">
+                        <td>@gasType.Name</td>
+                        <td class="gt-col-actions">
+                            <button class="gt-btn gt-btn-edit" @onclick="() => OpenEditModal(gasType)">
+                                Edit
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@* ── Modal ── *@
+@if (_showModal)
+{
+    <div class="gt-overlay" @onclick="CloseModal">
+        <div class="gt-modal" @onclick:stopPropagation="true">
+            <div class="gt-modal-header">
+                <h3>@(_isEditing ? "Edit Gas Type" : "Add Gas Type")</h3>
+                <button class="gt-modal-close" @onclick="CloseModal">&times;</button>
+            </div>
+
+            <div class="gt-modal-body">
+                <EditForm Model="_model" OnValidSubmit="HandleSubmit">
+                    <DataAnnotationsValidator />
+
+                    <div class="gt-field">
+                        <label for="gtName">Name</label>
+                        <InputText id="gtName" class="gt-input" @bind-Value="_model.Name" />
+                        <ValidationMessage For="() => _model.Name" class="gt-validation" />
+                    </div>
+
+                    @if (_isEditing)
+                    {
+                        <div class="gt-field gt-field-check">
+                            <InputCheckbox id="gtIsDeleted" class="gt-checkbox" @bind-Value="_model.IsDeleted" />
+                            <label for="gtIsDeleted">Is Deleted</label>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(_errorMessage))
+                    {
+                        <div class="gt-error">@_errorMessage</div>
+                    }
+
+                    <div class="gt-modal-footer">
+                        <button type="button" class="gt-btn gt-btn-cancel" @onclick="CloseModal">Cancel</button>
+                        <button type="submit" class="gt-btn gt-btn-save" disabled="@_isSaving">
+                            @(_isSaving ? "Saving..." : "Save")
+                        </button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    // ── State ──────────────────────────────────────────────────
+    private List<GasType> _gasTypes = [];
+    private GasType _model = new();
+    private bool _isLoading = true;
+    private bool _showModal = false;
+    private bool _isEditing = false;
+    private bool _isSaving = false;
+    private string? _errorMessage;
+    private int _editingId;
+
+    // ── Lifecycle ──────────────────────────────────────────────
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadDataAsync();
+    }
+
+    private async Task LoadDataAsync()
+    {
+        _isLoading = true;
+        _gasTypes = GasTypeService.GetAllAsync().Where(mm => mm.IsDeleted == false).ToList();
+        _isLoading = false;
+    }
+
+    // ── Modal helpers ──────────────────────────────────────────
+    private void OpenAddModal()
+    {
+        _model = new GasType();
+        _isEditing = false;
+        _errorMessage = null;
+        _showModal = true;
+    }
+
+    private void OpenEditModal(GasType gasType)
+    {
+        _editingId = gasType.GasTypeID;
+        _model = new GasType
+        {
+            Name = gasType.Name,
+            IsDeleted = gasType.IsDeleted
+        };
+        _isEditing = true;
+        _errorMessage = null;
+        _showModal = true;
+    }
+
+    private void CloseModal()
+    {
+        _showModal = false;
+        _errorMessage = null;
+    }
+
+    // ── Submit ─────────────────────────────────────────────────
+    private async Task HandleSubmit()
+    {
+        _isSaving = true;
+        _errorMessage = null;
+
+        try
+        {
+            if (_isEditing)
+            {
+                GasTypeService.EditAsync(new GasType
+                {
+                    GasTypeID = _editingId,
+                    Name = _model.Name,
+                    IsDeleted = _model.IsDeleted
+                });
+            }
+            else
+            {
+                await GasTypeService.AddAsync(new GasType
+                {
+                    Name = _model.Name,
+                    IsDeleted = false
+                });
+            }
+
+            await LoadDataAsync();
+            CloseModal();
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = $"An error occurred: {ex.Message}";
+        }
+        finally
+        {
+            _isSaving = false;
+        }
+    }
+
+}
+
+<style>
+    /* ── Layout ─────────────────────────────────────────── */
+    .gt-container {
+        max-width: 700px;
+        margin: 2rem auto;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .gt-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.25rem;
+    }
+
+    .gt-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin: 0;
+    }
+
+    /* ── Table ──────────────────────────────────────────── */
+    .gt-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    }
+
+    .gt-table thead tr {
+        background: #f1f5f9;
+    }
+
+    .gt-table th,
+    .gt-table td {
+        padding: .75rem 1rem;
+        text-align: left;
+        font-size: .9rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .gt-table th {
+        font-weight: 600;
+        color: #475569;
+        text-transform: uppercase;
+        font-size: .75rem;
+        letter-spacing: .05em;
+    }
+
+    .gt-table tbody tr:last-child td { border-bottom: none; }
+    .gt-table tbody tr:hover { background: #f8fafc; }
+
+    .gt-col-actions { width: 90px; text-align: right; }
+
+    .gt-row-deleted td { color: #94a3b8; text-decoration: line-through; }
+
+    /* ── Buttons ────────────────────────────────────────── */
+    .gt-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        padding: .45rem .9rem;
+        border: none;
+        border-radius: 6px;
+        font-size: .85rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background .15s, opacity .15s;
+    }
+
+    .gt-btn:disabled { opacity: .6; cursor: not-allowed; }
+
+    .gt-btn-add    { background: #2563eb; color: #fff; }
+    .gt-btn-add:hover { background: #1d4ed8; }
+
+    .gt-btn-edit   { background: #e2e8f0; color: #334155; font-size: .8rem; padding: .3rem .7rem; }
+    .gt-btn-edit:hover { background: #cbd5e1; }
+
+    .gt-btn-save   { background: #16a34a; color: #fff; }
+    .gt-btn-save:hover:not(:disabled) { background: #15803d; }
+
+    .gt-btn-cancel { background: #f1f5f9; color: #475569; }
+    .gt-btn-cancel:hover { background: #e2e8f0; }
+
+    /* ── Modal ──────────────────────────────────────────── */
+    .gt-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+    }
+
+    .gt-modal {
+        background: #fff;
+        border-radius: 10px;
+        width: 420px;
+        max-width: 95vw;
+        box-shadow: 0 8px 32px rgba(0,0,0,.18);
+    }
+
+    .gt-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .gt-modal-header h3 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1e293b;
+    }
+
+    .gt-modal-close {
+        background: none;
+        border: none;
+        font-size: 1.4rem;
+        color: #94a3b8;
+        cursor: pointer;
+        line-height: 1;
+    }
+
+    .gt-modal-close:hover { color: #475569; }
+
+    .gt-modal-body { padding: 1.25rem; }
+
+    .gt-modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: .5rem;
+        margin-top: 1.25rem;
+    }
+
+    /* ── Form fields ────────────────────────────────────── */
+    .gt-field {
+        display: flex;
+        flex-direction: column;
+        gap: .4rem;
+        margin-bottom: 1rem;
+    }
+
+    .gt-field label {
+        font-size: .85rem;
+        font-weight: 500;
+        color: #374151;
+    }
+
+    .gt-input {
+        padding: .5rem .75rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        font-size: .9rem;
+        outline: none;
+        transition: border-color .15s;
+    }
+
+    .gt-input:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
+
+    .gt-field-check {
+        flex-direction: row;
+        align-items: center;
+        gap: .6rem;
+    }
+
+    .gt-checkbox { width: 16px; height: 16px; cursor: pointer; }
+
+    .gt-validation { font-size: .8rem; color: #dc2626; }
+
+    .gt-error {
+        background: #fef2f2;
+        color: #dc2626;
+        border: 1px solid #fecaca;
+        border-radius: 6px;
+        padding: .6rem .85rem;
+        font-size: .85rem;
+        margin-bottom: .75rem;
+    }
+
+    /* ── Misc ───────────────────────────────────────────── */
+    .gt-loading, .gt-empty {
+        padding: 2rem;
+        text-align: center;
+        color: #94a3b8;
+        font-size: .9rem;
+    }
+</style>

@@ -8,67 +8,217 @@
 @inject NavigationManager NavigationManager
 @using HomeAppsBlazerServer.Models.Auto
 
+@rendermode @(new InteractiveServerRenderMode(false))
+
 <h3>@(IsEdit ? "Edit Miles" : "Add Miles")</h3>
 
-<EditForm Model="entry" OnValidSubmit="HandleValidSubmit">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-    <div>
-        <label>Car:</label>
-        <InputSelect @bind-Value="entry.CarID">
-            <option value="">Select Car</option>
-            @foreach (var car in Cars)
-            {
-                <option value="@car.CarID">@car.Name</option>
-            }
-        </InputSelect>
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
+
+            <div class="card border-0 shadow-sm"
+                 style="border-radius: 12px; overflow: hidden; border-top: 3px solid #1D9E75 !important;">
+
+                <div class="card-header bg-white border-bottom d-flex align-items-center gap-2 py-3 px-4">
+                    <div class="rounded-2 d-flex align-items-center justify-content-center flex-shrink-0"
+                         style="width:36px; height:36px; background:#E1F5EE;">
+                        <i class="bi bi-fuel-pump" style="font-size:15px; color:#0F6E56;"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-0 fw-medium">New fuel entry</h5>
+                        <small class="text-muted">Log a fillup for your vehicle</small>
+                    </div>
+                </div>
+
+                <div class="card-body px-4 py-4">
+                    <EditForm Model="entry" OnValidSubmit="HandleValidSubmit" FormName="fuelEntryForm">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="text-danger small mb-3" />
+
+                        <!-- Section: Vehicle -->
+                        <p class="text-uppercase fw-medium small text-secondary mb-2"
+                           style="font-size:11px; letter-spacing:.06em;">Vehicle</p>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-sm-6">
+                                <label class="form-label small fw-medium text-secondary" for="carId">Car</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="bi bi-car-front text-secondary" style="font-size:13px;"></i>
+                                    </span>
+                                    <InputSelect @bind-Value="entry.CarID"
+                                                 class="form-select border-start-0"
+                                                 id="carId">
+                                        <option value="">Select car</option>
+                                        @foreach (var car in Cars)
+                                        {
+                                            <option value="@car.CarID">@car.Name</option>
+                                        }
+                                    </InputSelect>
+                                </div>
+                                <ValidationMessage For="@(() => entry.CarID)" class="text-danger small" />
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="form-label small fw-medium text-secondary" for="entryDate">Entry date</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="bi bi-calendar3 text-secondary" style="font-size:13px;"></i>
+                                    </span>
+                                    <InputDate @bind-Value="entry.EntryDate"
+                                               class="form-control border-start-0"
+                                               id="entryDate" />
+                                </div>
+                                <ValidationMessage For="@(() => entry.EntryDate)" class="text-danger small" />
+                            </div>
+                        </div>
+
+                        <!-- Section: Fuel details -->
+                        <p class="text-uppercase fw-medium small text-secondary mb-2 mt-3"
+                           style="font-size:11px; letter-spacing:.06em;">Fuel details</p>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-sm-6">
+                                <label class="form-label small fw-medium text-secondary" for="gasTypeId">Gas type</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="bi bi-droplet text-secondary" style="font-size:13px;"></i>
+                                    </span>
+                                    <InputSelect @bind-Value="entry.GasTypeID"
+                                                 class="form-select border-start-0"
+                                                 id="gasTypeId">
+                                        <option value="">Select type</option>
+                                        @foreach (var gas in GasTypes)
+                                        {
+                                            <option value="@gas.GasTypeID">@gas.Name</option>
+                                        }
+                                    </InputSelect>
+                                </div>
+                                <ValidationMessage For="@(() => entry.GasTypeID)" class="text-danger small" />
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="form-label small fw-medium text-secondary" for="stationId">Gas station</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="bi bi-geo-alt text-secondary" style="font-size:13px;"></i>
+                                    </span>
+                                    <InputSelect @bind-Value="entry.StationID"
+                                                 class="form-select border-start-0"
+                                                 id="stationId">
+                                        <option value="">Select station</option>
+                                        @foreach (var station in GasStations)
+                                        {
+                                            <option value="@station.StationID">@station.Name</option>
+                                        }
+                                    </InputSelect>
+                                </div>
+                                <ValidationMessage For="@(() => entry.StationID)" class="text-danger small" />
+                            </div>
+                        </div>
+
+                        <!-- Section: Reading & cost -->
+                        <p class="text-uppercase fw-medium small text-secondary mb-2 mt-3"
+                           style="font-size:11px; letter-spacing:.06em;">Reading &amp; cost</p>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-sm-6">
+                                <label class="form-label small fw-medium text-secondary" for="odometer">Odometer (mi)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="bi bi-speedometer2 text-secondary" style="font-size:13px;"></i>
+                                    </span>
+                                    <InputNumber @bind-Value="entry.Odometer"
+                                                 class="form-control border-start-0"
+                                                 id="odometer"
+                                                 placeholder="e.g. 42500" />
+                                </div>
+                                <ValidationMessage For="@(() => entry.Odometer)" class="text-danger small" />
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="form-label small fw-medium text-secondary" for="gallons">Gallons</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="bi bi-bucket text-secondary" style="font-size:13px;"></i>
+                                    </span>
+                                    <InputNumber @bind-Value="entry.Gallons"
+                                                 class="form-control border-start-0"
+                                                 id="gallons"
+                                                 placeholder="e.g. 12.5" />
+                                </div>
+                                <ValidationMessage For="@(() => entry.Gallons)" class="text-danger small" />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-medium text-secondary" for="ppg">Price per gallon ($)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0">
+                                    <i class="bi bi-currency-dollar text-secondary" style="font-size:13px;"></i>
+                                </span>
+                                <InputNumber @bind-Value="entry.PricePerGallon"
+                                             class="form-control border-start-0"
+                                             id="ppg"
+                                             placeholder="e.g. 3.49" />
+                                <span class="input-group-text bg-light text-muted" style="font-size:12px;">
+                                    @if (entry.Gallons > 0 && entry.PricePerGallon > 0)
+                                    {
+                                        <span class="text-success fw-medium">
+                                            = @((entry.Gallons * entry.PricePerGallon).ToString("C"))
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span>total</span>
+                                    }
+                                </span>
+                            </div>
+                            <ValidationMessage For="@(() => entry.PricePerGallon)" class="text-danger small" />
+                        </div>
+
+                        <!-- Notes -->
+                        <div class="mb-4">
+                            <label class="form-label small fw-medium text-secondary" for="notes">Notes (optional)</label>
+                            <div class="input-group align-items-start">
+                                <span class="input-group-text bg-light border-end-0 pt-2">
+                                    <i class="bi bi-card-text text-secondary" style="font-size:13px;"></i>
+                                </span>
+                                <InputTextArea @bind-Value="entry.Notes"
+                                               class="form-control border-start-0"
+                                               id="notes"
+                                               rows="3"
+                                               placeholder="Full tank, top-off, etc." />
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <hr class="my-3" />
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted small">
+                                @if (entry.Gallons > 0 && entry.PricePerGallon > 0)
+                                {
+                                    <span>Total: <strong class="text-success">@((entry.Gallons * entry.PricePerGallon).ToString("C"))</strong></span>
+                                }
+                            </span>
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-outline-secondary px-3">Cancel</button>
+                                <button type="submit" class="btn px-4 fw-medium"
+                                        style="background:#1D9E75; color:#fff; border:none;">
+                                    <i class="bi bi-save me-1"></i> Save entry
+                                </button>
+                            </div>
+                        </div>
+
+                    </EditForm>
+                </div>
+            </div>
+
+        </div>
     </div>
-    <div>
-        <label>Gas Type:</label>
-        <InputSelect @bind-Value="entry.GasTypeID">
-            <option value="">Select Gas Type</option>
-            @foreach (var gas in GasTypes)
-            {
-                <option value="@gas.GasTypeID">@gas.Name</option>
-            }
-        </InputSelect>
-    </div>
-    <div>
-        <label>Gas Station:</label>
-        <InputSelect @bind-Value="entry.StationID">
-            <option value="">Select Station</option>
-            @foreach (var station in GasStations)
-            {
-                <option value="@station.StationID">@station.Name</option>
-            }
-        </InputSelect>
-    </div>
-    <div>
-        <label>Entry Date:</label>
-        <InputDate @bind-Value="entry.EntryDate" />
-    </div>
-    <div>
-        <label>Odometer:</label>
-        <InputNumber @bind-Value="entry.Odometer" />
-    </div>
-    <div>
-        <label>Gallons:</label>
-        <InputNumber @bind-Value="entry.Gallons" />
-    </div>
-    <div>
-        <label>Price Per Gallon:</label>
-        <InputNumber @bind-Value="entry.PricePerGallon" />
-    </div>
-    <div>
-        <label>Notes:</label>
-        <InputTextArea @bind-Value="entry.Notes" />
-    </div>
-    <button type="submit">Save</button>
-</EditForm>
+</div>
 
 @code {
     [Parameter]
     public int? EntryID { get; set; }
+
 
     private MileageEntry entry = new();
     private List<Car> Cars = new();

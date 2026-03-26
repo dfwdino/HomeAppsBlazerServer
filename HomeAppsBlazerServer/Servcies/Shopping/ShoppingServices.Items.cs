@@ -115,7 +115,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
                 queryShoppingItem = queryShoppingItem.Where(mm => mm.ItemName.Contains(filter));
             }
 
-            return queryShoppingItem.ToList();
+            return queryShoppingItem.AsNoTracking().ToList();
         }
 
         public async Task<List<ShoppingDetailItem>> GetShoppingItemsAsync(bool showallitems = false, string filter = "")
@@ -125,7 +125,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
             string cacheKey = $"{ShoppingItemsCacheKey}_{showallitems}";
 
             // Try to get from cache first
-            if (_cache.TryGetValue(cacheKey, out List<ShoppingDetailItem> cachedItems))  //Try using ConcurrentDictionary to be faster.
+            if (_cache.TryGetValue(cacheKey, out List<ShoppingDetailItem> cachedItems))  //Try using ConcurrentDictionary to be faster but a lot of changing. lol maybe have AI do it. lol
             {
                 _logger.LogInformation("Cache hit for shopping items with key '{CacheKey}'", cacheKey);
                 return cachedItems;
@@ -182,6 +182,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
                         })
                         .OrderByDescending(mm => mm.GotItemDate)
                         .ThenBy(mm => mm.ItemName)
+                        .AsNoTracking()
                         .ToList();
 
 
@@ -199,7 +200,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
 
         public async Task RemoveShoppingItem(int id)
         {
-            var shoppingItem = await myDbContext.ShoppingItems.FirstOrDefaultAsync(mm => mm.ShoppingItemID.Equals(id));
+            var shoppingItem = await myDbContext.ShoppingItems.FirstOrDefaultAsync(mm => mm.ShoppingItemID.Equals(id));  //GetShoppingItemByIDAsync that pulls all info back or just this info from the dbcontext
 
             if (shoppingItem != null)
             {

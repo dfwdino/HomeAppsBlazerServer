@@ -46,6 +46,10 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Components\Pages\Auto\GasType\" />
+  </ItemGroup>
 	
 
 </Project>

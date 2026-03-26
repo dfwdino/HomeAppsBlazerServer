@@ -30,6 +30,7 @@ builder.Services.AddScoped<IGasStationService, GasStationService>();
 builder.Services.AddScoped<GasTypeService, GasTypeService>();
 builder.Services.AddScoped<MileageEntryService, MileageEntryService>();
 builder.Services.AddScoped<ItemBrand, ItemBrand>();
+builder.Services.AddScoped<GasTypeService, GasTypeService>();
 
 builder.Services.AddMemoryCache();
 

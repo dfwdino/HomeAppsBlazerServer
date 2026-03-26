@@ -15,83 +15,111 @@
 <div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
-            <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <h3 class="mb-0">@(IsEdit ? "Edit Car" : "Add Car")</h3>
+
+            <div class="card border-0 shadow-sm" style="border-top: 3px solid #0d6efd !important; border-radius: 12px; overflow: hidden;">
+
+                <div class="card-header bg-white border-bottom d-flex align-items-center gap-2 py-3 px-4">
+                    <div class="rounded-2 d-flex align-items-center justify-content-center"
+                         style="width:36px; height:36px; background:#e8f0fe;">
+                        <i class="bi @(IsEdit ? "bi-pencil" : "bi-plus-lg") text-primary" style="font-size:14px;"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-0 fw-medium">@(IsEdit ? "Edit car" : "Add car")</h5>
+                        <small class="text-muted">@(IsEdit ? "Update the details below" : "Fill in the details below")</small>
+                    </div>
                 </div>
-                
-                <div class="card-body p-4">
+
+                <div class="card-body px-4 py-4">
                     <EditForm Model="@Car" OnValidSubmit="@HandleValidSubmit" FormName="carForm">
                         <DataAnnotationsValidator />
-                        <ValidationSummary class="text-danger mb-3" />
-                        
-                        <!-- Make Field -->
-                        <div class="mb-3">
-                            <label class="form-label" for="make">Make</label>
-                            <InputText @bind-Value="Car.Name"
-                                       class="form-control"
-                                       id="name"
-                                      placeholder="Enter car make"
-                                      maxlength="50" />
-                            <ValidationMessage For="@(() => Car.Name)" class="text-danger small" />
+                        <ValidationSummary class="text-danger small mb-3" />
+
+                        <!-- Make field -->
+                        <div class="mb-4">
+                            <label class="form-label text-uppercase fw-medium small text-secondary" for="make">
+                                Make
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0">
+                                    <i class="bi bi-car-front text-secondary" style="font-size:14px;"></i>
+                                </span>
+                                <InputText @bind-Value="Car.Name"
+                                           class="form-control border-start-0"
+                                           id="make"
+                                           placeholder="e.g. Toyota, Ford, Honda"
+                                           maxlength="50" />
+                            </div>
+                            <ValidationMessage For="@(() => Car.Name)" class="text-danger small mt-1" />
                         </div>
 
-                        <!-- Date Added Field (optional for edit, read-only) -->
+                        <!-- Date added (edit mode only, read-only display) -->
                         @if (IsEdit)
                         {
-                            <div class="mb-3">
-                                <label class="form-label" for="dateAdded">Date Added</label>
-                                <InputDate @bind-Value="Car.DateAdded" 
-                                           class="form-control" 
-                                           id="dateAdded"
-                                           readonly />
-                                <small class="form-text text-muted">This field cannot be modified</small>
+                            <div class="mb-4">
+                                <label class="form-label text-uppercase fw-medium small text-secondary">
+                                    Date added
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="bi bi-calendar3 text-secondary" style="font-size:14px;"></i>
+                                    </span>
+                                    <p class="form-control border-start-0 bg-light text-muted mb-0"
+                                           style="line-height: 38px;">
+                                        @Car.DateAdded.ToShortDateString()
+                                    </p>
+                                </div>
+                                <small class="text-muted mt-1 d-block">This field cannot be modified</small>
                             </div>
                         }
 
-                        <!-- Action Buttons -->
-                        <div class="d-flex justify-content-between mt-4 pt-3 border-top">
-                            <button type="button" 
-                                    class="btn btn-outline-secondary px-4" 
+                        <hr class="my-3" />
+
+                        <!-- Actions -->
+                        <div class="d-flex justify-content-between align-items-center">
+                            <button type="button"
+                                    class="btn btn-outline-secondary px-4"
                                     @onclick="Cancel">
-                                Cancel
+                                <i class="bi bi-x me-1"></i> Cancel
                             </button>
-                            <button type="submit" 
-                                    class="btn btn-primary px-4" 
-                                    disabled="@(Processing)">
+
+                            <button type="submit"
+                                    class="btn btn-primary px-4"
+                                    disabled="@Processing">
                                 @if (Processing)
                                 {
-                                    <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                                     <span>Processing...</span>
                                 }
                                 else
                                 {
-                                    <i class="bi @(IsEdit ? "bi-check-circle" : "bi-plus-circle") me-1"></i>
-                                    @(IsEdit ? "Update Car" : "Add Car")
+                                    <i class="bi @(IsEdit ? "bi-check-lg" : "bi-plus-lg") me-1"></i>
+                                    @(IsEdit ? "Update car" : "Add car")
                                 }
                             </button>
                         </div>
+
                     </EditForm>
                 </div>
+
+                <!-- Alerts inside the card -->
+                @if (!string.IsNullOrEmpty(ErrorMessage))
+                {
+                    <div class="alert alert-danger d-flex align-items-start gap-2 mx-4 mb-4 py-2" role="alert">
+                        <i class="bi bi-exclamation-circle-fill mt-1" style="font-size:14px;"></i>
+                        <span>@ErrorMessage</span>
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(SuccessMessage))
+                {
+                    <div class="alert alert-success d-flex align-items-start gap-2 mx-4 mb-4 py-2" role="alert">
+                        <i class="bi bi-check-circle-fill mt-1" style="font-size:14px;"></i>
+                        <span>@SuccessMessage</span>
+                    </div>
+                }
+
             </div>
 
-            <!-- Error Alert -->
-            @if (!string.IsNullOrEmpty(ErrorMessage))
-            {
-                <div class="alert alert-danger mt-3" role="alert">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                    @ErrorMessage
-                </div>
-            }
-
-            <!-- Success Alert -->
-            @if (!string.IsNullOrEmpty(SuccessMessage))
-            {
-                <div class="alert alert-success mt-3" role="alert">
-                    <i class="bi bi-check-circle-fill me-2"></i>
-                    @SuccessMessage
-                </div>
-            }
         </div>
     </div>
 </div>
@@ -175,7 +203,7 @@
 
             // Optional: Navigate back to the list after a delay
             await Task.Delay(1500);
-            Navigation.NavigateTo("/cars");
+            Navigation.NavigateTo("List-Car");
         }
         catch (Exception ex)
         {
@@ -189,6 +217,6 @@
 
     private void Cancel()
     {
-        Navigation.NavigateTo("/cars");
+        Navigation.NavigateTo("List-Car");
     }
 }

@@ -204,7 +204,7 @@
         try
         {
             loading = true;
-            cars = (await CarService.GetAllAsync()).ToList();
+            cars = (await CarService.GetAllAsync()).Where(mm => mm.IsDeleted == false).ToList();
             errorMessage = null;
         }
         catch (Exception ex)
