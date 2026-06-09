@@ -21,13 +21,14 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
 
 
             var monthlySummary = items
-                
+
                 .GroupBy(x => new
                 {
-                    x.GotItemDate!.Value.Year,   
+                    x.GotItemDate!.Value.Year,
                     x.GotItemDate!.Value.Month
                 })
-                
+                .OrderByDescending(g => g.Key.Year)
+                .ThenByDescending(g => g.Key.Month)
                 .Select(g => new MonthlyShoppingReport
                 {
                     Year = g.Key.Year,
@@ -64,8 +65,6 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
                                         .GroupBy(d => d.Key.Name)                
                                         .Select(itemGroup => $"{itemGroup.Key} | {itemGroup.Count()}"))
                 })
-                .OrderByDescending(x => x.Year)
-                .ThenByDescending(x => x.Month)
                 .ToList();
 
             return monthlySummary;
