@@ -37,7 +37,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
         {
             var storequery = myDbContext.ItemBrands.Where(mm => mm.IsDeleted == false).OrderBy(m => m.BrandName).AsQueryable();
 
-            if (!filter.IsNullOrEmpty())
+            if (!filter.IsWhiteSpace())
             {
                 storequery = storequery.Where(mm => mm.BrandName.Contains(filter));
             }

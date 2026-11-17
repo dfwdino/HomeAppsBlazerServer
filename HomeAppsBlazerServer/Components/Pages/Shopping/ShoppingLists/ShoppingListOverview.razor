@@ -149,6 +149,7 @@
     IEnumerable<ShoppingItemResult> ItemsNeededFuture;
 
     private DotNetObjectReference<ShoppingListOverview> _dotNetRef;
+    private bool _disposed;
 
 
     private void OnHideShowMenu()
@@ -183,8 +184,20 @@
         if (firstRender)
         {
             _dotNetRef = DotNetObjectReference.Create(this);
-            await JsRuntime.InvokeVoidAsync("requestWakeLock");
-            await JsRuntime.InvokeVoidAsync("registerSwipeGestures", "shopping-list-container", _dotNetRef);
+            try
+            {
+                await JsRuntime.InvokeVoidAsync("requestWakeLock");
+
+                // The page may have been disposed while the wake lock was being requested.
+                if (!_disposed)
+                {
+                    await JsRuntime.InvokeVoidAsync("registerSwipeGestures", "shopping-list-container", _dotNetRef);
+                }
+            }
+            catch (Exception ex) when (ex is ObjectDisposedException or JSDisconnectedException)
+            {
+                // Page or circuit went away mid-render — nothing to register.
+            }
         }
     }
 
@@ -201,8 +214,10 @@
 
     public async ValueTask DisposeAsync()
     {
+        _disposed = true;
         try
         {
+            await JsRuntime.InvokeVoidAsync("unregisterSwipeGestures");
             await JsRuntime.InvokeVoidAsync("releaseWakeLock");
         }
         catch (JSDisconnectedException)

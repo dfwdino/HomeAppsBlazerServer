@@ -13,9 +13,9 @@
             <table class="table table-hover mb-0">
 
                 <tbody class="table table-hover mb-0">
-                    @*     @foreach (var item in Items.OrderBy(mm => mm.ItemName))
-    { *@
-                    <Virtualize Items="@Items" Context="item">
+                    @* Virtualize inside a <tbody> stopped rendering rows after the .NET 11 upgrade; the list is small, so a plain loop is fine. *@
+                    @foreach (var item in Items)
+                    {
                         <tr id="@item.ShoppingItemListID">
                             <td>
                                 <div class="d-flex flex-column flex-md-row align-items-md-center">
@@ -62,8 +62,7 @@
                                 </button>
                             </td>
                         </tr>
-                    </Virtualize>
-                    @*}*@
+                    }
                 </tbody>
 
             </table>

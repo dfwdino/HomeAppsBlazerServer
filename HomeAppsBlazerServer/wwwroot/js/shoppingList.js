@@ -19,21 +19,37 @@ async function releaseWakeLock() {
     }
 }
 // ─── Swipe to Mark as Got ────────────────────────────────────────────────────
+let removeSwipeGestures = null;
 function registerSwipeGestures(containerId, dotNetRef, threshold = 80) {
+    // Drop any listeners from a previous page instance so they never call a disposed reference.
+    unregisterSwipeGestures();
     const container = document.getElementById(containerId);
     if (!container)
         return;
     let startX = 0;
-    container.addEventListener('touchstart', (e) => {
+    const onTouchStart = (e) => {
         startX = e.touches[0].clientX;
-    }, { passive: true });
-    container.addEventListener('touchend', (e) => {
+    };
+    const onTouchEnd = (e) => {
         const deltaX = e.changedTouches[0].clientX - startX;
         if (deltaX > threshold) {
             const row = e.target.closest('tr');
             if (row === null || row === void 0 ? void 0 : row.id) {
-                dotNetRef.invokeMethodAsync('HandleSwipeGot', parseInt(row.id));
+                dotNetRef.invokeMethodAsync('HandleSwipeGot', parseInt(row.id))
+                    .catch(() => { /* component already disposed — ignore */ });
             }
         }
-    }, { passive: true });
+    };
+    container.addEventListener('touchstart', onTouchStart, { passive: true });
+    container.addEventListener('touchend', onTouchEnd, { passive: true });
+    removeSwipeGestures = () => {
+        container.removeEventListener('touchstart', onTouchStart);
+        container.removeEventListener('touchend', onTouchEnd);
+    };
+}
+function unregisterSwipeGestures() {
+    if (removeSwipeGestures) {
+        removeSwipeGestures();
+        removeSwipeGestures = null;
+    }
 }

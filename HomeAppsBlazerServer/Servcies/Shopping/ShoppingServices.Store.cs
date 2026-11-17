@@ -36,7 +36,7 @@ namespace HomeAppsBlazerServer.Servcies.Shopping
         {
             var storequery = myDbContext.ShoppingStores.Where(mm => mm.IsDeleted == false).AsQueryable();
 
-            if (!filter.IsNullOrEmpty())
+            if (!filter.IsWhiteSpace())
             {
                 storequery = storequery.Where(mm => mm.StoreName.Contains(filter));
             }
