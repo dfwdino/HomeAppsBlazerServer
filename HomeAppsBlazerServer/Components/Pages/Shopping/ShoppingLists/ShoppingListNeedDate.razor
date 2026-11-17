@@ -37,10 +37,10 @@
                                                 <i class="bi bi-currency-dollar me-1"></i>@item.Price
                                             </span>
                                         }
-                                        @if (item.Store?.StoreName != null)
+                                        @if (string.IsNullOrWhiteSpace(item.storename) == false)
                                         {
                                             <span class="badge bg-info text-dark me-2">
-                                                <i class="bi bi-shop me-1"></i>@item.Store?.StoreName
+                                                <i class="bi bi-shop me-1"></i>@item.storename
                                             </span>
                                         }
                                     </div>
